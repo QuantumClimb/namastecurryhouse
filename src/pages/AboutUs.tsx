@@ -32,14 +32,14 @@ const AboutUs = () => {
       <section
         className="relative h-screen flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/images/aboutus.png')`
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/images/new images/34.png')`
         }}
       >
         <div className="text-center z-10 max-w-5xl mx-auto px-4">
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 text-glow gradient-text animate-fade-in">
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 text-white animate-fade-in">
             Our Story
           </h1>
-          <p className="text-xl md:text-2xl text-foreground/90 leading-relaxed animate-fade-in">
+          <p className="text-xl md:text-2xl text-white/90 leading-relaxed animate-fade-in">
             Bringing authentic Indian flavors and traditional hospitality to create memorable dining experiences
           </p>
         </div>
@@ -75,7 +75,7 @@ const AboutUs = () => {
       </section>
 
       {/* Values Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-primary/5 to-secondary/5">
+  <section className="py-20 px-4 bg-primary/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">

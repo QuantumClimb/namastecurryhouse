@@ -48,14 +48,14 @@ const Reservation = () => {
       <section
         className="relative h-96 flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')`
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/new images/39.png')`
         }}
       >
         <div className="text-center z-10 max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-glow gradient-text animate-fade-in">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white animate-fade-in">
             Reservations
           </h1>
-          <p className="text-xl text-foreground/90 animate-fade-in">
+          <p className="text-xl text-white/90 animate-fade-in">
             Secure your spot for an authentic Indian dining experience at Namaste Curry House
           </p>
         </div>
@@ -218,7 +218,7 @@ const Reservation = () => {
 
       {/* Large Bookings CTA */}
       <section className="py-12 px-4 max-w-4xl mx-auto">
-        <Card className="bg-gradient-to-r from-secondary/10 to-primary/10 border-secondary/20 neon-glow">
+  <Card className="bg-secondary/10 border-secondary/20 neon-glow">
           <CardContent className="p-8 text-center">
             <h3 className="text-2xl font-bold mb-4 gradient-text">Planning a Large Event?</h3>
             <p className="text-foreground/80 mb-6 max-w-2xl mx-auto">

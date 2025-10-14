@@ -39,14 +39,14 @@ const Contact = () => {
       <section
         className="relative h-96 flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1500673922987-e212871fec22?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')`
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/new images/38.png')`
         }}
       >
         <div className="text-center z-10 max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-glow gradient-text animate-fade-in">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white animate-fade-in">
             Contact Us
           </h1>
-          <p className="text-xl text-foreground/90 animate-fade-in">
+          <p className="text-xl text-white/90 animate-fade-in">
             Get in touch with Namaste Curry House for reservations, events, or inquiries
           </p>
         </div>
@@ -169,7 +169,7 @@ const Contact = () => {
             </Card>
 
             {/* WhatsApp Card */}
-            <Card className="bg-gradient-to-r from-secondary/10 to-primary/10 border-secondary/20 neon-glow">
+            <Card className="bg-secondary/10 border-secondary/20 neon-glow">
               <CardContent className="p-8 text-center">
                 <MessageCircle className="w-12 h-12 text-secondary mx-auto mb-4" />
                 <h3 className="text-2xl font-bold mb-4 gradient-text">Quick Contact</h3>
@@ -195,7 +195,7 @@ const Contact = () => {
       </section>
 
       {/* Map Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-primary/5 to-secondary/5">
+  <section className="py-20 px-4 bg-primary/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4 gradient-text">Find Us</h2>
@@ -206,7 +206,7 @@ const Contact = () => {
           
           <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow overflow-hidden">
             <CardContent className="p-0">
-              <div className="w-full h-96 bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center">
+              <div className="w-full h-96 bg-primary/20 flex items-center justify-center">
                 <div className="text-center">
                   <MapPin className="w-16 h-16 text-primary mx-auto mb-4" />
                   <h3 className="text-2xl font-bold gradient-text mb-2">Interactive Map</h3>

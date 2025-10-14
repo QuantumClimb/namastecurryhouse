@@ -7,6 +7,7 @@ export interface MenuItem {
   description?: string;
   dietary?: string[];
   spiceLevel?: number;
+  imageUrl?: string;    // New field for image URL
 }
 
 export interface MenuCategory {

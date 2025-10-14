@@ -25,11 +25,13 @@ export const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-3">
-              <img 
-                src="/images/97a3f1c0-4793-4b37-9b8b-ca88ea090ffe.png" 
-                alt="Namaste Curry House Logo" 
-                className="h-10 w-10 rounded-full"
+            <Link to="/" className="flex items-center space-x-3" aria-label="Namaste Curry House Home">
+              <img
+                src="/logo.png"
+                alt="Namaste Curry House Logo"
+                className="h-12 w-12 object-contain drop-shadow-md"
+                loading="eager"
+                fetchPriority="high"
               />
               <span className="text-2xl font-bold gradient-text">Namaste Curry House</span>
             </Link>

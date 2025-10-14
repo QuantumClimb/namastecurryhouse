@@ -40,17 +40,17 @@ const Index = () => {
       <section
         className="relative h-screen flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/7c8ae1ad-de1e-4176-ab36-b029628d76f1.png')`
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/new images/36.png')`
         }}
       >
         <div className="text-center z-10 max-w-4xl mx-auto px-4">
-          <h1 className="text-6xl md:text-8xl font-bold mb-6 text-glow animate-fade-in">
-            <span className="gradient-text">Namaste Curry House</span>
+          <h1 className="text-6xl md:text-8xl font-bold mb-6 text-white animate-fade-in">
+            <span className="text-white">Namaste Curry House</span>
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-foreground/90 animate-fade-in">
+          <p className="text-xl md:text-2xl mb-8 text-white/90 animate-fade-in">
             Authentic Indian Flavors & Traditional Hospitality
           </p>
-          <p className="text-lg mb-10 text-foreground/80 max-w-2xl mx-auto animate-fade-in">
+          <p className="text-lg mb-10 text-white/80 max-w-2xl mx-auto animate-fade-in">
             Experience the rich traditions of Indian cuisine with authentic spices, traditional recipes, and warm hospitality
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
@@ -104,7 +104,7 @@ const Index = () => {
       </section>
 
       {/* Highlights Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-primary/10 to-secondary/10">
+  <section className="py-20 px-4 bg-primary/10">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -127,7 +127,7 @@ const Index = () => {
             </div>
             <div className="relative">
               <img
-                src="/images/7b32962f-e13c-45fa-a409-c2be1886607f.png"
+                src="/images/new images/37.png"
                 alt="Namaste Curry House Experience"
                 className="rounded-lg shadow-2xl w-full h-96 object-cover neon-glow"
               />
@@ -137,7 +137,7 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 text-center bg-gradient-to-r from-midnight to-primary/5">
+  <section className="py-20 px-4 text-center bg-midnight">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
             Ready for the Night?

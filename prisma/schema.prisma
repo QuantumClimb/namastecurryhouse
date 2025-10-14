@@ -25,4 +25,5 @@ model MenuItem {
   spiceLevel  Int?
   categoryId  Int
   category    MenuCategory @relation(fields: [categoryId], references: [id])
+  imageUrl    String?      // New column for image URL
 }

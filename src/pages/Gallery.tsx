@@ -9,171 +9,29 @@ const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Real MAUJ images
-  const images = [
-    {
-      src: "/images/1cf9179c-6705-4640-b9b8-fac00c54127c.png",
-      alt: "MAUJ Dining Experience - Customer enjoying pasta and cocktail",
-      category: "Food"
-    },
-    {
-      src: "/images/fec6a3c9-6c35-4847-862a-9f1c2b754cca.png",
-      alt: "MAUJ Night Out - Friends enjoying the atmosphere",
-      category: "Atmosphere"
-    },
-    {
-      src: "/images/d4f3c81a-38ad-41b3-b972-735ae9aa96df.png",
-      alt: "MAUJ Social Dining - Friends sharing drinks",
-      category: "Atmosphere"
-    },
-    {
-      src: "/images/fbb684c2-b917-475d-ad52-61c6a7749ce4.png",
-      alt: "MAUJ Tea Service - Traditional tea ceremony experience",
-      category: "Events"
-    },
-    {
-      src: "/images/9b01b889-0ffb-468f-a8b8-eac971522006.png",
-      alt: "MAUJ Group Celebration - Friends celebrating together",
-      category: "Atmosphere"
-    },
-    {
-      src: "/images/bbf2a0c0-5ab4-4ebb-b8d7-96b944fdb6af.png",
-      alt: "MAUJ Bar Scene - Couple enjoying cocktails",
-      category: "Drinks"
-    },
-    {
-      src: "/images/2777b9fc-43e5-468a-b996-30567c7577a4.png",
-      alt: "MAUJ Private Dining - Intimate dining experience",
-      category: "Interior"
-    },
-    {
-      src: "/images/28117363-f0b1-42a5-a5e5-12d9b1cc6b21.png",
-      alt: "MAUJ Outdoor Dining - Evening cocktails on the terrace",
-      category: "Atmosphere"
-    },
-    {
-      src: "/images/2850dedc-0ada-4a62-ba80-625bafd5ce0c.png",
-      alt: "MAUJ Happy Moments - Staff and customers celebrating",
-      category: "Events"
-    },
-    {
-      src: "/images/2a6f48a5-5656-4a20-a17d-d386e20c1cdf.png",
-      alt: "MAUJ Wine Experience - Customer enjoying wine",
-      category: "Drinks"
-    },
-    // New food images
-    {
-      src: "/images/6e68544b-c4c7-4680-90c6-8aada141f912.png",
-      alt: "MAUJ 3 Course Lunch Set - Gourmet shrimp and noodle dish",
-      category: "Food"
-    },
-    {
-      src: "/images/1f161bac-f2ae-42db-97c1-8eb00f72a4ed.png",
-      alt: "MAUJ Aromatic Indulgence - Signature biryani dish",
-      category: "Food"
-    },
-    {
-      src: "/images/b9d15489-5c40-4fe6-84f6-70d52012646b.png",
-      alt: "MAUJ Appetizer - Grilled prawns with mint chutney",
-      category: "Food"
-    },
-    {
-      src: "/images/e26eb677-f6aa-4657-9b00-629d43b7290f.png",
-      alt: "MAUJ Signature Dish - Rich meatballs in savory sauce",
-      category: "Food"
-    },
-    {
-      src: "/images/8385f424-9cd6-4b59-a1bc-6b6e4ab35924.png",
-      alt: "MAUJ Pasta Special - Spicy tomato pasta with herbs",
-      category: "Food"
-    },
-    {
-      src: "/images/8074fb11-df2a-4fcd-86fb-9c3a2024a294.png",
-      alt: "MAUJ Breakfast Platter - Eggs and traditional sides",
-      category: "Food"
-    },
-    {
-      src: "/images/2113dcf7-786b-4266-9a9e-473606e05161.png",
-      alt: "MAUJ Curry Selection - Rich tomato-based curry",
-      category: "Food"
-    },
-    {
-      src: "/images/197bc384-656d-4894-8a60-9846ca7af986.png",
-      alt: "MAUJ Family Feast - Assorted traditional dishes",
-      category: "Food"
-    },
-    {
-      src: "/images/e90c077c-ce5b-4e6e-a368-0bbca863b055.png",
-      alt: "MAUJ Dining Experience - Multiple course meal spread",
-      category: "Food"
-    },
-    {
-      src: "/images/f0aa01a4-8911-4992-941f-63ec5a3ccf5c.png",
-      alt: "MAUJ Comfort Food - Traditional soup with bread",
-      category: "Food"
-    },
-    // New drink images
-    {
-      src: "/images/3f403e4e-3e7d-4d84-91df-1d87668967b9.png",
-      alt: "MAUJ Cocktail Night - Signature martini with elegant presentation",
-      category: "Drinks"
-    },
-    {
-      src: "/images/143afebf-8293-4ab2-88ab-2b375d0f8326.png",
-      alt: "MAUJ Happy Hour - Special deals on cocktails and wine",
-      category: "Events"
-    },
-    {
-      src: "/images/4a99af30-79dc-47d1-8ebf-308119edc093.png",
-      alt: "MAUJ Mixology - Professional cocktail preparation",
-      category: "Drinks"
-    },
-    {
-      src: "/images/0aee548a-1169-4ccc-b544-6fb545c23348.png",
-      alt: "MAUJ Premium Spirits - Monkey Shoulder whisky selection",
-      category: "Drinks"
-    },
-    {
-      src: "/images/545c2758-8833-4327-a82a-de357d17cbcd.png",
-      alt: "MAUJ Father's Day Special - Free beer promotion",
-      category: "Events"
-    },
-    {
-      src: "/images/5b6092e6-faee-40e1-98dc-538cc103835b.png",
-      alt: "MAUJ April Specials - Pour-fect deals all month",
-      category: "Events"
-    },
-    {
-      src: "/images/9e0460ad-065e-4680-9f5d-6fa7ea61b326.png",
-      alt: "MAUJ All May Deal - Comprehensive food and drink offers",
-      category: "Events"
-    },
-    {
-      src: "/images/480dd221-896b-4bc1-b682-b0cfa7694d56.png",
-      alt: "MAUJ Pouring Deals - Weekend beer and spirit specials",
-      category: "Drinks"
-    },
-    {
-      src: "/images/57650b82-f039-4aa9-828f-e6d208e0c18e.png",
-      alt: "MAUJ St. Patrick's Day - Exclusive green beer promotion",
-      category: "Events"
-    },
-    {
-      src: "/images/68a6e030-38b8-4516-8fde-b6f83efaf2e5.png",
-      alt: "MAUJ Wednesday DJ Night - Featuring DJ Reyna",
-      category: "Events"
-    }
-  ];
+  // Replaced images using sequential assets from /images/new images/
+  // Mapping keeps prior categories but uses numbered filenames.
+  const images = Array.from({ length: 30 }, (_, i) => {
+    const index = i + 1; // 1..30 for main gallery
+    // Rough category cycling: Food, Atmosphere, Events, Drinks, Interior
+    const categoriesCycle = ["Food", "Atmosphere", "Events", "Drinks", "Interior"];
+    const category = categoriesCycle[i % categoriesCycle.length];
+    return {
+      src: `/images/new images/${index}.png`,
+      alt: `Gallery Image ${index}`,
+      category
+    };
+  });
 
   const videos = [
     {
       title: "MAUJ Night Experience",
-      thumbnail: "/images/bbf2a0c0-5ab4-4ebb-b8d7-96b944fdb6af.png",
+      thumbnail: "/images/new images/31.png",
       embedId: "dQw4w9WgXcQ" // Replace with actual video ID
     },
     {
       title: "MAUJ Cocktail Preparation",
-      thumbnail: "/images/4a99af30-79dc-47d1-8ebf-308119edc093.png",
+      thumbnail: "/images/new images/32.png",
       embedId: "dQw4w9WgXcQ" // Replace with actual video ID
     }
   ];
@@ -205,14 +63,14 @@ const Gallery = () => {
       <section
         className="relative h-96 flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/bbf2a0c0-5ab4-4ebb-b8d7-96b944fdb6af.png')`
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/new images/33.png')`
         }}
       >
         <div className="text-center z-10 max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-glow gradient-text animate-fade-in">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white animate-fade-in">
             Gallery
           </h1>
-          <p className="text-xl text-foreground/90 animate-fade-in">
+          <p className="text-xl text-white/90 animate-fade-in">
             Capturing the essence of MAUJ's unforgettable moments
           </p>
         </div>
@@ -264,7 +122,7 @@ const Gallery = () => {
       </section>
 
       {/* Video Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-primary/5 to-secondary/5">
+  <section className="py-20 px-4 bg-primary/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">

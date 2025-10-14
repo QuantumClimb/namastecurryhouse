@@ -7,46 +7,62 @@ import { MenuCategory, MenuItem } from "../types/menu";
 import { getMenuData } from "../services/menuService";
 import { AddToCartButton } from "../components/AddToCartButton";
 
-const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => (
-  <div className="space-y-6">
-    <h3 className="text-3xl font-bold gradient-text mb-8">{title}</h3>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {items.map((item, index) => (
-        <Card key={item.id || index} className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow overflow-hidden group">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-start mb-3">
-              <h4 className="text-xl font-bold text-foreground">{item.name}</h4>
-              <span className="text-lg font-bold text-accent">€{item.price.toFixed(2)}</span>
+const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => {
+  const placeholderImg = "/images/placeholder-food.svg";
+  
+  return (
+    <div className="space-y-6">
+      <h3 className="text-3xl font-bold gradient-text mb-8">{title}</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {items.map((item, index) => (
+          <Card key={item.id || index} className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow overflow-hidden group">
+            {/* Food Image */}
+            <div className="relative h-48 overflow-hidden">
+              <img
+                src={item.imageUrl || placeholderImg}
+                alt={item.name}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                onError={(e) => {
+                  e.currentTarget.src = placeholderImg;
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
-            <p className="text-foreground/70 mb-4 leading-relaxed">{item.description}</p>
-            {item.dietary && item.dietary.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-4">
-                {item.dietary.map((diet: string, idx: number) => (
-                  <Badge key={idx} className="bg-primary/20 text-primary border-primary/30">
-                    {diet}
-                  </Badge>
-                ))}
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start mb-3">
+                <h4 className="text-xl font-bold text-foreground">{item.name}</h4>
+                <span className="text-lg font-bold text-accent">€{item.price.toFixed(2)}</span>
               </div>
-            )}
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-2">
-                {item.spiceLevel && (
-                  <Badge variant="outline" className="text-xs">
-                    {'🌶️'.repeat(item.spiceLevel)}
-                  </Badge>
-                )}
-                {item.namePt && (
-                  <span className="text-sm text-muted-foreground italic">{item.namePt}</span>
-                )}
+              <p className="text-foreground/70 mb-4 leading-relaxed">{item.description}</p>
+              {item.dietary && item.dietary.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {item.dietary.map((diet: string, idx: number) => (
+                    <Badge key={idx} className="bg-primary/20 text-primary border-primary/30">
+                      {diet}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+              <div className="flex justify-between items-center">
+                <div className="flex items-center space-x-2">
+                  {item.spiceLevel && (
+                    <Badge variant="outline" className="text-xs">
+                      {'🌶️'.repeat(item.spiceLevel)}
+                    </Badge>
+                  )}
+                  {item.namePt && (
+                    <span className="text-sm text-muted-foreground italic">{item.namePt}</span>
+                  )}
+                </div>
+                <AddToCartButton menuItem={item} size="sm" />
               </div>
-              <AddToCartButton menuItem={item} size="sm" />
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Menu = () => {
   const [menuData, setMenuData] = useState<MenuCategory[]>([]);
@@ -76,14 +92,14 @@ const Menu = () => {
       <section
         className="relative h-96 flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/2113dcf7-786b-4266-9a9e-473606e05161.png')`
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/new images/35.png')`
         }}
       >
         <div className="text-center z-10 max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-glow gradient-text animate-fade-in">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white animate-fade-in">
             Our Menu
           </h1>
-          <p className="text-xl text-foreground/90 animate-fade-in">
+          <p className="text-xl text-white/90 animate-fade-in">
             Culinary artistry meets innovative mixology
           </p>
         </div>
@@ -114,7 +130,7 @@ const Menu = () => {
       </section>
 
       {/* Wine & Spirits Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-primary/5 to-secondary/5">
+  <section className="py-20 px-4 bg-primary/5">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8 gradient-text">
             Premium Spirits & Wines
