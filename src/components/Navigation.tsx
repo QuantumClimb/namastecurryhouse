@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CartDrawer } from "./CartDrawer";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,24 +36,28 @@ export const Navigation = () => {
           </div>
           
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ${
-                    isActive(item.href)
-                      ? "text-primary bg-primary/10 neon-glow"
-                      : "text-foreground/80 hover:text-primary hover:bg-primary/5"
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              ))}
+            <div className="ml-10 flex items-center space-x-4">
+              <div className="flex items-baseline space-x-4">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ${
+                      isActive(item.href)
+                        ? "text-primary bg-primary/10 neon-glow"
+                        : "text-foreground/80 hover:text-primary hover:bg-primary/5"
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+              <CartDrawer />
             </div>
           </div>
           
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-2">
+            <CartDrawer />
             <Button
               variant="ghost"
               size="sm"

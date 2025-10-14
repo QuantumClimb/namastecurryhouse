@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MenuCategory, MenuItem } from "../types/menu";
 import { getMenuData } from "../services/menuService";
+import { AddToCartButton } from "../components/AddToCartButton";
 
 const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => (
   <div className="space-y-6">
@@ -12,17 +13,6 @@ const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {items.map((item, index) => (
         <Card key={item.id || index} className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow overflow-hidden group">
-          <div className="relative overflow-hidden">
-            {/* Optionally add image if available */}
-            {item.image && (
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-              />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </div>
           <CardContent className="p-6">
             <div className="flex justify-between items-start mb-3">
               <h4 className="text-xl font-bold text-foreground">{item.name}</h4>
@@ -30,7 +20,7 @@ const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => 
             </div>
             <p className="text-foreground/70 mb-4 leading-relaxed">{item.description}</p>
             {item.dietary && item.dietary.length > 0 && (
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mb-4">
                 {item.dietary.map((diet: string, idx: number) => (
                   <Badge key={idx} className="bg-primary/20 text-primary border-primary/30">
                     {diet}
@@ -38,6 +28,19 @@ const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => 
                 ))}
               </div>
             )}
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-2">
+                {item.spiceLevel && (
+                  <Badge variant="outline" className="text-xs">
+                    {'🌶️'.repeat(item.spiceLevel)}
+                  </Badge>
+                )}
+                {item.namePt && (
+                  <span className="text-sm text-muted-foreground italic">{item.namePt}</span>
+                )}
+              </div>
+              <AddToCartButton menuItem={item} size="sm" />
+            </div>
           </CardContent>
         </Card>
       ))}
