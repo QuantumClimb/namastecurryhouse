@@ -21,53 +21,53 @@ export default {
 		},
 		extend: {
 			colors: {
-				border: 'hsl(var(--border))',
-				input: 'hsl(var(--input))',
-				ring: 'hsl(var(--ring))',
-				background: 'hsl(var(--background))',
-				foreground: 'hsl(var(--foreground))',
+				border: 'oklch(var(--border-raw) / <alpha-value>)',
+				input: 'oklch(var(--input-raw) / <alpha-value>)',
+				ring: 'oklch(var(--ring-raw) / <alpha-value>)',
+				background: 'oklch(var(--background-raw) / <alpha-value>)',
+				foreground: 'oklch(var(--foreground-raw) / <alpha-value>)',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					DEFAULT: 'oklch(var(--primary-raw) / <alpha-value>)',
+					foreground: 'oklch(var(--primary-foreground-raw) / <alpha-value>)'
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
+					DEFAULT: 'oklch(var(--secondary-raw) / <alpha-value>)',
+					foreground: 'oklch(var(--secondary-foreground-raw) / <alpha-value>)'
 				},
 				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))'
+					DEFAULT: 'oklch(var(--destructive-raw) / <alpha-value>)',
+					foreground: 'oklch(var(--destructive-foreground-raw) / <alpha-value>)'
 				},
 				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))'
+					DEFAULT: 'oklch(var(--muted-raw) / <alpha-value>)',
+					foreground: 'oklch(var(--muted-foreground-raw) / <alpha-value>)'
 				},
 				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					DEFAULT: 'oklch(var(--accent-raw) / <alpha-value>)',
+					foreground: 'oklch(var(--accent-foreground-raw) / <alpha-value>)'
 				},
 				popover: {
-					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))'
+					DEFAULT: 'oklch(var(--popover-raw) / <alpha-value>)',
+					foreground: 'oklch(var(--popover-foreground-raw) / <alpha-value>)'
 				},
 				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))'
+					DEFAULT: 'oklch(var(--card-raw) / <alpha-value>)',
+					foreground: 'oklch(var(--card-foreground-raw) / <alpha-value>)'
 				},
 				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
+					DEFAULT: 'oklch(var(--sidebar-background-raw) / <alpha-value>)',
+					foreground: 'oklch(var(--sidebar-foreground-raw) / <alpha-value>)',
+					primary: 'oklch(var(--sidebar-primary-raw) / <alpha-value>)',
+					'primary-foreground': 'oklch(var(--sidebar-primary-foreground-raw) / <alpha-value>)',
+					accent: 'oklch(var(--sidebar-accent-raw) / <alpha-value>)',
+					'accent-foreground': 'oklch(var(--sidebar-accent-foreground-raw) / <alpha-value>)',
+					border: 'oklch(var(--sidebar-border-raw) / <alpha-value>)',
+					ring: 'oklch(var(--sidebar-ring-raw) / <alpha-value>)'
 				},
-				'neon-purple': 'hsl(var(--neon-purple))',
-				'neon-green': 'hsl(var(--neon-green))',
-				'gold-glow': 'hsl(var(--gold-glow))',
-				'midnight': 'hsl(var(--midnight))'
+				'neon-purple': 'hsl(var(--neon-purple) / <alpha-value>)',
+				'neon-green': 'hsl(var(--neon-green) / <alpha-value>)',
+				'gold-glow': 'hsl(var(--gold-glow) / <alpha-value>)',
+				'midnight': 'hsl(var(--midnight) / <alpha-value>)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -75,7 +75,9 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			fontFamily: {
-				'raleway': ['Raleway', 'sans-serif'],
+				'sans': ['Inter', 'system-ui', 'sans-serif'],
+				'serif': ['Source Serif 4', 'serif'],
+				'mono': ['JetBrains Mono', 'monospace']
 			},
 			keyframes: {
 				'accordion-down': {
@@ -109,8 +111,8 @@ export default {
 					'100%': { transform: 'translateX(0)' }
 				},
 				'glow': {
-					'0%, 100%': { boxShadow: '0 0 5px hsl(var(--primary))' },
-					'50%': { boxShadow: '0 0 20px hsl(var(--primary)), 0 0 30px hsl(var(--primary))' }
+					'0%, 100%': { boxShadow: '0 0 5px var(--primary)' },
+					'50%': { boxShadow: '0 0 20px var(--primary), 0 0 30px var(--primary)' }
 				}
 			},
 			animation: {

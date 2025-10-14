@@ -4,7 +4,7 @@ import { MapPin, Phone, Mail, Clock, Facebook, Instagram } from "lucide-react";
 
 export const Footer = () => {
   return (
-    <footer className="bg-midnight border-t border-primary/20">
+    <footer className="bg-card border-t border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Brand */}
@@ -73,8 +73,8 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-primary/20 mt-8 pt-8 text-center">
-          <p className="text-foreground/60">
+        <div className="border-t border-border mt-8 pt-8 text-center">
+          <p className="text-muted-foreground">
             © 2024 Namaste Curry House. All rights reserved.
           </p>
         </div>

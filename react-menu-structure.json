@@ -1,0 +1,432 @@
+{
+  "categories": [
+    {
+      "name": "Tikka Masala",
+      "items": [
+        {
+          "id": "tikka-masala---chicken",
+          "name": "Tikka Masala - Chicken",
+          "description": "Grilled meat with tikka sauce, yogurt, cream and spices",
+          "price": "€11.99",
+          "priceValue": 11.99,
+          "portugueseTranslation": "Frango Tikka Masala",
+          "category": "Tikka Masala",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "tikka-masala---lamb",
+          "name": "Tikka Masala - Lamb",
+          "description": "Grilled meat with tikka sauce, yogurt, cream and spices",
+          "price": "€12.99",
+          "priceValue": 12.99,
+          "portugueseTranslation": "Borrego Tikka Masala",
+          "category": "Tikka Masala",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "tikka-masala---prawn",
+          "name": "Tikka Masala - Prawn",
+          "description": "Grilled meat with tikka sauce, yogurt, cream and spices",
+          "price": "€12.99",
+          "priceValue": 12.99,
+          "portugueseTranslation": "Camarão Tikka Masala",
+          "category": "Tikka Masala",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        }
+      ]
+    },
+    {
+      "name": "Lababdar",
+      "items": [
+        {
+          "id": "lababdar---chicken",
+          "name": "Lababdar - Chicken",
+          "description": "Cooked with onion, tomato, garlic, ginger, coriander and cashew sauce",
+          "price": "€11.99",
+          "priceValue": 11.99,
+          "portugueseTranslation": "Frango Lababdar",
+          "category": "Lababdar",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "lababdar---lamb",
+          "name": "Lababdar - Lamb",
+          "description": "Cooked with onion, tomato, garlic, ginger, coriander and cashew sauce",
+          "price": "€12.99",
+          "priceValue": 12.99,
+          "portugueseTranslation": "Borrego Lababdar",
+          "category": "Lababdar",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "lababdar---prawn",
+          "name": "Lababdar - Prawn",
+          "description": "Cooked with onion, tomato, garlic, ginger, coriander and cashew sauce",
+          "price": "€12.99",
+          "priceValue": 12.99,
+          "portugueseTranslation": "Camarão Lababdar",
+          "category": "Lababdar",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        }
+      ]
+    },
+    {
+      "name": "Vegetarian",
+      "items": [
+        {
+          "id": "vegetable-curry",
+          "name": "Vegetable Curry",
+          "description": "Mixed vegetables cooked in special sauce with spices",
+          "price": "€9.99",
+          "priceValue": 9.99,
+          "portugueseTranslation": "Caril de Vegetais",
+          "category": "Vegetarian",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "daal-tarka",
+          "name": "Daal Tarka",
+          "description": "Three types of lentils cooked in special sauce and spices",
+          "price": "€10.99",
+          "priceValue": 10.99,
+          "portugueseTranslation": "Daal Tarka",
+          "category": "Vegetarian",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "karahi-vegetable",
+          "name": "Karahi Vegetable",
+          "description": "Mixed vegetables cooked in thick, flavorful sauce",
+          "price": "€10.99",
+          "priceValue": 10.99,
+          "portugueseTranslation": "Karahi de Vegetais",
+          "category": "Vegetarian",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        }
+      ]
+    },
+    {
+      "name": "Other",
+      "items": [
+        {
+          "id": "chana-masala",
+          "name": "Chana Masala",
+          "description": "Chickpeas cooked with mild spices, onions and tomatoes",
+          "price": "€10.99",
+          "priceValue": 10.99,
+          "portugueseTranslation": "Chana Masala",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "coca-cola",
+          "name": "Coca Cola",
+          "description": "Soft drink",
+          "price": "€2.50",
+          "priceValue": 2.5,
+          "portugueseTranslation": "Coca Cola",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "cola-zero",
+          "name": "Cola Zero",
+          "description": "Soft drink",
+          "price": "€2.50",
+          "priceValue": 2.5,
+          "portugueseTranslation": "Cola Zero",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "fanta",
+          "name": "Fanta",
+          "description": "Soft drink",
+          "price": "€2.50",
+          "priceValue": 2.5,
+          "portugueseTranslation": "Fanta",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "icetea--lemon--mango--peach-",
+          "name": "Icetea (Lemon, Mango, Peach)",
+          "description": "Flavored iced tea",
+          "price": "€2.50",
+          "priceValue": 2.5,
+          "portugueseTranslation": "Icetea (Limão, Manga, Pêssego)",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "sparkling-water",
+          "name": "Sparkling Water",
+          "description": "Mineral water with gas",
+          "price": "€2.50",
+          "priceValue": 2.5,
+          "portugueseTranslation": "Água Com Gás",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "water-50cl",
+          "name": "Water 50cl",
+          "description": "Still water",
+          "price": "€2.00",
+          "priceValue": 2,
+          "portugueseTranslation": "Água 50cl",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "water-1-5l",
+          "name": "Water 1.5L",
+          "description": "Still water",
+          "price": "€2.99",
+          "priceValue": 2.99,
+          "portugueseTranslation": "Água 1.5L",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "beer---imperial",
+          "name": "Beer - Imperial",
+          "description": "Draft beer",
+          "price": "€2.00",
+          "priceValue": 2,
+          "portugueseTranslation": "Cerveja Imperial",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "beer---mug",
+          "name": "Beer - Mug",
+          "description": "Beer served in a mug",
+          "price": "€3.50",
+          "priceValue": 3.5,
+          "portugueseTranslation": "Caneca de Cerveja",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "nepalese-beer",
+          "name": "Nepalese Beer",
+          "description": "Imported beer from Nepal",
+          "price": "€2.99",
+          "priceValue": 2.99,
+          "portugueseTranslation": "Cerveja Nepalesa",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "indian-beer",
+          "name": "Indian Beer",
+          "description": "Imported beer from India",
+          "price": "€3.50",
+          "priceValue": 3.5,
+          "portugueseTranslation": "Cerveja Indiana",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "somersby",
+          "name": "Somersby",
+          "description": "Cider",
+          "price": "€2.99",
+          "priceValue": 2.99,
+          "portugueseTranslation": "Somersby",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "glass-of-wine--white-red-",
+          "name": "Glass of Wine (White/Red)",
+          "description": "House wine",
+          "price": "€3.50",
+          "priceValue": 3.5,
+          "portugueseTranslation": "Copo de Vinho (Branco/Tinto)",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "butter-naan",
+          "name": "Butter Naan",
+          "description": "Leavened bread baked in the tandoor and brushed with butter",
+          "price": "€2.99",
+          "priceValue": 2.99,
+          "portugueseTranslation": "Pão Indiano com Manteiga",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "garlic-naan",
+          "name": "Garlic Naan",
+          "description": "Leavened tandoori bread with fire-roasted garlic and coriander",
+          "price": "€3.99",
+          "priceValue": 3.99,
+          "portugueseTranslation": "Pão Indiano com Alho",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "cheese-naan",
+          "name": "Cheese Naan",
+          "description": "Leavened bread baked in the tandoor with cheese and coriander leaves",
+          "price": "€4.50",
+          "priceValue": 4.5,
+          "portugueseTranslation": "Pão Indiano com Queijo",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "cheese---garlic-naan",
+          "name": "Cheese & Garlic Naan",
+          "description": "Leavened bread baked in the tandoor with cheese, garlic and coriander",
+          "price": "€5.50",
+          "priceValue": 5.5,
+          "portugueseTranslation": "Pão Indiano com Queijo e Alho",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "mixed-salad",
+          "name": "Mixed Salad",
+          "description": "Cucumber, lettuce, tomato, onion, carrots & olives",
+          "price": "€5.99",
+          "priceValue": 5.99,
+          "portugueseTranslation": "Salada Mista",
+          "category": "Other",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        }
+      ]
+    },
+    {
+      "name": "Beverages",
+      "items": [
+        {
+          "id": "plain-lassi",
+          "name": "Plain Lassi",
+          "description": "Traditional yogurt drink",
+          "price": "€2.50",
+          "priceValue": 2.5,
+          "portugueseTranslation": "Lassi Natural",
+          "category": "Beverages",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "mango-lassi",
+          "name": "Mango Lassi",
+          "description": "Special yogurt drink with mango",
+          "price": "€3.50",
+          "priceValue": 3.5,
+          "portugueseTranslation": "Mango Lassi",
+          "category": "Beverages",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        },
+        {
+          "id": "coffee",
+          "name": "Coffee",
+          "description": "Hot beverage",
+          "price": "€0.99",
+          "priceValue": 0.99,
+          "portugueseTranslation": "Café",
+          "category": "Beverages",
+          "available": true,
+          "spiceLevel": "Medium",
+          "dietary": [],
+          "image": null
+        }
+      ]
+    }
+  ]
+}

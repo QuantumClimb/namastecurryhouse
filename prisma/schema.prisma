@@ -1,0 +1,28 @@
+// This is the Prisma schema file for Namaste Curry House menu
+// Using PostgreSQL for production with Neon
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model MenuCategory {
+  id        Int        @id @default(autoincrement())
+  name      String
+  items     MenuItem[]
+}
+
+model MenuItem {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  price       Float
+  dietary     String   // comma-separated dietary tags
+  spiceLevel  Int?
+  categoryId  Int
+  category    MenuCategory @relation(fields: [categoryId], references: [id])
+}

@@ -20,7 +20,7 @@ const Reservation = () => {
     "10:30 PM", "11:00 PM", "11:30 PM"
   ];
 
-  const unavailableSlots = ["7:00 PM", "8:00 PM", "8:30 PM"]; // Mock unavailable times
+  const unavailableSlots: string[] = []; // All time slots available
 
   const handleTimeSelect = (time: string) => {
     if (!unavailableSlots.includes(time)) {
