@@ -174,7 +174,6 @@ app.get('/api/menu/search', async (req, res) => {
       dietary: item.dietary ? item.dietary.split(',').filter(d => d.trim()) : [],
       spiceLevel: item.spiceLevel,
       category: item.category.name,
-      imageUrl: item.imageUrl,
       imageUrl: item.imageUrl
     }));
 
