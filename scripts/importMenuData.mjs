@@ -54,7 +54,9 @@ async function main() {
           price: parseFloat(item["Price (EUR)"].replace('€','')), // Remove euro sign
           dietary: '', // Not present in this dataset
           spiceLevel: undefined, // Not present in this dataset
-          categoryId: category.id
+          categoryId: category.id,
+          // Assign a placeholder image; future enhancement: map based on item name
+          imageUrl: '/images/placeholder-food.svg'
         }
       });
     }
