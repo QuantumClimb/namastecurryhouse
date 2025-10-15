@@ -16,6 +16,7 @@ export const Navigation = () => {
     { name: "Gallery", href: "/gallery" },
     { name: "Reservation", href: "/reservation" },
     { name: "Contact", href: "/contact" },
+    { name: "Admin", href: "/admin" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -31,7 +32,7 @@ export const Navigation = () => {
                 alt="Namaste Curry House Logo"
                 className="h-12 w-12 object-contain drop-shadow-md"
                 loading="eager"
-                fetchpriority="high"
+                fetchPriority="high"
               />
               <span className="text-2xl font-bold gradient-text">Namaste Curry House</span>
             </Link>

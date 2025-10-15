@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trash2, Plus, Minus, ShoppingBag, X } from 'lucide-react';
 import { Button } from './ui/button';
@@ -113,11 +113,22 @@ const CartItemComponent: React.FC<{ item: CartItem }> = ({ item }) => {
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({
   trigger,
-  open,
-  onOpenChange
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange
 }) => {
+  const [open, setOpen] = useState(controlledOpen ?? false);
   const { items, total, itemCount, clearCart } = useCartStore();
   const navigate = useNavigate();
+
+  // Sync controlled open state
+  useEffect(() => {
+    if (typeof controlledOpen === 'boolean') setOpen(controlledOpen);
+  }, [controlledOpen]);
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
+    controlledOnOpenChange?.(nextOpen);
+  };
 
   const defaultTrigger = (
     <Button variant="outline" size="icon" className="relative">
@@ -134,7 +145,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   );
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+  <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>
         {trigger || defaultTrigger}
       </SheetTrigger>
@@ -198,7 +209,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                 {/* Checkout Buttons */}
                 <div className="space-y-2">
-                    <Button className="w-full" size="lg" onClick={() => navigate('/checkout')}>
+                    <Button className="w-full" size="lg" onClick={() => {
+                      setOpen(false);
+                      navigate('/checkout');
+                    }}>
                       Proceed to Checkout
                     </Button>
                   <Button variant="outline" className="w-full">
