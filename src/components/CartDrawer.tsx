@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Trash2, Plus, Minus, ShoppingBag, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -196,9 +197,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                 {/* Checkout Buttons */}
                 <div className="space-y-2">
-                  <Button className="w-full" size="lg">
-                    Proceed to Checkout
-                  </Button>
+                    <Button className="w-full" size="lg" onClick={() => {
+                      const navigate = useNavigate();
+                      navigate('/checkout');
+                    }}>
+                      Proceed to Checkout
+                    </Button>
                   <Button variant="outline" className="w-full">
                     Continue Shopping
                   </Button>
