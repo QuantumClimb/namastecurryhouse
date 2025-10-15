@@ -117,6 +117,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   onOpenChange
 }) => {
   const { items, total, itemCount, clearCart } = useCartStore();
+  const navigate = useNavigate();
 
   const defaultTrigger = (
     <Button variant="outline" size="icon" className="relative">
@@ -197,10 +198,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                 {/* Checkout Buttons */}
                 <div className="space-y-2">
-                    <Button className="w-full" size="lg" onClick={() => {
-                      const navigate = useNavigate();
-                      navigate('/checkout');
-                    }}>
+                    <Button className="w-full" size="lg" onClick={() => navigate('/checkout')}>
                       Proceed to Checkout
                     </Button>
                   <Button variant="outline" className="w-full">
