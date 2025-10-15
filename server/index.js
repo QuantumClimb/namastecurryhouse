@@ -14,7 +14,9 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 
 const app = express();
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  log: ['warn', 'error']
+});
 const PORT = process.env.PORT || 3001;
 
 // Database connection status with lightweight retry capability
@@ -112,6 +114,35 @@ app.get('/api/health', (req, res) => {
     message: 'Server is running',
     database: dbConnected ? 'connected' : 'disconnected'
   });
+});
+
+// Database diagnostics endpoint for quick monitoring
+app.get('/api/db/diagnostics', async (req, res) => {
+  try {
+    const connected = await ensureDbConnection(true);
+    if (!connected) {
+      return res.status(503).json({ ok: false, reason: 'database-unavailable' });
+    }
+
+    const [versionRow] = await prisma.$queryRaw`SELECT version()`;
+    const [nowRow] = await prisma.$queryRaw`SELECT NOW()`;
+    const [counts] = await prisma.$queryRaw`SELECT 
+      (SELECT COUNT(*) FROM "public"."MenuCategory")::int AS categories,
+      (SELECT COUNT(*) FROM "public"."MenuItem")::int AS items`;
+
+    res.json({
+      ok: true,
+      db: {
+        connected: true,
+        version: versionRow?.version || 'unknown',
+        now: nowRow?.now || null,
+        counts
+      }
+    });
+  } catch (err) {
+    console.error('Diagnostics error:', err);
+    res.status(500).json({ ok: false, error: 'diagnostics-failed' });
+  }
 });
 
 // Get all menu categories with items

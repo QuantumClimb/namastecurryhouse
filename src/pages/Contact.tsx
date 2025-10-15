@@ -130,9 +130,9 @@ const Contact = () => {
                     <div>
                       <h4 className="font-semibold text-foreground">Address</h4>
                       <p className="text-foreground/70">
-                        123 Jalan Bangsar,<br />
-                        Bangsar, 59200<br />
-                        Kuala Lumpur, Malaysia
+                        R. Agostinho Lourenço 339,<br />
+                        1000-011 Lisboa<br />
+                        Portugal
                       </p>
                     </div>
                   </div>
@@ -141,7 +141,7 @@ const Contact = () => {
                     <Phone className="w-6 h-6 text-primary mt-1" />
                     <div>
                       <h4 className="font-semibold text-foreground">Phone</h4>
-                      <p className="text-foreground/70">+60 12-345 6789</p>
+                      <p className="text-foreground/70">+351 920 617 185</p>
                     </div>
                   </div>
                   
@@ -181,7 +181,7 @@ const Contact = () => {
                     const message = encodeURIComponent(
                       "Hi Namaste Curry House! I have a question about your Indian restaurant. Could you please assist me?"
                     );
-                    window.open(`https://wa.me/60123456789?text=${message}`, "_blank");
+                    window.open(`https://wa.me/351920617185?text=${message}`, "_blank");
                   }}
                   className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-8 py-3 text-lg neon-glow"
                 >
