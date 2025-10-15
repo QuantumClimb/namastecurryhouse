@@ -42,10 +42,24 @@ async function ensureDbConnection(force = false) {
   }
 }
 
-// Ensure uploads directory exists
-const uploadsDir = path.join(__dirname, '..', 'public', 'images', 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+// Ensure uploads directory exists (serverless-safe)
+let uploadsDir = path.join(__dirname, '..', 'public', 'images', 'uploads');
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+} catch (err) {
+  // In Vercel serverless, filesystem is read-only except /tmp
+  const tmpUploads = path.join('/tmp', 'uploads');
+  try {
+    if (!fs.existsSync(tmpUploads)) {
+      fs.mkdirSync(tmpUploads, { recursive: true });
+    }
+    uploadsDir = tmpUploads;
+    console.warn('Using /tmp for uploads in serverless environment:', uploadsDir);
+  } catch (e) {
+    console.error('Failed to initialize uploads directory:', e.message);
+  }
 }
 
 // Configure multer for file uploads
@@ -82,6 +96,12 @@ app.use(cors());
 app.use(express.json());
 // Serve uploaded images
 app.use('/images/uploads', express.static(uploadsDir));
+
+// Global error handler to prevent serverless hard crashes
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({ error: 'Internal Server Error' });
+});
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -369,8 +389,12 @@ app.delete('/api/admin/menu-items/:id', async (req, res) => {
     if (item.imageUrl && item.imageUrl.includes('/images/uploads/')) {
       const filename = path.basename(item.imageUrl);
       const filepath = path.join(uploadsDir, filename);
-      if (fs.existsSync(filepath)) {
-        fs.unlinkSync(filepath);
+      try {
+        if (fs.existsSync(filepath)) {
+          fs.unlinkSync(filepath);
+        }
+      } catch (e) {
+        console.warn('Skipping image delete (serverless or permission issue):', e.message);
       }
     }
     
