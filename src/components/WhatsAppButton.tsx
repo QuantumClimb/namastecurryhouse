@@ -7,7 +7,7 @@ export const WhatsAppButton = () => {
     const message = encodeURIComponent(
       "Hi Namaste Curry House! I'd like to make a reservation at your Indian restaurant. Could you please help me with the booking?"
     );
-    window.open(`https://wa.me/60123456789?text=${message}`, "_blank");
+    window.open(`https://wa.me/351920617185?text=${message}`, "_blank");
   };
 
   return (

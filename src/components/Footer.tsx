@@ -52,11 +52,11 @@ export const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-primary mt-0.5" />
-                <p className="text-foreground/70">Your Location, City, Country</p>
+                <p className="text-foreground/70">R. Agostinho Lourenço 339, 1000-011 Lisboa, Portugal</p>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-primary" />
-                <p className="text-foreground/70">+60 12-345-6789</p>
+                <p className="text-foreground/70">+351 920 617 185</p>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-primary" />

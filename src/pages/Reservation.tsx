@@ -32,14 +32,14 @@ const Reservation = () => {
     const message = encodeURIComponent(
       `Hi Namaste Curry House! I'd like to make a reservation for ${guests} ${guests === "1" ? "person" : "people"} on ${format(date, "MMMM d, yyyy")} at ${selectedTime}. Please confirm availability.`
     );
-    window.open(`https://wa.me/60123456789?text=${message}`, "_blank");
+    window.open(`https://wa.me/351920617185?text=${message}`, "_blank");
   };
 
   const handleWaitlist = () => {
     const message = encodeURIComponent(
       `Hi Namaste Curry House! I'd like to join the waitlist for ${guests} ${guests === "1" ? "person" : "people"} on ${format(date, "MMMM d, yyyy")} at ${selectedTime}. Please notify me if a table becomes available.`
     );
-    window.open(`https://wa.me/60123456789?text=${message}`, "_blank");
+    window.open(`https://wa.me/351920617185?text=${message}`, "_blank");
   };
 
   return (
@@ -229,7 +229,7 @@ const Reservation = () => {
                 const message = encodeURIComponent(
                   "Hi Namaste Curry House! I'm interested in booking for a large group or special event. Could you please provide more information about your event packages and availability?"
                 );
-                window.open(`https://wa.me/60123456789?text=${message}`, "_blank");
+                window.open(`https://wa.me/351920617185?text=${message}`, "_blank");
               }}
               className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-8 py-3 text-lg neon-glow"
             >

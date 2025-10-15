@@ -200,7 +200,7 @@ const Contact = () => {
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4 gradient-text">Find Us</h2>
             <p className="text-xl text-foreground/80">
-              Located in the heart of Bangsar's vibrant dining and nightlife district
+              Located in the heart of Lisboa's vibrant dining district
             </p>
           </div>
           
