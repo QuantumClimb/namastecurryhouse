@@ -7,8 +7,8 @@ const API_BASE_URL = (() => {
   if (import.meta.env.DEV && typeof window !== 'undefined') {
     return `${window.location.origin}/api`;
   }
-  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL as string;
-  return typeof window !== 'undefined' ? `${window.location.origin}/api` : 'http://localhost:3001/api';
+  // In production, always use relative path to API
+  return '/api';
 })();
 
 // Fetch all menu categories and items from the API
