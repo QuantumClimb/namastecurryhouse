@@ -24,3 +24,10 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Local databases
+dev.db
+*.db
+
+# Prisma generated engines/cache
+node_modules/.prisma/

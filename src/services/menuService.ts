@@ -1,10 +1,15 @@
 import { MenuItem, MenuCategory, MenuData } from '../types/menu';
 
-// Determine API base URL: prefer explicit env, otherwise if running in browser and same-origin has /api, use relative, else fallback to localhost
-const API_BASE_URL = (
-  import.meta.env.VITE_API_URL ||
-  (typeof window !== 'undefined' ? `${window.location.origin}/api` : 'http://localhost:3001/api')
-);
+// Determine API base URL
+// In development, always use the same-origin /api to leverage Vite's proxy
+// In production, prefer VITE_API_URL if provided, else same-origin /api
+const API_BASE_URL = (() => {
+  if (import.meta.env.DEV && typeof window !== 'undefined') {
+    return `${window.location.origin}/api`;
+  }
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL as string;
+  return typeof window !== 'undefined' ? `${window.location.origin}/api` : 'http://localhost:3001/api';
+})();
 
 // Fetch all menu categories and items from the API
 export async function getMenuData(): Promise<MenuData> {
@@ -16,9 +21,9 @@ export async function getMenuData(): Promise<MenuData> {
     return await response.json();
   } catch (error) {
     console.error('Error fetching menu data:', error);
-    // Fallback to bundled static JSON (ensure it exists)
+    // Fallback to static JSON in public folder
     try {
-      const fallback = await fetch('/src/data/menuData.json');
+      const fallback = await fetch('/menuData.json');
       if (fallback.ok) {
         const data = await fallback.json();
         return data as MenuData;

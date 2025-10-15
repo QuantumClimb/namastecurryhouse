@@ -17,6 +17,31 @@ const app = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3001;
 
+// Database connection status with lightweight retry capability
+let dbConnected = false;
+let lastDbCheck = 0;
+
+// Ensure database connection (used on startup and per-request when needed)
+async function ensureDbConnection(force = false) {
+  const now = Date.now();
+  // Avoid hammering DB: only recheck if forced or 10s have passed
+  if (!force && dbConnected && now - lastDbCheck < 10_000) {
+    return true;
+  }
+  try {
+    await prisma.$connect();
+    await prisma.$queryRaw`SELECT 1`;
+    dbConnected = true;
+    return true;
+  } catch (error) {
+    dbConnected = false;
+    console.warn('⚠️  Database check failed:', error.message);
+    return false;
+  } finally {
+    lastDbCheck = now;
+  }
+}
+
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, '..', 'public', 'images', 'uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -60,12 +85,32 @@ app.use('/images/uploads', express.static(uploadsDir));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Server is running' });
+  // Trigger a background check but don't block health response
+  ensureDbConnection().finally(() => {});
+  res.json({
+    status: 'OK',
+    message: 'Server is running',
+    database: dbConnected ? 'connected' : 'disconnected'
+  });
 });
 
 // Get all menu categories with items
 app.get('/api/menu', async (req, res) => {
   try {
+    if (!(await ensureDbConnection())) {
+      // Fallback: serve static menu data bundled with the app
+      try {
+        const fallbackPath = path.join(__dirname, '..', 'public', 'menuData.json');
+        if (fs.existsSync(fallbackPath)) {
+          const json = fs.readFileSync(fallbackPath, 'utf-8');
+          return res.json(JSON.parse(json));
+        }
+      } catch (e) {
+        console.warn('Fallback menu load failed:', e.message);
+      }
+      return res.json([]);
+    }
+
     const categories = await prisma.menuCategory.findMany({
       include: {
         items: true
@@ -99,6 +144,12 @@ app.get('/api/menu', async (req, res) => {
 // Get items by category
 app.get('/api/menu/category/:categoryName', async (req, res) => {
   try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ 
+        error: 'Database unavailable',
+        message: 'Please try again later or use fallback data'
+      });
+    }
     const { categoryName } = req.params;
     const category = await prisma.menuCategory.findFirst({
       where: {
@@ -139,6 +190,12 @@ app.get('/api/menu/category/:categoryName', async (req, res) => {
 // Search menu items
 app.get('/api/menu/search', async (req, res) => {
   try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ 
+        error: 'Database unavailable',
+        message: 'Please try again later'
+      });
+    }
     const { q } = req.query;
     if (!q) {
       return res.status(400).json({ error: 'Search query required' });
@@ -189,6 +246,9 @@ app.get('/api/menu/search', async (req, res) => {
 // Get all categories (for admin dropdown)
 app.get('/api/admin/categories', async (req, res) => {
   try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
     const categories = await prisma.menuCategory.findMany({
       orderBy: {
         name: 'asc'
@@ -204,6 +264,9 @@ app.get('/api/admin/categories', async (req, res) => {
 // Create new menu item
 app.post('/api/admin/menu-items', async (req, res) => {
   try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
     const { name, description, price, dietary, spiceLevel, categoryId, imageUrl } = req.body;
     
     const newItem = await prisma.menuItem.create({
@@ -241,6 +304,9 @@ app.post('/api/admin/menu-items', async (req, res) => {
 // Update menu item
 app.put('/api/admin/menu-items/:id', async (req, res) => {
   try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
     const { id } = req.params;
     const { name, description, price, dietary, spiceLevel, categoryId, imageUrl } = req.body;
     
@@ -280,6 +346,9 @@ app.put('/api/admin/menu-items/:id', async (req, res) => {
 // Delete menu item
 app.delete('/api/admin/menu-items/:id', async (req, res) => {
   try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
     const { id } = req.params;
     
     // Get the item to check for image
@@ -382,8 +451,25 @@ app.get('/api/admin/menu-items', async (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+async function startServer() {
+  try {
+    await ensureDbConnection(true);
+  } catch (error) {
+    console.error('Database connection warning:', error.message);
+  }
+  
+  const server = app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Database status: ${dbConnected ? 'connected' : 'disconnected'}`);
+  });
+  
+  // Keep reference to server to prevent process from exiting
+  return server;
+}
+
+startServer().catch(err => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
 });
 
 // Graceful shutdown

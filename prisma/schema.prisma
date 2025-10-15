@@ -1,5 +1,4 @@
-// This is the Prisma schema file for Namaste Curry House menu
-// Using PostgreSQL for production with Neon
+// Prisma schema for Namaste Curry House (Production - PostgreSQL/Neon)
 
 datasource db {
   provider = "postgresql"
