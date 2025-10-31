@@ -70,7 +70,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ 
   storage: storage,
   limits: {
-    fileSize: 500 * 1024 // 500KB limit for database storage (within 0.5GB Neon limit)
+    fileSize: 350 * 1024 // 350KB limit (allows 250KB + base64 expansion buffer)
   },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|webp/;
@@ -80,7 +80,7 @@ const upload = multer({
     if (mimetype && extname) {
       return cb(null, true);
     } else {
-      cb(new Error('Only image files are allowed!'));
+      cb(new Error('Only JPEG, PNG, WebP image files are allowed!'));
     }
   }
 });
@@ -466,33 +466,60 @@ app.delete('/api/admin/menu-items/:id', async (req, res) => {
 });
 
 // Image upload endpoint - stores directly in database
-app.post('/api/admin/upload-image', upload.single('image'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No image file provided' });
+app.post('/api/admin/upload-image', (req, res) => {
+  upload.single('image')(req, res, async (err) => {
+    // Handle multer errors specifically
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ 
+          error: 'Image too large. Maximum file size is 250KB.' 
+        });
+      }
+      if (err.message.includes('Only JPEG, PNG, WebP')) {
+        return res.status(400).json({ 
+          error: 'Invalid file type. Please use JPEG, PNG, or WebP format.' 
+        });
+      }
+      return res.status(400).json({ 
+        error: err.message || 'Invalid file upload.' 
+      });
     }
 
-    if (!(await ensureDbConnection())) {
-      return res.status(503).json({ error: 'Database unavailable' });
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No image file provided' });
+      }
+
+      if (!(await ensureDbConnection())) {
+        return res.status(503).json({ error: 'Database unavailable' });
+      }
+
+      // Additional server-side validation
+      const maxSize = 250 * 1024; // 250KB
+      if (req.file.size > maxSize) {
+        return res.status(400).json({ 
+          error: `Image too large. Maximum size is 250KB. Your image is ${Math.round(req.file.size / 1024)}KB.` 
+        });
+      }
+
+      // Convert buffer to base64 for database storage
+      const imageData = req.file.buffer.toString('base64');
+      const imageMimeType = req.file.mimetype;
+      const imageSize = req.file.size;
+
+      // For now, just return the image data info
+      // The actual saving will happen when creating/updating menu items
+      res.json({ 
+        imageData,
+        imageMimeType,
+        imageSize,
+        message: 'Image processed successfully - ready for menu item association'
+      });
+    } catch (error) {
+      console.error('Error processing image:', error);
+      res.status(500).json({ error: 'Failed to process image' });
     }
-
-    // Convert buffer to base64 for database storage
-    const imageData = req.file.buffer.toString('base64');
-    const imageMimeType = req.file.mimetype;
-    const imageSize = req.file.size;
-
-    // For now, just return the image data info
-    // The actual saving will happen when creating/updating menu items
-    res.json({ 
-      imageData,
-      imageMimeType,
-      imageSize,
-      message: 'Image processed successfully - ready for menu item association'
-    });
-  } catch (error) {
-    console.error('Error processing image:', error);
-    res.status(500).json({ error: 'Failed to process image' });
-  }
+  });
 });
 
 // Get all menu items for admin (with pagination)

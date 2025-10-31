@@ -106,16 +106,70 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
     }
   };
 
-  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+  const validateImageFile = (file: File): string | null => {
+    // Check file size (250KB limit)
+    const maxSize = 250 * 1024; // 250KB
+    if (file.size > maxSize) {
+      return `Image too large. Maximum size is 250KB. Your image is ${Math.round(file.size / 1024)}KB.`;
     }
+
+    // Check file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      return 'Invalid file type. Please use JPEG, PNG, or WebP format.';
+    }
+
+    return null; // Valid file
+  };
+
+  const validateImageDimensions = (file: File): Promise<string | null> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const maxWidth = 400;
+        const maxHeight = 300;
+        
+        if (img.width > maxWidth || img.height > maxHeight) {
+          resolve(`Image dimensions too large. Maximum size is ${maxWidth}×${maxHeight}px. Your image is ${img.width}×${img.height}px.`);
+        } else {
+          resolve(null); // Valid dimensions
+        }
+      };
+      img.onerror = () => resolve('Could not read image dimensions.');
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
+  const handleImageSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Clear previous errors
+    setError(null);
+
+    // Validate file size and type first
+    const fileError = validateImageFile(file);
+    if (fileError) {
+      setError(fileError);
+      event.target.value = ''; // Clear the input
+      return;
+    }
+
+    // Validate dimensions
+    const dimensionError = await validateImageDimensions(file);
+    if (dimensionError) {
+      setError(dimensionError);
+      event.target.value = ''; // Clear the input
+      return;
+    }
+
+    // File is valid, proceed with setting it
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
 
   const uploadImage = async (): Promise<{imageData: string, imageMimeType: string, imageSize: number} | null> => {
@@ -293,6 +347,18 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
                 {/* Image Upload Section */}
                 <div className="space-y-2">
                   <Label>Item Image</Label>
+                  
+                  {/* Image Requirements */}
+                  <div className="text-sm text-foreground/60 bg-muted/50 p-3 rounded-lg">
+                    <p className="font-medium text-foreground/80 mb-1">Image Requirements:</p>
+                    <ul className="space-y-1">
+                      <li>• Maximum size: 250KB</li>
+                      <li>• Maximum dimensions: 400×300 pixels</li>
+                      <li>• Formats: JPEG, PNG, WebP</li>
+                      <li>• Recommended ratio: 4:3 (landscape)</li>
+                    </ul>
+                  </div>
+
                   <div className="flex flex-col space-y-4">
                     {imagePreview && (
                       <div className="relative w-full h-48 border rounded-lg overflow-hidden">
@@ -322,10 +388,20 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
                         </Button>
                       </div>
                     )}
+                    
+                    {/* Current File Info */}
+                    {imageFile && (
+                      <div className="text-sm text-foreground/70 bg-primary/5 p-2 rounded border">
+                        <p><strong>Selected file:</strong> {imageFile.name}</p>
+                        <p><strong>Size:</strong> {Math.round(imageFile.size / 1024)}KB</p>
+                        <p><strong>Type:</strong> {imageFile.type}</p>
+                      </div>
+                    )}
+                    
                     <div className="flex items-center space-x-2">
                       <Input
                         type="file"
-                        accept="image/*"
+                        accept="image/jpeg,image/jpg,image/png,image/webp"
                         onChange={handleImageSelect}
                         className="flex-1"
                       />
