@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Trash2, Edit, Plus, Upload, X } from "lucide-react";
 import { API_BASE_URL, SERVER_BASE_URL } from "@/lib/apiConfig";
@@ -166,9 +166,18 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
             imageData: imageData.imageData,
             imageMimeType: imageData.imageMimeType,
             imageSize: imageData.imageSize,
-            imageUrl: "" // Clear external URL when using database storage
+            imageUrl: null // Clear external URL when using database storage
           };
         }
+      } else {
+        // If no new image, only send imageUrl if it exists and is not empty
+        if (formData.imageUrl && formData.imageUrl.trim() !== '') {
+          submitData.imageUrl = formData.imageUrl;
+        }
+        // Don't send empty imageData fields
+        delete submitData.imageData;
+        delete submitData.imageMimeType;
+        delete submitData.imageSize;
       }
 
       const url = editingItem 
@@ -275,6 +284,9 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
                 <DialogTitle>
                   {editingItem ? 'Edit Menu Item' : 'Add New Menu Item'}
                 </DialogTitle>
+                <DialogDescription>
+                  {editingItem ? 'Update the details of this menu item.' : 'Create a new menu item for your restaurant.'}
+                </DialogDescription>
               </DialogHeader>
               
               <form onSubmit={handleSubmit} className="space-y-4">
