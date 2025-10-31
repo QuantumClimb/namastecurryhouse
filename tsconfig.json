@@ -15,7 +15,8 @@
     "noUnusedParameters": false,
     "allowJs": true,
     "noUnusedLocals": false,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src", "scripts"],
   "files": [],
