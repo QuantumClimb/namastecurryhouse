@@ -20,6 +20,14 @@ dist-ssr
 env_Variables
 adminerrors.txt
 
+# Local development files
+*.bat
+test-*.mjs
+public/images/uploads/
+
+# Documentation and local notes
+docs/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
