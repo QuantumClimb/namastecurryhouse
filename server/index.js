@@ -64,21 +64,13 @@ try {
   }
 }
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadsDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
+// Configure multer for in-memory image storage (will save to database)
+const storage = multer.memoryStorage();
 
 const upload = multer({ 
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
+    fileSize: 500 * 1024 // 500KB limit for database storage (within 0.5GB Neon limit)
   },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|webp/;
@@ -96,8 +88,37 @@ const upload = multer({
 // Middleware
 app.use(cors());
 app.use(express.json());
-// Serve uploaded images
-app.use('/images/uploads', express.static(uploadsDir));
+
+// Serve database-stored images via base64 data URIs
+app.get('/api/images/:id', async (req, res) => {
+  try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
+
+    const { id } = req.params;
+    const item = await prisma.menuItem.findUnique({
+      where: { id: parseInt(id) },
+      select: { imageData: true, imageMimeType: true }
+    });
+
+    if (!item || !item.imageData) {
+      return res.status(404).json({ error: 'Image not found' });
+    }
+
+    // Convert base64 back to buffer and send as image
+    const imageBuffer = Buffer.from(item.imageData, 'base64');
+    res.set({
+      'Content-Type': item.imageMimeType || 'image/jpeg',
+      'Content-Length': imageBuffer.length,
+      'Cache-Control': 'public, max-age=31536000' // Cache for 1 year
+    });
+    res.send(imageBuffer);
+  } catch (error) {
+    console.error('Error serving image:', error);
+    res.status(500).json({ error: 'Failed to serve image' });
+  }
+});
 
 // Global error handler to prevent serverless hard crashes
 app.use((err, req, res, next) => {
@@ -171,7 +192,7 @@ app.get('/api/menu', async (req, res) => {
       }
     });
 
-    // Transform to match frontend expectations
+    // Transform to match frontend expectations with database-served images
     const menuData = categories.map(category => ({
       name: category.name,
       items: category.items.map(item => ({
@@ -181,7 +202,8 @@ app.get('/api/menu', async (req, res) => {
         price: item.price,
         dietary: item.dietary ? item.dietary.split(',').filter(d => d.trim()) : [],
         spiceLevel: item.spiceLevel,
-        imageUrl: item.imageUrl
+        // Use database-served image endpoint or external URL fallback
+        imageUrl: item.imageData ? `/api/images/${item.id}` : item.imageUrl
       }))
     }));
 
@@ -225,7 +247,8 @@ app.get('/api/menu/category/:categoryName', async (req, res) => {
       price: item.price,
       dietary: item.dietary ? item.dietary.split(',').filter(d => d.trim()) : [],
       spiceLevel: item.spiceLevel,
-      imageUrl: item.imageUrl
+      // Use database-served image endpoint or external URL fallback
+      imageUrl: item.imageData ? `/api/images/${item.id}` : item.imageUrl
     }));
 
     res.json({
@@ -318,7 +341,7 @@ app.post('/api/admin/menu-items', async (req, res) => {
     if (!(await ensureDbConnection())) {
       return res.status(503).json({ error: 'Database unavailable' });
     }
-    const { name, description, price, dietary, spiceLevel, categoryId, imageUrl } = req.body;
+    const { name, description, price, dietary, spiceLevel, categoryId, imageUrl, imageData, imageMimeType, imageSize } = req.body;
     
     const newItem = await prisma.menuItem.create({
       data: {
@@ -328,7 +351,10 @@ app.post('/api/admin/menu-items', async (req, res) => {
         dietary: Array.isArray(dietary) ? dietary.join(',') : dietary || '',
         spiceLevel: spiceLevel ? parseInt(spiceLevel) : null,
         categoryId: parseInt(categoryId),
-        imageUrl: imageUrl || null
+        imageUrl: imageUrl || null,
+        imageData: imageData || null,
+        imageMimeType: imageMimeType || null,
+        imageSize: imageSize ? parseInt(imageSize) : null
       },
       include: {
         category: true
@@ -344,7 +370,7 @@ app.post('/api/admin/menu-items', async (req, res) => {
       spiceLevel: newItem.spiceLevel,
       categoryId: newItem.categoryId,
       category: newItem.category.name,
-      imageUrl: newItem.imageUrl
+      imageUrl: newItem.imageData ? `/api/images/${newItem.id}` : newItem.imageUrl
     });
   } catch (error) {
     console.error('Error creating menu item:', error);
@@ -359,7 +385,7 @@ app.put('/api/admin/menu-items/:id', async (req, res) => {
       return res.status(503).json({ error: 'Database unavailable' });
     }
     const { id } = req.params;
-    const { name, description, price, dietary, spiceLevel, categoryId, imageUrl } = req.body;
+    const { name, description, price, dietary, spiceLevel, categoryId, imageUrl, imageData, imageMimeType, imageSize } = req.body;
     
     const updatedItem = await prisma.menuItem.update({
       where: { id: parseInt(id) },
@@ -370,7 +396,10 @@ app.put('/api/admin/menu-items/:id', async (req, res) => {
         dietary: Array.isArray(dietary) ? dietary.join(',') : dietary || '',
         spiceLevel: spiceLevel ? parseInt(spiceLevel) : null,
         categoryId: parseInt(categoryId),
-        imageUrl: imageUrl || null
+        imageUrl: imageUrl || null,
+        imageData: imageData || null,
+        imageMimeType: imageMimeType || null,
+        imageSize: imageSize ? parseInt(imageSize) : null
       },
       include: {
         category: true
@@ -386,7 +415,7 @@ app.put('/api/admin/menu-items/:id', async (req, res) => {
       spiceLevel: updatedItem.spiceLevel,
       categoryId: updatedItem.categoryId,
       category: updatedItem.category.name,
-      imageUrl: updatedItem.imageUrl
+      imageUrl: updatedItem.imageData ? `/api/images/${updatedItem.id}` : updatedItem.imageUrl
     });
   } catch (error) {
     console.error('Error updating menu item:', error);
@@ -402,7 +431,7 @@ app.delete('/api/admin/menu-items/:id', async (req, res) => {
     }
     const { id } = req.params;
     
-    // Get the item to check for image
+    // Get the item to check for legacy file-based image
     const item = await prisma.menuItem.findUnique({
       where: { id: parseInt(id) }
     });
@@ -411,12 +440,12 @@ app.delete('/api/admin/menu-items/:id', async (req, res) => {
       return res.status(404).json({ error: 'Menu item not found' });
     }
     
-    // Delete the item
+    // Delete the item (database-stored images are automatically removed)
     await prisma.menuItem.delete({
       where: { id: parseInt(id) }
     });
     
-    // Optionally delete the image file
+    // Clean up legacy file-based image if it exists
     if (item.imageUrl && item.imageUrl.includes('/images/uploads/')) {
       const filename = path.basename(item.imageUrl);
       const filepath = path.join(uploadsDir, filename);
@@ -425,7 +454,7 @@ app.delete('/api/admin/menu-items/:id', async (req, res) => {
           fs.unlinkSync(filepath);
         }
       } catch (e) {
-        console.warn('Skipping image delete (serverless or permission issue):', e.message);
+        console.warn('Skipping legacy image file delete:', e.message);
       }
     }
     
@@ -436,18 +465,33 @@ app.delete('/api/admin/menu-items/:id', async (req, res) => {
   }
 });
 
-// Image upload endpoint
-app.post('/api/admin/upload-image', upload.single('image'), (req, res) => {
+// Image upload endpoint - stores directly in database
+app.post('/api/admin/upload-image', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No image file provided' });
     }
-    
-    const imageUrl = `/images/uploads/${req.file.filename}`;
-    res.json({ imageUrl });
+
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
+
+    // Convert buffer to base64 for database storage
+    const imageData = req.file.buffer.toString('base64');
+    const imageMimeType = req.file.mimetype;
+    const imageSize = req.file.size;
+
+    // For now, just return the image data info
+    // The actual saving will happen when creating/updating menu items
+    res.json({ 
+      imageData,
+      imageMimeType,
+      imageSize,
+      message: 'Image processed successfully - ready for menu item association'
+    });
   } catch (error) {
-    console.error('Error uploading image:', error);
-    res.status(500).json({ error: 'Failed to upload image' });
+    console.error('Error processing image:', error);
+    res.status(500).json({ error: 'Failed to process image' });
   }
 });
 
@@ -490,7 +534,8 @@ app.get('/api/admin/menu-items', async (req, res) => {
       spiceLevel: item.spiceLevel,
       categoryId: item.categoryId,
       category: item.category.name,
-      imageUrl: item.imageUrl
+      // Use database-served image endpoint or external URL fallback
+      imageUrl: item.imageData ? `/api/images/${item.id}` : item.imageUrl
     }));
     
     res.json({

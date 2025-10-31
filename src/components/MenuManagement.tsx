@@ -51,7 +51,11 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
     dietary: [] as string[],
     spiceLevel: "",
     categoryId: "",
-    imageUrl: ""
+    imageUrl: "",
+    // New fields for database image storage
+    imageData: "",
+    imageMimeType: "",
+    imageSize: 0
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
@@ -114,7 +118,7 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
     }
   };
 
-  const uploadImage = async (): Promise<string | null> => {
+  const uploadImage = async (): Promise<{imageData: string, imageMimeType: string, imageSize: number} | null> => {
     if (!imageFile) return null;
     
     setUploading(true);
@@ -127,10 +131,14 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
         body: formData
       });
       
-      if (!response.ok) throw new Error('Failed to upload image');
+      if (!response.ok) throw new Error('Failed to process image');
       const data = await response.json();
       setUploading(false);
-      return data.imageUrl;
+      return {
+        imageData: data.imageData,
+        imageMimeType: data.imageMimeType,
+        imageSize: data.imageSize
+      };
     } catch (err) {
       setUploading(false);
       throw err;
@@ -142,20 +150,26 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
     setError(null);
 
     try {
-      let imageUrl = formData.imageUrl;
-      
-      // Upload new image if selected
-      if (imageFile) {
-        imageUrl = await uploadImage() || "";
-      }
-
-      const submitData = {
+      let submitData = {
         ...formData,
         price: parseFloat(formData.price),
         spiceLevel: formData.spiceLevel ? parseInt(formData.spiceLevel) : null,
-        categoryId: parseInt(formData.categoryId),
-        imageUrl
+        categoryId: parseInt(formData.categoryId)
       };
+      
+      // Process new image if selected
+      if (imageFile) {
+        const imageData = await uploadImage();
+        if (imageData) {
+          submitData = {
+            ...submitData,
+            imageData: imageData.imageData,
+            imageMimeType: imageData.imageMimeType,
+            imageSize: imageData.imageSize,
+            imageUrl: "" // Clear external URL when using database storage
+          };
+        }
+      }
 
       const url = editingItem 
         ? `${API_BASE_URL}/admin/menu-items/${editingItem.id}`
@@ -189,7 +203,10 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
       dietary: item.dietary,
       spiceLevel: item.spiceLevel?.toString() || "",
       categoryId: item.categoryId.toString(),
-      imageUrl: item.imageUrl || ""
+      imageUrl: item.imageUrl || "",
+      imageData: "",
+      imageMimeType: "",
+      imageSize: 0
     });
     setImagePreview(item.imageUrl || "");
     setIsDialogOpen(true);
@@ -219,7 +236,10 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
       dietary: [],
       spiceLevel: "",
       categoryId: "",
-      imageUrl: ""
+      imageUrl: "",
+      imageData: "",
+      imageMimeType: "",
+      imageSize: 0
     });
     setEditingItem(null);
     setImageFile(null);
@@ -277,7 +297,13 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
                           onClick={() => {
                             setImagePreview("");
                             setImageFile(null);
-                            setFormData(prev => ({ ...prev, imageUrl: "" }));
+                            setFormData(prev => ({ 
+                              ...prev, 
+                              imageUrl: "",
+                              imageData: "",
+                              imageMimeType: "",
+                              imageSize: 0
+                            }));
                           }}
                         >
                           <X className="w-4 h-4" />

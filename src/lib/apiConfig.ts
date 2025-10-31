@@ -19,17 +19,17 @@ export const getApiBaseUrl = (): string => {
 
 // Get the base server URL (for image URLs, etc.)
 export const getServerBaseUrl = (): string => {
+  // Development: use the frontend origin with proxy
+  if (import.meta.env.DEV && typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  
   // Check if VITE_API_URL is set, remove /api suffix if present
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL.replace('/api', '');
   }
   
-  // Development: use localhost:3001
-  if (import.meta.env.DEV) {
-    return 'http://localhost:3001';
-  }
-  
-  // Production: use current origin
+  // Production fallback: use current origin
   return typeof window !== 'undefined' ? window.location.origin : '';
 };
 
