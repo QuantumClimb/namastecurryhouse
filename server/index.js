@@ -44,26 +44,6 @@ async function ensureDbConnection(force = false) {
   }
 }
 
-// Ensure uploads directory exists (serverless-safe)
-let uploadsDir = path.join(__dirname, '..', 'public', 'images', 'uploads');
-try {
-  if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-  }
-} catch (err) {
-  // In Vercel serverless, filesystem is read-only except /tmp
-  const tmpUploads = path.join('/tmp', 'uploads');
-  try {
-    if (!fs.existsSync(tmpUploads)) {
-      fs.mkdirSync(tmpUploads, { recursive: true });
-    }
-    uploadsDir = tmpUploads;
-    console.warn('Using /tmp for uploads in serverless environment:', uploadsDir);
-  } catch (e) {
-    console.error('Failed to initialize uploads directory:', e.message);
-  }
-}
-
 // Configure multer for in-memory image storage (will save to database)
 const storage = multer.memoryStorage();
 
@@ -444,19 +424,6 @@ app.delete('/api/admin/menu-items/:id', async (req, res) => {
     await prisma.menuItem.delete({
       where: { id: parseInt(id) }
     });
-    
-    // Clean up legacy file-based image if it exists
-    if (item.imageUrl && item.imageUrl.includes('/images/uploads/')) {
-      const filename = path.basename(item.imageUrl);
-      const filepath = path.join(uploadsDir, filename);
-      try {
-        if (fs.existsSync(filepath)) {
-          fs.unlinkSync(filepath);
-        }
-      } catch (e) {
-        console.warn('Skipping legacy image file delete:', e.message);
-      }
-    }
     
     res.json({ message: 'Menu item deleted successfully' });
   } catch (error) {
