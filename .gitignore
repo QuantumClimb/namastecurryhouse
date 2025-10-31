@@ -12,6 +12,14 @@ dist
 dist-ssr
 *.local
 
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.template
+env_Variables
+adminerrors.txt
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -31,3 +39,8 @@ dev.db
 
 # Prisma generated engines/cache
 node_modules/.prisma/
+
+# Local development files
+*.bat
+test-*.mjs
+public/images/uploads/

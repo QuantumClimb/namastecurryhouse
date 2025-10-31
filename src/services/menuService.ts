@@ -1,15 +1,5 @@
 import { MenuItem, MenuCategory, MenuData } from '../types/menu';
-
-// Determine API base URL
-// In development, always use the same-origin /api to leverage Vite's proxy
-// In production, prefer VITE_API_URL if provided, else same-origin /api
-const API_BASE_URL = (() => {
-  if (import.meta.env.DEV && typeof window !== 'undefined') {
-    return `${window.location.origin}/api`;
-  }
-  // In production, always use relative path to API
-  return '/api';
-})();
+import { API_BASE_URL } from '../lib/apiConfig';
 
 // Fetch all menu categories and items from the API
 export async function getMenuData(): Promise<MenuData> {

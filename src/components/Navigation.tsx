@@ -32,7 +32,6 @@ export const Navigation = () => {
                 alt="Namaste Curry House Logo"
                 className="h-12 w-12 object-contain drop-shadow-md"
                 loading="eager"
-                fetchPriority="high"
               />
               <span className="text-2xl font-bold gradient-text">Namaste Curry House</span>
             </Link>

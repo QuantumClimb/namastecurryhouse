@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Trash2, Edit, Plus, Upload, X } from "lucide-react";
+import { API_BASE_URL, SERVER_BASE_URL } from "@/lib/apiConfig";
 
 interface MenuCategory {
   id: number;
@@ -40,7 +41,7 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   // Form state
   const [formData, setFormData] = useState({
@@ -65,7 +66,7 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/admin/categories');
+      const response = await fetch(`${API_BASE_URL}/admin/categories`);
       if (!response.ok) throw new Error('Failed to fetch categories');
       const data = await response.json();
       setCategories(data);
@@ -83,11 +84,11 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
         limit: '10'
       });
       
-      if (selectedCategory) {
+      if (selectedCategory && selectedCategory !== "all") {
         params.append('category', selectedCategory);
       }
       
-      const response = await fetch(`http://localhost:3001/api/admin/menu-items?${params}`);
+      const response = await fetch(`${API_BASE_URL}/admin/menu-items?${params}`);
       if (!response.ok) throw new Error('Failed to fetch menu items');
       const data = await response.json();
       
@@ -121,7 +122,7 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
     formData.append('image', imageFile);
     
     try {
-      const response = await fetch('http://localhost:3001/api/admin/upload-image', {
+      const response = await fetch(`${API_BASE_URL}/admin/upload-image`, {
         method: 'POST',
         body: formData
       });
@@ -157,8 +158,8 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
       };
 
       const url = editingItem 
-        ? `http://localhost:3001/api/admin/menu-items/${editingItem.id}`
-        : 'http://localhost:3001/api/admin/menu-items';
+        ? `${API_BASE_URL}/admin/menu-items/${editingItem.id}`
+        : `${API_BASE_URL}/admin/menu-items`;
         
       const method = editingItem ? 'PUT' : 'POST';
 
@@ -198,7 +199,7 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
     if (!confirm('Are you sure you want to delete this menu item?')) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/admin/menu-items/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/menu-items/${id}`, {
         method: 'DELETE'
       });
 
@@ -415,7 +416,7 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Categories</SelectItem>
+            <SelectItem value="all">All Categories</SelectItem>
             {categories.map((category) => (
               <SelectItem key={category.id} value={category.name}>
                 {category.name}
@@ -436,7 +437,7 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
                 {item.imageUrl && (
                   <div className="h-48 overflow-hidden">
                     <img 
-                      src={`http://localhost:3001${item.imageUrl}`} 
+                      src={`${SERVER_BASE_URL}${item.imageUrl}`} 
                       alt={item.name}
                       className="w-full h-full object-cover"
                     />
