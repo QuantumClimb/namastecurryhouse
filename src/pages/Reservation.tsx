@@ -15,9 +15,10 @@ const Reservation = () => {
   const [selectedTime, setSelectedTime] = useState<string>("");
 
   const timeSlots = [
-    "4:30 PM", "5:00 PM", "5:30 PM", "6:00 PM", "6:30 PM", "7:00 PM",
-    "7:30 PM", "8:00 PM", "8:30 PM", "9:00 PM", "9:30 PM", "10:00 PM",
-    "10:30 PM", "11:00 PM", "11:30 PM"
+    "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM",
+    "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM",
+    "5:00 PM", "5:30 PM", "6:00 PM", "6:30 PM", "7:00 PM", "7:30 PM",
+    "8:00 PM", "8:30 PM", "9:00 PM", "9:30 PM"
   ];
 
   const unavailableSlots: string[] = []; // All time slots available
@@ -48,7 +49,7 @@ const Reservation = () => {
       <section
         className="relative h-96 flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/new images/39.png')`
+          backgroundImage: `linear-gradient(rgba(139, 69, 19, 0.5), rgba(205, 133, 63, 0.4)), url('/images/new images/39.png')`
         }}
       >
         <div className="text-center z-10 max-w-4xl mx-auto px-4">
@@ -181,7 +182,7 @@ const Reservation = () => {
                   <AlertCircle className="w-5 h-5 text-primary mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-foreground">Dress Code</h4>
-                    <p className="text-foreground/70 text-sm">Smart casual attire required. No slippers or singlets allowed.</p>
+                    <p className="text-foreground/70 text-sm">Casual and comfortable. We welcome all guests in a relaxed, family-friendly atmosphere.</p>
                   </div>
                 </div>
                 
@@ -220,9 +221,9 @@ const Reservation = () => {
       <section className="py-12 px-4 max-w-4xl mx-auto">
   <Card className="bg-secondary/10 border-secondary/20 neon-glow">
           <CardContent className="p-8 text-center">
-            <h3 className="text-2xl font-bold mb-4 gradient-text">Planning a Large Event?</h3>
+            <h3 className="text-2xl font-bold mb-4 gradient-text">Planning a Special Celebration?</h3>
             <p className="text-foreground/80 mb-6 max-w-2xl mx-auto">
-              Whether it's a corporate event, birthday celebration, or special occasion, we'll help you create an unforgettable experience for your group.
+              Whether it's a family gathering, birthday celebration, or corporate event, we'll help you create memorable moments with authentic Indian cuisine.
             </p>
             <Button
               onClick={() => {

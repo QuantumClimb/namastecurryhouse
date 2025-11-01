@@ -25,12 +25,12 @@ const Gallery = () => {
 
   const videos = [
     {
-      title: "MAUJ Night Experience",
+      title: "Traditional Indian Cooking",
       thumbnail: "/images/new images/31.png",
       embedId: "dQw4w9WgXcQ" // Replace with actual video ID
     },
     {
-      title: "MAUJ Cocktail Preparation",
+      title: "Behind the Scenes at Namaste",
       thumbnail: "/images/new images/32.png",
       embedId: "dQw4w9WgXcQ" // Replace with actual video ID
     }
@@ -63,7 +63,7 @@ const Gallery = () => {
       <section
         className="relative h-96 flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/new images/33.png')`
+          backgroundImage: `linear-gradient(rgba(139, 69, 19, 0.5), rgba(205, 133, 63, 0.4)), url('/images/new images/33.png')`
         }}
       >
         <div className="text-center z-10 max-w-4xl mx-auto px-4">
@@ -71,7 +71,7 @@ const Gallery = () => {
             Gallery
           </h1>
           <p className="text-xl text-white/90 animate-fade-in">
-            Capturing the essence of MAUJ's unforgettable moments
+            Capturing the flavors, colors, and joy of Indian cuisine
           </p>
         </div>
       </section>

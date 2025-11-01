@@ -39,7 +39,7 @@ const Contact = () => {
       <section
         className="relative h-96 flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/new images/38.png')`
+          backgroundImage: `linear-gradient(rgba(139, 69, 19, 0.5), rgba(205, 133, 63, 0.4)), url('/images/new images/38.png')`
         }}
       >
         <div className="text-center z-10 max-w-4xl mx-auto px-4">
@@ -158,9 +158,9 @@ const Contact = () => {
                     <div>
                       <h4 className="font-semibold text-foreground">Hours</h4>
                       <div className="text-foreground/70">
-                        <p>Monday - Thursday: 5:00 PM - 1:00 AM</p>
-                        <p>Friday - Saturday: 5:00 PM - 2:00 AM</p>
-                        <p>Sunday: 5:00 PM - 12:00 AM</p>
+                        <p>Monday - Sunday: 11:00 AM - 10:00 PM</p>
+                        <p>Kitchen closes at 9:30 PM</p>
+                        <p>Delivery: 11:00 AM - 9:30 PM</p>
                       </div>
                     </div>
                   </div>
@@ -174,7 +174,7 @@ const Contact = () => {
                 <MessageCircle className="w-12 h-12 text-secondary mx-auto mb-4" />
                 <h3 className="text-2xl font-bold mb-4 gradient-text">Quick Contact</h3>
                 <p className="text-foreground/80 mb-6">
-                  Need immediate assistance? Contact us directly via WhatsApp for faster response times.
+                  Have a question? Contact us directly via WhatsApp for the fastest response about reservations, menu items, or catering.
                 </p>
                 <Button
                   onClick={() => {
@@ -200,7 +200,7 @@ const Contact = () => {
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4 gradient-text">Find Us</h2>
             <p className="text-xl text-foreground/80">
-              Located in the heart of Lisboa's vibrant dining district
+              Visit us in Lisboa for an authentic Indian dining experience
             </p>
           </div>
           

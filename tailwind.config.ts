@@ -64,10 +64,13 @@ export default {
 					border: 'oklch(var(--sidebar-border-raw) / <alpha-value>)',
 					ring: 'oklch(var(--sidebar-ring-raw) / <alpha-value>)'
 				},
-				'neon-purple': 'hsl(var(--neon-purple) / <alpha-value>)',
-				'neon-green': 'hsl(var(--neon-green) / <alpha-value>)',
-				'gold-glow': 'hsl(var(--gold-glow) / <alpha-value>)',
-				'midnight': 'hsl(var(--midnight) / <alpha-value>)'
+				/* Indian Restaurant Color Palette */
+				'saffron': 'hsl(var(--saffron) / <alpha-value>)',
+				'turmeric': 'hsl(var(--turmeric) / <alpha-value>)',
+				'curry-red': 'hsl(var(--curry-red) / <alpha-value>)',
+				'cilantro-green': 'hsl(var(--cilantro-green) / <alpha-value>)',
+				'warm-cream': 'hsl(var(--warm-cream) / <alpha-value>)',
+				'spice-brown': 'hsl(var(--spice-brown) / <alpha-value>)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -111,8 +114,22 @@ export default {
 					'100%': { transform: 'translateX(0)' }
 				},
 				'glow': {
-					'0%, 100%': { boxShadow: '0 0 5px var(--primary)' },
-					'50%': { boxShadow: '0 0 20px var(--primary), 0 0 30px var(--primary)' }
+					'0%, 100%': { boxShadow: '0 0 5px oklch(var(--primary-raw) / 0.5)' },
+					'50%': { boxShadow: '0 0 20px oklch(var(--primary-raw) / 0.7), 0 0 30px oklch(var(--accent-raw) / 0.5)' }
+				},
+				'warm-pulse': {
+					'0%, 100%': { 
+						opacity: '1',
+						transform: 'scale(1)'
+					},
+					'50%': { 
+						opacity: '0.9',
+						transform: 'scale(1.05)'
+					}
+				},
+				'spice-float': {
+					'0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+					'50%': { transform: 'translateY(-10px) rotate(2deg)' }
 				}
 			},
 			animation: {
@@ -120,7 +137,9 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.6s ease-out',
 				'slide-in-right': 'slide-in-right 0.3s ease-out',
-				'glow': 'glow 2s ease-in-out infinite'
+				'glow': 'glow 2s ease-in-out infinite',
+				'warm-pulse': 'warm-pulse 3s ease-in-out infinite',
+				'spice-float': 'spice-float 4s ease-in-out infinite'
 			}
 		}
 	},

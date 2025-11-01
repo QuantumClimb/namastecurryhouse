@@ -40,7 +40,7 @@ const Index = () => {
       <section
         className="relative h-screen flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/new images/36.png')`
+          backgroundImage: `linear-gradient(rgba(139, 69, 19, 0.5), rgba(205, 133, 63, 0.4)), url('/images/new images/36.png')`
         }}
       >
         <div className="text-center z-10 max-w-4xl mx-auto px-4">
@@ -137,26 +137,26 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-  <section className="py-20 px-4 text-center bg-midnight">
+  <section className="py-20 px-4 text-center bg-accent/10">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
-            Ready for the Night?
+            Experience Authentic India
           </h2>
           <p className="text-xl text-foreground/80 mb-8 max-w-2xl mx-auto">
-            Join us for an unforgettable evening where every detail is crafted to perfection
+            Join us for an unforgettable dining experience where traditional recipes meet warm hospitality
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               onClick={scrollToReservation}
-              className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-3 gold-glow"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-3 neon-glow"
               size="lg"
             >
-              Make Reservation
+              Reserve Your Table
             </Button>
             <Button
               onClick={() => navigate("/contact")}
               variant="outline"
-              className="border-accent text-accent hover:bg-accent/10 text-lg px-8 py-3"
+              className="border-primary text-primary hover:bg-primary/10 text-lg px-8 py-3"
               size="lg"
             >
               Get in Touch

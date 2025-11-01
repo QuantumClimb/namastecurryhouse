@@ -1,11 +1,11 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Music, ChefHat, GlassWater, Users } from "lucide-react";
+import { Sparkles, ChefHat, Leaf, Users } from "lucide-react";
 
 const AboutUs = () => {
   const values = [
     {
-      icon: <Music className="w-12 h-12" />,
+      icon: <Sparkles className="w-12 h-12" />,
       title: "Traditional Heritage",
       description: "Authentic recipes passed down through generations, bringing the true flavors of India to your table"
     },
@@ -15,7 +15,7 @@ const AboutUs = () => {
       description: "Our master chefs use traditional cooking techniques and authentic spices to create unforgettable Indian dining experiences"
     },
     {
-      icon: <GlassWater className="w-12 h-12" />,
+      icon: <Leaf className="w-12 h-12" />,
       title: "Fresh Ingredients",
       description: "Premium quality spices, fresh vegetables, and authentic ingredients sourced to maintain traditional flavors"
     },
@@ -32,7 +32,7 @@ const AboutUs = () => {
       <section
         className="relative h-screen flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/images/new images/34.png')`
+          backgroundImage: `linear-gradient(rgba(139, 69, 19, 0.6), rgba(160, 82, 45, 0.5)), url('/images/new images/34.png')`
         }}
       >
         <div className="text-center z-10 max-w-5xl mx-auto px-4">
