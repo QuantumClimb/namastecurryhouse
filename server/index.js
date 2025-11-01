@@ -86,8 +86,18 @@ app.get('/api/images/:id', async (req, res) => {
       return res.status(404).json({ error: 'Image not found' });
     }
 
-    // Convert base64 back to buffer and send as image
-    const imageBuffer = Buffer.from(item.imageData, 'base64');
+    // Handle both data URI format and raw base64
+    let base64Data = item.imageData;
+    if (base64Data.startsWith('data:')) {
+      // Extract base64 from data URI: data:image/jpeg;base64,/9j/4AAQ...
+      const matches = base64Data.match(/^data:([^;]+);base64,(.+)$/);
+      if (matches) {
+        base64Data = matches[2];
+      }
+    }
+
+    // Convert base64 to buffer and send as image
+    const imageBuffer = Buffer.from(base64Data, 'base64');
     res.set({
       'Content-Type': item.imageMimeType || 'image/jpeg',
       'Content-Length': imageBuffer.length,

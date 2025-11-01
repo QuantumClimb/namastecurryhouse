@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MenuCategory, MenuItem } from "../types/menu";
 import { getMenuData } from "../services/menuService";
 import { AddToCartButton } from "../components/AddToCartButton";
+import { API_BASE_URL } from "../lib/apiConfig";
 
 const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => {
   const placeholderImg = "/images/placeholder-food.svg";
@@ -19,12 +20,24 @@ const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => 
             {/* Food Image */}
             <div className="relative h-48 overflow-hidden">
               <img
-                src={
-                  // If item has database image (no imageUrl but has id), use API endpoint
-                  !item.imageUrl && item.id ? `/api/images/${item.id}` :
-                  // Otherwise use imageUrl or fallback to placeholder
-                  item.imageUrl || placeholderImg
-                }
+                src={(() => {
+                  // Priority 1: Check if image is in database (no placeholder imageUrl, or has placeholder)
+                  // If imageUrl is null/empty OR is a placeholder, try database first
+                  if (!item.imageUrl || item.imageUrl.includes('placeholder')) {
+                    if (item.id) {
+                      const baseUrl = import.meta.env.DEV 
+                        ? 'https://namastecurryhouse.vercel.app/api' 
+                        : '/api';
+                      return `${baseUrl}/images/${item.id}`;
+                    }
+                  }
+                  // Priority 2: Use imageUrl if it exists and is not a placeholder
+                  if (item.imageUrl && !item.imageUrl.includes('placeholder')) {
+                    return item.imageUrl;
+                  }
+                  // Priority 3: Fallback to placeholder
+                  return placeholderImg;
+                })()}
                 alt={item.name}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 onError={(e) => {
@@ -97,7 +110,7 @@ const Menu = () => {
       <section
         className="relative h-96 flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/new images/35.png')`
+          backgroundImage: `linear-gradient(rgba(139, 69, 19, 0.5), rgba(205, 133, 63, 0.4)), url('/images/new images/35.png')`
         }}
       >
         <div className="text-center z-10 max-w-4xl mx-auto px-4">
@@ -105,7 +118,7 @@ const Menu = () => {
             Our Menu
           </h1>
           <p className="text-xl text-white/90 animate-fade-in">
-            Culinary artistry meets innovative mixology
+            Authentic Indian cuisine crafted with love and tradition
           </p>
         </div>
       </section>
@@ -134,37 +147,37 @@ const Menu = () => {
         )}
       </section>
 
-      {/* Wine & Spirits Section */}
+      {/* Indian Beverages Section */}
   <section className="py-20 px-4 bg-primary/5">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8 gradient-text">
-            Premium Spirits & Wines
+            Traditional Indian Beverages
           </h2>
           <p className="text-xl text-foreground/80 mb-12 max-w-3xl mx-auto">
-            Discover our curated selection of premium spirits, fine wines, and rare bottles from around the world
+            Complement your meal with our authentic Indian drinks, from refreshing lassis to aromatic chai
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
               <CardContent className="p-8 text-center">
-                <h3 className="text-2xl font-bold mb-4 text-primary">Whiskey Collection</h3>
+                <h3 className="text-2xl font-bold mb-4 text-primary">Lassi Varieties</h3>
                 <p className="text-foreground/70">
-                  From Scottish single malts to Japanese whisky, explore our extensive collection
+                  Cool, creamy yogurt drinks in sweet, salty, and mango flavors - the perfect complement to spicy dishes
                 </p>
               </CardContent>
             </Card>
             <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
               <CardContent className="p-8 text-center">
-                <h3 className="text-2xl font-bold mb-4 text-secondary">Wine Cellar</h3>
+                <h3 className="text-2xl font-bold mb-4 text-secondary">Masala Chai</h3>
                 <p className="text-foreground/70">
-                  Carefully selected wines from renowned vineyards across the globe
+                  Traditional spiced tea brewed with aromatic Indian spices, cardamom, ginger, and milk
                 </p>
               </CardContent>
             </Card>
             <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
               <CardContent className="p-8 text-center">
-                <h3 className="text-2xl font-bold mb-4 text-accent">Premium Spirits</h3>
+                <h3 className="text-2xl font-bold mb-4 text-accent">Soft Drinks & More</h3>
                 <p className="text-foreground/70">
-                  Top-shelf vodka, gin, rum, and tequila for the discerning palate
+                  Indian sodas, fresh juices, and imported beverages to complete your authentic dining experience
                 </p>
               </CardContent>
             </Card>
