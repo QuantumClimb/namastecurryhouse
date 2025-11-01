@@ -5,23 +5,43 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import MenuManagement from "@/components/MenuManagement";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const ADMIN_USER = "NamasteAdmin";
 const ADMIN_PASS = "namaste123";
+const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes in milliseconds
 
 export default function Admin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [error, setError] = useState("");
-  const [activeView, setActiveView] = useState<"dashboard" | "menu-management">("dashboard");
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Get active view from URL hash
+  const getActiveViewFromUrl = (): "dashboard" | "menu-management" => {
+    const hash = location.hash.replace('#', '');
+    return hash === 'menu-management' ? 'menu-management' : 'dashboard';
+  };
+  
+  const [activeView, setActiveView] = useState<"dashboard" | "menu-management">(getActiveViewFromUrl());
+
+  // Check if session is still valid
+  const isSessionValid = (): boolean => {
+    const loginTime = localStorage.getItem("namaste-admin-login-time");
+    if (!loginTime) return false;
+    
+    const elapsed = Date.now() - parseInt(loginTime);
+    return elapsed < SESSION_TIMEOUT;
+  };
 
   const handleLogin = () => {
     if (username === ADMIN_USER && password === ADMIN_PASS) {
       setLoggedIn(true);
       setError("");
-      // Store login state in localStorage
-      localStorage.setItem("namaste-admin-logged-in", "true");
+      // Store login time instead of just boolean
+      localStorage.setItem("namaste-admin-login-time", Date.now().toString());
     } else {
       setError("Invalid credentials");
     }
@@ -31,8 +51,19 @@ export default function Admin() {
     setLoggedIn(false);
     setUsername("");
     setPassword("");
-    setActiveView("dashboard");
-    localStorage.removeItem("namaste-admin-logged-in");
+    setActiveViewWithUrl("dashboard");
+    // Clear session data
+    localStorage.removeItem("namaste-admin-login-time");
+  };
+
+  const setActiveViewWithUrl = (view: "dashboard" | "menu-management") => {
+    setActiveView(view);
+    // Update URL hash to persist view state
+    if (view === "menu-management") {
+      navigate('/admin#menu-management');
+    } else {
+      navigate('/admin');
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -41,20 +72,40 @@ export default function Admin() {
     }
   };
 
-  // Check localStorage on component mount
+  // Check session validity on component mount and URL changes
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("namaste-admin-logged-in");
-    if (isLoggedIn === "true") {
+    if (isSessionValid()) {
       setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+      localStorage.removeItem("namaste-admin-login-time");
     }
   }, []);
+
+  // Update active view when URL hash changes
+  useEffect(() => {
+    setActiveView(getActiveViewFromUrl());
+  }, [location.hash]);
+
+  // Auto-logout on session timeout
+  useEffect(() => {
+    if (loggedIn) {
+      const interval = setInterval(() => {
+        if (!isSessionValid()) {
+          handleLogout();
+        }
+      }, 60000); // Check every minute
+
+      return () => clearInterval(interval);
+    }
+  }, [loggedIn]);
 
   if (loggedIn) {
     if (activeView === "menu-management") {
       return (
   <div className="min-h-screen pt-16 bg-primary/5">
           <div className="container mx-auto px-4 py-8">
-            <MenuManagement onClose={() => setActiveView("dashboard")} />
+            <MenuManagement onClose={() => setActiveViewWithUrl("dashboard")} />
           </div>
         </div>
       );
@@ -86,7 +137,7 @@ export default function Admin() {
                   </p>
                   <Button 
                     className="w-full"
-                    onClick={() => setActiveView("menu-management")}
+                    onClick={() => setActiveViewWithUrl("menu-management")}
                   >
                     Manage Menu Items
                   </Button>
