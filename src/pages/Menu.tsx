@@ -19,7 +19,12 @@ const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => 
             {/* Food Image */}
             <div className="relative h-48 overflow-hidden">
               <img
-                src={item.imageUrl || placeholderImg}
+                src={
+                  // If item has database image (no imageUrl but has id), use API endpoint
+                  !item.imageUrl && item.id ? `/api/images/${item.id}` :
+                  // Otherwise use imageUrl or fallback to placeholder
+                  item.imageUrl || placeholderImg
+                }
                 alt={item.name}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 onError={(e) => {
