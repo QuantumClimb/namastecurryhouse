@@ -131,9 +131,9 @@ const Menu = () => {
           <div className="text-center py-20 text-red-500">{error}</div>
         ) : (
           <Tabs defaultValue={defaultTab} className="space-y-8">
-            <TabsList className={`grid w-full grid-cols-${tabKeys.length} bg-card/50 backdrop-blur-sm border-primary/20`}>
+            <TabsList className="inline-flex w-full justify-start overflow-x-auto bg-card/50 backdrop-blur-sm border-primary/20 flex-wrap gap-2">
               {tabKeys.map((key) => (
-                <TabsTrigger key={key} value={key} className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger key={key} value={key} className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground whitespace-nowrap">
                   {key}
                 </TabsTrigger>
               ))}
