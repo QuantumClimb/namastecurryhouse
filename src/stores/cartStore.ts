@@ -1,14 +1,33 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { CartStore, CartItem, CartCustomization } from '../types/cart';
+import { CustomerInfo, DeliveryAddress, PaymentMethod } from '../types/order';
 import { MenuItem } from '../types/menu';
 
-const useCartStore = create<CartStore>()(
+interface ExtendedCartStore extends CartStore {
+  // Checkout data
+  customerInfo: CustomerInfo | null;
+  deliveryAddress: DeliveryAddress | null;
+  selectedPaymentMethod: PaymentMethod | null;
+  
+  // Checkout actions
+  setCustomerInfo: (info: CustomerInfo) => void;
+  setDeliveryAddress: (address: DeliveryAddress) => void;
+  setPaymentMethod: (method: PaymentMethod) => void;
+  clearCheckoutData: () => void;
+}
+
+const useCartStore = create<ExtendedCartStore>()(
   persist(
     (set, get) => ({
       items: [],
       total: 0,
       itemCount: 0,
+      
+      // Checkout state
+      customerInfo: null,
+      deliveryAddress: null,
+      selectedPaymentMethod: null,
 
       addItem: (menuItem: MenuItem, quantity = 1, customization?: CartCustomization) => {
         set((state) => {
@@ -117,11 +136,35 @@ const useCartStore = create<CartStore>()(
           items: [],
           total: 0,
           itemCount: 0,
+          customerInfo: null,
+          deliveryAddress: null,
+          selectedPaymentMethod: null,
         });
       },
 
       getItemById: (itemId: string) => {
         return get().items.find(item => item.id === itemId);
+      },
+      
+      // Checkout actions
+      setCustomerInfo: (info: CustomerInfo) => {
+        set({ customerInfo: info });
+      },
+      
+      setDeliveryAddress: (address: DeliveryAddress) => {
+        set({ deliveryAddress: address });
+      },
+      
+      setPaymentMethod: (method: PaymentMethod) => {
+        set({ selectedPaymentMethod: method });
+      },
+      
+      clearCheckoutData: () => {
+        set({
+          customerInfo: null,
+          deliveryAddress: null,
+          selectedPaymentMethod: null,
+        });
       },
     }),
     {

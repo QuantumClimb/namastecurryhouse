@@ -5,6 +5,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { PrismaClient } from '@prisma/client';
+import Stripe from 'stripe';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 
@@ -17,6 +18,12 @@ const app = express();
 const prisma = new PrismaClient({
   log: ['warn', 'error']
 });
+
+// Initialize Stripe
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+  apiVersion: '2024-11-20.acacia',
+});
+
 const PORT = process.env.PORT || 3001;
 
 // Database connection status with lightweight retry capability
@@ -553,6 +560,328 @@ app.get('/api/admin/menu-items', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch menu items' });
   }
 });
+
+// ============================================================================
+// STRIPE & ORDER MANAGEMENT
+// ============================================================================
+
+// Helper: Generate unique order number
+function generateOrderNumber() {
+  const date = new Date();
+  const dateStr = date.toISOString().split('T')[0].replace(/-/g, '');
+  const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+  return `ORD-${dateStr}-${random}`;
+}
+
+// Helper: Calculate delivery fee
+function calculateDeliveryFee(address) {
+  // Simple flat rate for now - can be enhanced with distance calculation
+  return 2.50; // €2.50 delivery fee
+}
+
+// GET /api/stripe/config - Get publishable key for frontend
+app.get('/api/stripe/config', (req, res) => {
+  res.json({
+    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+  });
+});
+
+// POST /api/stripe/create-payment-intent
+app.post('/api/stripe/create-payment-intent', express.json(), async (req, res) => {
+  try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
+
+    const { orderItems, customerInfo, deliveryAddress } = req.body;
+    
+    // Validate input
+    if (!orderItems || !orderItems.length) {
+      return res.status(400).json({ error: 'Order items are required' });
+    }
+    
+    if (!customerInfo || !customerInfo.name || !customerInfo.email || !customerInfo.phone) {
+      return res.status(400).json({ error: 'Customer information is incomplete' });
+    }
+    
+    if (!deliveryAddress || !deliveryAddress.street || !deliveryAddress.city || !deliveryAddress.postalCode) {
+      return res.status(400).json({ error: 'Delivery address is incomplete' });
+    }
+    
+    // Calculate totals
+    const subtotal = orderItems.reduce((sum, item) => sum + item.totalPrice, 0);
+    const deliveryFee = calculateDeliveryFee(deliveryAddress);
+    const total = subtotal + deliveryFee;
+    
+    // Create order in database
+    const orderNumber = generateOrderNumber();
+    const order = await prisma.order.create({
+      data: {
+        orderNumber,
+        customerName: customerInfo.name,
+        customerEmail: customerInfo.email,
+        customerPhone: customerInfo.phone,
+        deliveryAddress: deliveryAddress,
+        orderItems: orderItems,
+        subtotal: subtotal,
+        deliveryFee: deliveryFee,
+        total: total,
+        status: 'PENDING',
+        paymentStatus: 'PENDING',
+        paymentMethod: 'STRIPE_CARD',
+      },
+    });
+    
+    // Create Stripe Payment Intent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(total * 100), // Convert to cents
+      currency: process.env.STRIPE_CURRENCY || 'eur',
+      metadata: {
+        orderId: order.id.toString(),
+        orderNumber: order.orderNumber,
+        customerEmail: customerInfo.email,
+      },
+      description: `Order ${order.orderNumber} - Namaste Curry House`,
+      receipt_email: customerInfo.email,
+    });
+    
+    // Update order with payment intent ID
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { stripePaymentIntentId: paymentIntent.id },
+    });
+    
+    console.log(`✅ Payment intent created for order ${order.orderNumber}`);
+    
+    res.json({
+      clientSecret: paymentIntent.client_secret,
+      orderId: order.id,
+      orderNumber: order.orderNumber,
+      amount: total,
+    });
+    
+  } catch (error) {
+    console.error('Error creating payment intent:', error);
+    res.status(500).json({ error: 'Failed to create payment intent' });
+  }
+});
+
+// POST /api/stripe/webhook - Handle Stripe webhooks
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+  
+  try {
+    // Verify webhook signature
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    console.error('Webhook signature verification failed:', err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+  
+  // Handle the event
+  try {
+    switch (event.type) {
+      case 'payment_intent.succeeded':
+        const paymentIntent = event.data.object;
+        await handlePaymentSuccess(paymentIntent);
+        break;
+        
+      case 'payment_intent.payment_failed':
+        const failedPayment = event.data.object;
+        await handlePaymentFailure(failedPayment);
+        break;
+        
+      case 'charge.succeeded':
+        const charge = event.data.object;
+        await handleChargeSuccess(charge);
+        break;
+        
+      default:
+        console.log(`Unhandled event type: ${event.type}`);
+    }
+    
+    res.json({ received: true });
+  } catch (error) {
+    console.error('Error processing webhook:', error);
+    res.status(500).json({ error: 'Webhook processing failed' });
+  }
+});
+
+// Helper: Handle successful payment
+async function handlePaymentSuccess(paymentIntent) {
+  try {
+    if (!(await ensureDbConnection())) {
+      console.error('Database unavailable for payment success handling');
+      return;
+    }
+
+    const order = await prisma.order.findFirst({
+      where: { stripePaymentIntentId: paymentIntent.id },
+    });
+    
+    if (order) {
+      await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          paymentStatus: 'SUCCEEDED',
+          status: 'CONFIRMED',
+          confirmedAt: new Date(),
+        },
+      });
+      
+      console.log(`✅ Payment succeeded for order ${order.orderNumber}`);
+      
+      // TODO: Send confirmation email
+      // TODO: Notify restaurant staff
+    }
+  } catch (error) {
+    console.error('Error handling payment success:', error);
+  }
+}
+
+// Helper: Handle failed payment
+async function handlePaymentFailure(paymentIntent) {
+  try {
+    if (!(await ensureDbConnection())) {
+      console.error('Database unavailable for payment failure handling');
+      return;
+    }
+
+    const order = await prisma.order.findFirst({
+      where: { stripePaymentIntentId: paymentIntent.id },
+    });
+    
+    if (order) {
+      await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          paymentStatus: 'FAILED',
+          status: 'CANCELLED',
+        },
+      });
+      
+      console.log(`❌ Payment failed for order ${order.orderNumber}`);
+    }
+  } catch (error) {
+    console.error('Error handling payment failure:', error);
+  }
+}
+
+// Helper: Handle charge success (for charge ID)
+async function handleChargeSuccess(charge) {
+  try {
+    if (!(await ensureDbConnection())) {
+      return;
+    }
+
+    const order = await prisma.order.findFirst({
+      where: { stripePaymentIntentId: charge.payment_intent },
+    });
+    
+    if (order) {
+      await prisma.order.update({
+        where: { id: order.id },
+        data: { stripeChargeId: charge.id },
+      });
+    }
+  } catch (error) {
+    console.error('Error handling charge success:', error);
+  }
+}
+
+// GET /api/orders/:id - Get order by ID
+app.get('/api/orders/:id', async (req, res) => {
+  try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
+
+    const orderId = parseInt(req.params.id);
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+    });
+    
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    res.json(order);
+  } catch (error) {
+    console.error('Error fetching order:', error);
+    res.status(500).json({ error: 'Failed to fetch order' });
+  }
+});
+
+// GET /api/orders/number/:orderNumber - Get order by order number
+app.get('/api/orders/number/:orderNumber', async (req, res) => {
+  try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
+
+    const order = await prisma.order.findUnique({
+      where: { orderNumber: req.params.orderNumber },
+    });
+    
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    res.json(order);
+  } catch (error) {
+    console.error('Error fetching order:', error);
+    res.status(500).json({ error: 'Failed to fetch order' });
+  }
+});
+
+// POST /api/orders/whatsapp - Create order via WhatsApp
+app.post('/api/orders/whatsapp', express.json(), async (req, res) => {
+  try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
+
+    const { orderItems, customerInfo, deliveryAddress } = req.body;
+    
+    const subtotal = orderItems.reduce((sum, item) => sum + item.totalPrice, 0);
+    const deliveryFee = calculateDeliveryFee(deliveryAddress);
+    const total = subtotal + deliveryFee;
+    const orderNumber = generateOrderNumber();
+    
+    const order = await prisma.order.create({
+      data: {
+        orderNumber,
+        customerName: customerInfo.name,
+        customerEmail: customerInfo.email || '',
+        customerPhone: customerInfo.phone,
+        deliveryAddress: deliveryAddress,
+        orderItems: orderItems,
+        subtotal: subtotal,
+        deliveryFee: deliveryFee,
+        total: total,
+        status: 'PENDING',
+        paymentStatus: 'PENDING',
+        paymentMethod: 'WHATSAPP',
+      },
+    });
+    
+    console.log(`📱 WhatsApp order created: ${order.orderNumber}`);
+    
+    res.json({ success: true, order });
+  } catch (error) {
+    console.error('Error creating WhatsApp order:', error);
+    res.status(500).json({ error: 'Failed to create order' });
+  }
+});
+
+// ============================================================================
+// SERVER STARTUP
+// ============================================================================
 
 // Start server
 async function startServer() {

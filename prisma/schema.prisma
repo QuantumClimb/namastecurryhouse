@@ -29,3 +29,81 @@ model MenuItem {
   imageMimeType String?      // MIME type (image/jpeg, image/png, etc.)
   imageSize     Int?         // Image size in bytes
 }
+
+model Customer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  phone     String
+  addresses Json     // Array of delivery addresses
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id                    Int           @id @default(autoincrement())
+  orderNumber           String        @unique // e.g., "ORD-20251102-001"
+  
+  // Customer Information
+  customerId            Int?
+  customer              Customer?     @relation(fields: [customerId], references: [id])
+  customerName          String
+  customerEmail         String
+  customerPhone         String
+  
+  // Delivery Information
+  deliveryAddress       Json          // {street, apartment, city, postalCode, country}
+  deliveryInstructions  String?
+  
+  // Order Details
+  orderItems            Json          // Array of cart items with quantities, customizations
+  subtotal              Float
+  deliveryFee           Float         @default(0)
+  total                 Float
+  
+  // Status
+  status                OrderStatus   @default(PENDING)
+  paymentStatus         PaymentStatus @default(PENDING)
+  
+  // Payment Information
+  paymentMethod         PaymentMethod
+  stripePaymentIntentId String?       @unique
+  stripeChargeId        String?
+  
+  // Timestamps
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  confirmedAt           DateTime?
+  completedAt           DateTime?
+  
+  @@index([orderNumber])
+  @@index([customerEmail])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum OrderStatus {
+  PENDING       // Order created, payment pending
+  CONFIRMED     // Payment received
+  PREPARING     // Kitchen is preparing
+  READY         // Ready for delivery/pickup
+  IN_TRANSIT    // Out for delivery
+  DELIVERED     // Successfully delivered
+  CANCELLED     // Order cancelled
+}
+
+enum PaymentStatus {
+  PENDING       // Awaiting payment
+  PROCESSING    // Payment being processed
+  SUCCEEDED     // Payment successful
+  FAILED        // Payment failed
+  REFUNDED      // Payment refunded
+}
+
+enum PaymentMethod {
+  WHATSAPP      // Order via WhatsApp
+  STRIPE_CARD   // Stripe credit/debit card
+  STRIPE_IDEAL  // Future: iDEAL payment
+  CASH          // Future: Cash on delivery
+}
