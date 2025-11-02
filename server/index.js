@@ -19,10 +19,20 @@ const prisma = new PrismaClient({
   log: ['warn', 'error']
 });
 
-// Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-11-20.acacia',
-});
+// Initialize Stripe (only if key is configured)
+let stripe = null;
+if (process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY !== 'sk_test_YOUR_SECRET_KEY_HERE') {
+  try {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2024-11-20.acacia',
+    });
+    console.log('✅ Stripe initialized');
+  } catch (error) {
+    console.warn('⚠️  Stripe initialization failed:', error.message);
+  }
+} else {
+  console.warn('⚠️  Stripe not configured - payment endpoints will not work');
+}
 
 const PORT = process.env.PORT || 3001;
 
@@ -581,6 +591,9 @@ function calculateDeliveryFee(address) {
 
 // GET /api/stripe/config - Get publishable key for frontend
 app.get('/api/stripe/config', (req, res) => {
+  if (!stripe) {
+    return res.status(503).json({ error: 'Stripe not configured' });
+  }
   res.json({
     publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
   });
@@ -589,6 +602,10 @@ app.get('/api/stripe/config', (req, res) => {
 // POST /api/stripe/create-payment-intent
 app.post('/api/stripe/create-payment-intent', express.json(), async (req, res) => {
   try {
+    if (!stripe) {
+      return res.status(503).json({ error: 'Stripe not configured' });
+    }
+    
     if (!(await ensureDbConnection())) {
       return res.status(503).json({ error: 'Database unavailable' });
     }
@@ -668,6 +685,10 @@ app.post('/api/stripe/create-payment-intent', express.json(), async (req, res) =
 
 // POST /api/stripe/webhook - Handle Stripe webhooks
 app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  if (!stripe) {
+    return res.status(503).json({ error: 'Stripe not configured' });
+  }
+  
   const sig = req.headers['stripe-signature'];
   let event;
   
