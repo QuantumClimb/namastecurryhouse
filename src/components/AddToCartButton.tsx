@@ -17,6 +17,7 @@ interface AddToCartButtonProps {
   size?: 'sm' | 'default' | 'lg';
   showCustomization?: boolean;
   className?: string;
+  buttonText?: string;
 }
 
 const extraOptions = [
@@ -34,7 +35,8 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   variant = 'default',
   size = 'default',
   showCustomization = true,
-  className
+  className,
+  buttonText = 'Add to Cart'
 }) => {
   const [quantity, setQuantity] = useState(1);
   const [customization, setCustomization] = useState<CartCustomization>({
@@ -87,7 +89,7 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
         onClick={quickAddToCart}
       >
         <ShoppingCart className="w-4 h-4 mr-2" />
-        Add to Cart
+        {buttonText}
       </Button>
     );
   }
@@ -101,7 +103,7 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
           className={className}
         >
           <ShoppingCart className="w-4 h-4 mr-2" />
-          Add to Cart
+          {buttonText}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
