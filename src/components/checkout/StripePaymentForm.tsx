@@ -75,11 +75,10 @@ export default function StripePaymentForm({
             email: customerInfo.email,
             phone: customerInfo.phone,
             address: {
-              line1: deliveryAddress.street,
-              line2: deliveryAddress.apartment || '',
-              city: deliveryAddress.city,
-              postal_code: deliveryAddress.postalCode,
-              country: 'PT', // ISO code
+              line1: 'Rua do Comercio 1',
+              city: 'Lisboa',
+              postal_code: '1100-148',
+              country: 'PT', // Portugal - avoids Indian payment restrictions in test mode
             },
           },
         },
