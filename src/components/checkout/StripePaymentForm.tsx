@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { CustomerInfo, DeliveryAddress } from '@/types/order';
 import useCartStore from '@/stores/cartStore';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://namastecurryhouse.vercel.app/api';
 
 interface StripePaymentFormProps {
   orderItems: any[];

@@ -73,11 +73,11 @@ export default function DeliveryAddressForm({ initialData, onSubmit, onBack }: D
             </div>
             
             <div>
-              <Label htmlFor="postalCode">Postal Code *</Label>
+              <Label htmlFor="postalCode">Postal Code / PIN Code *</Label>
               <Input
                 id="postalCode"
                 {...register('postalCode')}
-                placeholder="1000-001"
+                placeholder="1000-001 or 110001"
               />
               {errors.postalCode && (
                 <p className="text-sm text-red-600 mt-1">{errors.postalCode.message}</p>
