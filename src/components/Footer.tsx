@@ -33,16 +33,14 @@ export const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Legal & Support Links */}
           <div>
-            <h3 className="text-lg font-semibold text-foreground mb-4">Quick Links</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-4">Legal & Support</h3>
             <ul className="space-y-2">
-              <li><Link to="/" className="text-foreground/70 hover:text-primary transition-colors">Home</Link></li>
-              <li><Link to="/about" className="text-foreground/70 hover:text-primary transition-colors">About</Link></li>
-              <li><Link to="/menu" className="text-foreground/70 hover:text-primary transition-colors">Menu</Link></li>
-              <li><Link to="/gallery" className="text-foreground/70 hover:text-primary transition-colors">Gallery</Link></li>
-              <li><Link to="/reservation" className="text-foreground/70 hover:text-primary transition-colors">Reservation</Link></li>
-              <li><Link to="/contact" className="text-foreground/70 hover:text-primary transition-colors">Contact</Link></li>
+              <li><Link to="/customer-support" className="text-foreground/70 hover:text-primary transition-colors">Customer Support</Link></li>
+              <li><Link to="/terms-and-conditions" className="text-foreground/70 hover:text-primary transition-colors">Terms and Conditions</Link></li>
+              <li><Link to="/privacy-policy" className="text-foreground/70 hover:text-primary transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/cancellation-refund" className="text-foreground/70 hover:text-primary transition-colors">Cancellation & Refund</Link></li>
             </ul>
           </div>
 

@@ -18,6 +18,10 @@ import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
+import CustomerSupport from "./pages/CustomerSupport";
+import TermsConditions from "./pages/TermsConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import CancellationRefund from "./pages/CancellationRefund";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +44,10 @@ const App = () => (
             <Route path="/admin" element={<Admin />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/order-confirmation" element={<OrderConfirmation />} />
+            <Route path="/customer-support" element={<CustomerSupport />} />
+            <Route path="/terms-and-conditions" element={<TermsConditions />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/cancellation-refund" element={<CancellationRefund />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
