@@ -52,3 +52,5 @@ node_modules/.prisma/
 *.bat
 test-*.mjs
 public/images/uploads/
+
+.vercel
