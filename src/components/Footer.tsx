@@ -11,9 +11,9 @@ export const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
               <img 
-                src="/images/97a3f1c0-4793-4b37-9b8b-ca88ea090ffe.png" 
+                src="/images/new images/35.png" 
                 alt="Namaste Curry House Logo" 
-                className="h-12 w-12 rounded-full"
+                className="h-12 w-12 rounded-full object-cover"
               />
               <span className="text-3xl font-bold gradient-text">Namaste Curry House</span>
             </div>
