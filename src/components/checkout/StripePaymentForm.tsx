@@ -75,10 +75,9 @@ export default function StripePaymentForm({
             email: customerInfo.email,
             phone: customerInfo.phone,
             address: {
-              line1: 'Rua do Comercio 1',
               city: 'Lisboa',
-              postal_code: '1100-148',
-              country: 'PT', // Portugal - avoids Indian payment restrictions in test mode
+              postal_code: '1000-001',
+              country: 'PT',
             },
           },
         },
