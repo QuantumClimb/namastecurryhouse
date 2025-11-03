@@ -102,6 +102,7 @@ export default function StripePaymentForm({
   };
   
   const cardElementOptions = {
+    hidePostalCode: true, // Remove ZIP code field to avoid regional restrictions
     style: {
       base: {
         fontSize: '16px',
