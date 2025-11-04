@@ -32,7 +32,7 @@ export const Navigation = () => {
                 className="h-12 w-12 object-contain drop-shadow-md"
                 loading="eager"
               />
-              <span className="text-2xl font-bold gradient-text">Namaste Curry House</span>
+              <span className="text-2xl font-bold gradient-text hidden md:inline">Namaste Curry House</span>
             </Link>
           </div>
           

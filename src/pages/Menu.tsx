@@ -69,87 +69,144 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
     }
   };
 
+  const imageUrl = (() => {
+    // Priority 1: Check if image is in database (no placeholder imageUrl, or has placeholder)
+    // If imageUrl is null/empty OR is a placeholder, try database first
+    if (!item.imageUrl || item.imageUrl.includes('placeholder')) {
+      if (item.id) {
+        const baseUrl = import.meta.env.DEV 
+          ? 'https://namastecurryhouse.vercel.app/api' 
+          : '/api';
+        return `${baseUrl}/images/${item.id}`;
+      }
+    }
+    // Priority 2: Use imageUrl if it exists and is not a placeholder
+    if (item.imageUrl && !item.imageUrl.includes('placeholder')) {
+      return item.imageUrl;
+    }
+    // Priority 3: Fallback to placeholder
+    return placeholderImg;
+  })();
+
   return (
-    <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow overflow-hidden group">
-      {/* Food Image */}
-      <div className="relative h-48 overflow-hidden">
-        <img
-          src={(() => {
-            // Priority 1: Check if image is in database (no placeholder imageUrl, or has placeholder)
-            // If imageUrl is null/empty OR is a placeholder, try database first
-            if (!item.imageUrl || item.imageUrl.includes('placeholder')) {
-              if (item.id) {
-                const baseUrl = import.meta.env.DEV 
-                  ? 'https://namastecurryhouse.vercel.app/api' 
-                  : '/api';
-                return `${baseUrl}/images/${item.id}`;
-              }
-            }
-            // Priority 2: Use imageUrl if it exists and is not a placeholder
-            if (item.imageUrl && !item.imageUrl.includes('placeholder')) {
-              return item.imageUrl;
-            }
-            // Priority 3: Fallback to placeholder
-            return placeholderImg;
-          })()}
-          alt={item.name}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          onError={(e) => {
-            e.currentTarget.src = placeholderImg;
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      </div>
-      <CardContent className="p-6">
-        <div className="flex justify-between items-start mb-3">
-          <h4 className="text-xl font-bold text-foreground">{item.name}</h4>
-          <span className="text-lg font-bold text-accent">€{item.price.toFixed(2)}</span>
-        </div>
-        <p className="text-foreground/70 mb-4 leading-relaxed">{item.description}</p>
+    <>
+      {/* Mobile Layout - Horizontal Card */}
+      <Card className="md:hidden bg-card/50 backdrop-blur-sm border-primary/20 neon-glow overflow-hidden group flex flex-row items-center p-3 relative">
+        {/* Dietary Indicator - Top Right */}
         {item.dietary && item.dietary.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
-            {item.dietary.map((diet: string, idx: number) => (
-              <Badge key={idx} className="bg-primary/20 text-primary border-primary/30">
-                {diet}
-              </Badge>
-            ))}
-          </div>
+          <div className="absolute top-2 right-2 w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-md" title={item.dietary.join(', ')} />
         )}
-        <div className="flex justify-between items-center gap-3">
-          <div className="flex items-center space-x-2 flex-1 min-w-0">
+        
+        {/* Left: Food Image */}
+        <div className="relative w-24 h-24 flex-shrink-0 overflow-hidden rounded-lg">
+          <img
+            src={imageUrl}
+            alt={item.name}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.src = placeholderImg;
+            }}
+          />
+        </div>
+
+        {/* Center: Content */}
+        <div className="flex-1 px-3 py-1 min-w-0">
+          <h4 className="text-base font-bold text-foreground truncate mb-1">{item.name}</h4>
+          <p className="text-xs text-foreground/60 line-clamp-1 mb-2">{item.description}</p>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-bold text-accent">€{item.price.toFixed(2)}</span>
             {item.spiceLevel && (
-              <Badge variant="outline" className="text-xs">
-                {'🌶️'.repeat(item.spiceLevel)}
-              </Badge>
-            )}
-            {item.namePt && (
-              <span className="text-sm text-muted-foreground italic truncate">{item.namePt}</span>
-            )}
-          </div>
-          
-          {/* Conditional rendering: Stepper if in cart, Add button otherwise */}
-          <div className="flex-shrink-0">
-            {isInCart ? (
-              <QuantityStepper
-                quantity={cartQuantity}
-                onIncrement={handleIncrement}
-                onDecrement={handleDecrement}
-                size="sm"
-              />
-            ) : (
-              <Button 
-                onClick={handleAddToCart}
-                size="sm"
-                className="gap-1"
-              >
-                <ShoppingCart className="w-4 h-4" />
-                Add
-              </Button>
+              <span className="text-xs">{'🌶️'.repeat(item.spiceLevel)}</span>
             )}
           </div>
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Right: Add Button */}
+        <div className="flex-shrink-0">
+          {isInCart ? (
+            <QuantityStepper
+              quantity={cartQuantity}
+              onIncrement={handleIncrement}
+              onDecrement={handleDecrement}
+              size="sm"
+            />
+          ) : (
+            <Button 
+              onClick={handleAddToCart}
+              size="sm"
+              className="rounded-full px-6"
+            >
+              Add
+            </Button>
+          )}
+        </div>
+      </Card>
+
+      {/* Desktop Layout - Vertical Card */}
+      <Card className="hidden md:block bg-card/50 backdrop-blur-sm border-primary/20 neon-glow overflow-hidden group">
+        {/* Food Image */}
+        <div className="relative h-48 overflow-hidden">
+          <img
+            src={imageUrl}
+            alt={item.name}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={(e) => {
+              e.currentTarget.src = placeholderImg;
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </div>
+        <CardContent className="p-6">
+          <div className="flex justify-between items-start mb-3">
+            <h4 className="text-xl font-bold text-foreground">{item.name}</h4>
+            <span className="text-lg font-bold text-accent">€{item.price.toFixed(2)}</span>
+          </div>
+          <p className="text-foreground/70 mb-4 leading-relaxed">{item.description}</p>
+          {item.dietary && item.dietary.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {item.dietary.map((diet: string, idx: number) => (
+                <Badge key={idx} className="bg-primary/20 text-primary border-primary/30">
+                  {diet}
+                </Badge>
+              ))}
+            </div>
+          )}
+          <div className="flex justify-between items-center gap-3">
+            <div className="flex items-center space-x-2 flex-1 min-w-0">
+              {item.spiceLevel && (
+                <Badge variant="outline" className="text-xs">
+                  {'🌶️'.repeat(item.spiceLevel)}
+                </Badge>
+              )}
+              {item.namePt && (
+                <span className="text-sm text-muted-foreground italic truncate">{item.namePt}</span>
+              )}
+            </div>
+            
+            {/* Conditional rendering: Stepper if in cart, Add button otherwise */}
+            <div className="flex-shrink-0">
+              {isInCart ? (
+                <QuantityStepper
+                  quantity={cartQuantity}
+                  onIncrement={handleIncrement}
+                  onDecrement={handleDecrement}
+                  size="sm"
+                />
+              ) : (
+                <Button 
+                  onClick={handleAddToCart}
+                  size="sm"
+                  className="gap-1"
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                  Add
+                </Button>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 
@@ -178,25 +235,16 @@ const Menu = () => {
   return (
     <div className="min-h-screen pt-16">
       {/* Menu Content */}
-      <section className="py-20 px-4 max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 gradient-text">
-            Our Menu
-          </h1>
-          <p className="text-xl text-foreground/80">
-            Authentic Indian cuisine crafted with love and tradition
-          </p>
-        </div>
-        
+      <section className="py-8 px-4 max-w-7xl mx-auto">
         {loading ? (
           <div className="text-center py-20 text-xl">Loading menu...</div>
         ) : error ? (
           <div className="text-center py-20 text-red-500">{error}</div>
         ) : (
           <Tabs defaultValue={defaultTab} className="space-y-8">
-            <TabsList className="inline-flex w-full justify-start overflow-x-auto bg-card/50 backdrop-blur-sm border-primary/20 flex-wrap gap-2">
+            <TabsList className="inline-flex w-full justify-start overflow-x-auto bg-card/50 backdrop-blur-sm border-primary/20 md:flex-wrap gap-2 scrollbar-hide">
               {tabKeys.map((key) => (
-                <TabsTrigger key={key} value={key} className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground whitespace-nowrap">
+                <TabsTrigger key={key} value={key} className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground whitespace-nowrap flex-shrink-0">
                   {key}
                 </TabsTrigger>
               ))}

@@ -206,6 +206,16 @@ All colors MUST be HSL.
     transform: translateY(-4px) scale(1.02);
     box-shadow: 0 12px 24px -8px oklch(var(--primary-raw) / 0.3);
   }
+
+  /* Hide scrollbar while keeping functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
 }
 
 @keyframes float {
