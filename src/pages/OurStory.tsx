@@ -58,7 +58,7 @@ const OurStory = () => {
       <section
         className="relative h-screen flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(139, 69, 19, 0.6), rgba(160, 82, 45, 0.5)), url('/images/new images/34.png')`
+          backgroundImage: `url('/images/new images/34.png')`
         }}
       >
         <div className="text-center z-10 max-w-5xl mx-auto px-4">
@@ -74,7 +74,7 @@ const OurStory = () => {
       {/* Welcome Section */}
       <section className="py-20 px-4 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
             Welcome to Namaste Curry House
           </h2>
           <p className="text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed">
@@ -87,7 +87,7 @@ const OurStory = () => {
       <section className="py-20 px-4 max-w-7xl mx-auto bg-primary/5">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 gradient-text">
+            <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">
               Where It All Began
             </h2>
             <div className="space-y-6 text-lg text-foreground/80 leading-relaxed">
@@ -115,7 +115,7 @@ const OurStory = () => {
       {/* Features Section */}
       <section className="py-20 px-4 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
             The Namaste Experience
           </h2>
           <p className="text-xl text-foreground/80 max-w-3xl mx-auto">
@@ -146,7 +146,7 @@ const OurStory = () => {
       <section className="py-20 px-4 bg-primary/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
               What Drives Us
             </h2>
             <p className="text-xl text-foreground/80 max-w-3xl mx-auto">
@@ -185,7 +185,7 @@ const OurStory = () => {
             />
           </div>
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
               Tradition Perfected
             </h2>
             <p className="text-lg text-foreground/80 mb-6 leading-relaxed">
@@ -201,7 +201,7 @@ const OurStory = () => {
       {/* Vision Section */}
       <section className="py-20 px-4 max-w-7xl mx-auto bg-accent/10">
         <div className="text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 gradient-text">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">
             Our Vision
           </h2>
           <div className="max-w-4xl mx-auto">
@@ -221,7 +221,7 @@ const OurStory = () => {
       {/* CTA Section */}
       <section className="py-20 px-4 text-center">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
             Experience Authentic India
           </h2>
           <p className="text-xl text-foreground/80 mb-8 max-w-2xl mx-auto">

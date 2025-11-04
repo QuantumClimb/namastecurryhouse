@@ -117,7 +117,7 @@ export default function Admin() {
           <div className="max-w-4xl mx-auto">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h1 className="text-4xl font-bold gradient-text">Admin Dashboard</h1>
+                <h1 className="text-4xl font-bold text-foreground">Admin Dashboard</h1>
                 <p className="text-foreground/70 mt-2">Welcome, {ADMIN_USER}!</p>
               </div>
               <Button onClick={handleLogout} variant="outline">
@@ -265,7 +265,7 @@ export default function Admin() {
       <div className="max-w-md w-full mx-4">
         <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl gradient-text">Admin Login</CardTitle>
+            <CardTitle className="text-2xl text-foreground">Admin Login</CardTitle>
             <p className="text-foreground/70">Access the admin dashboard</p>
           </CardHeader>
           <CardContent className="space-y-4">

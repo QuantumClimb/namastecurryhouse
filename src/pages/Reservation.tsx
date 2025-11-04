@@ -48,7 +48,7 @@ const Reservation = () => {
       {/* Reservation Form */}
       <section className="py-20 px-4 max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 gradient-text">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-foreground">
             Reservations
           </h1>
           <p className="text-xl text-foreground/80 mb-8">
@@ -58,7 +58,7 @@ const Reservation = () => {
         
         <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
           <CardHeader>
-            <CardTitle className="text-3xl font-bold gradient-text text-center">
+            <CardTitle className="text-3xl font-bold text-foreground text-center">
               Book Your Table
             </CardTitle>
           </CardHeader>
@@ -167,7 +167,7 @@ const Reservation = () => {
       <section className="py-12 px-4 max-w-4xl mx-auto">
         <Card className="bg-card/30 backdrop-blur-sm border-primary/20">
           <CardContent className="p-8">
-            <h3 className="text-2xl font-bold mb-6 gradient-text">Booking Information</h3>
+            <h3 className="text-2xl font-bold mb-6 text-foreground">Booking Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
@@ -213,7 +213,7 @@ const Reservation = () => {
       <section className="py-12 px-4 max-w-4xl mx-auto">
   <Card className="bg-secondary/10 border-secondary/20 neon-glow">
           <CardContent className="p-8 text-center">
-            <h3 className="text-2xl font-bold mb-4 gradient-text">Planning a Special Celebration?</h3>
+            <h3 className="text-2xl font-bold mb-4 text-foreground">Planning a Special Celebration?</h3>
             <p className="text-foreground/80 mb-6 max-w-2xl mx-auto">
               Whether it's a family gathering, birthday celebration, or corporate event, we'll help you create memorable moments with authentic Indian cuisine.
             </p>

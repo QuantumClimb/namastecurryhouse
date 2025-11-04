@@ -8,7 +8,7 @@ const CustomerSupport = () => {
       <section
         className="relative h-64 flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(139, 69, 19, 0.7), rgba(205, 133, 63, 0.5)), url('/images/new images/35.png')`
+          backgroundImage: `url('/images/new images/35.png')`
         }}
       >
         <div className="text-center z-10 max-w-4xl mx-auto px-4">

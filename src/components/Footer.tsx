@@ -15,7 +15,7 @@ export const Footer = () => {
                 alt="Namaste Curry House Logo" 
                 className="h-12 w-12 rounded-full object-cover"
               />
-              <span className="text-3xl font-bold gradient-text">Namaste Curry House</span>
+              <span className="text-3xl font-bold text-foreground">Namaste Curry House</span>
             </div>
             <p className="text-foreground/70 mb-6 max-w-md">
               Experience authentic Indian flavors and traditional hospitality. 

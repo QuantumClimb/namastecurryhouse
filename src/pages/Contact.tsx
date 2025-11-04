@@ -41,7 +41,7 @@ const Contact = () => {
           {/* Contact Form */}
           <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
             <CardHeader>
-              <CardTitle className="text-3xl font-bold gradient-text">
+              <CardTitle className="text-3xl font-bold text-foreground">
                 Send us a Message
               </CardTitle>
             </CardHeader>
@@ -106,7 +106,7 @@ const Contact = () => {
           <div className="space-y-8">
             <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
               <CardContent className="p-8">
-                <h3 className="text-2xl font-bold mb-6 gradient-text">Contact Information</h3>
+                <h3 className="text-2xl font-bold mb-6 text-foreground">Contact Information</h3>
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4">
                     <MapPin className="w-6 h-6 text-primary mt-1" />
@@ -155,7 +155,7 @@ const Contact = () => {
             <Card className="bg-secondary/10 border-secondary/20 neon-glow">
               <CardContent className="p-8 text-center">
                 <MessageCircle className="w-12 h-12 text-secondary mx-auto mb-4" />
-                <h3 className="text-2xl font-bold mb-4 gradient-text">Quick Contact</h3>
+                <h3 className="text-2xl font-bold mb-4 text-foreground">Quick Contact</h3>
                 <p className="text-foreground/80 mb-6">
                   Have a question? Contact us directly via WhatsApp for the fastest response about reservations, menu items, or catering.
                 </p>
@@ -181,7 +181,7 @@ const Contact = () => {
   <section className="py-20 px-4 bg-primary/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4 gradient-text">Find Us</h2>
+            <h2 className="text-4xl font-bold mb-4 text-foreground">Find Us</h2>
             <p className="text-xl text-foreground/80">
               Visit us in Lisboa for an authentic Indian dining experience
             </p>
@@ -192,7 +192,7 @@ const Contact = () => {
               <div className="w-full h-96 bg-primary/20 flex items-center justify-center">
                 <div className="text-center">
                   <MapPin className="w-16 h-16 text-primary mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold gradient-text mb-2">Interactive Map</h3>
+                  <h3 className="text-2xl font-bold text-foreground mb-2">Interactive Map</h3>
                   <p className="text-foreground/70">
                     Embedded Google Map would be placed here<br />
                     showing Namaste Curry House's location

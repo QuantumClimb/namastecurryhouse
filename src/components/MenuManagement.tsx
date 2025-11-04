@@ -322,7 +322,7 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold gradient-text">Menu Management</h2>
+          <h2 className="text-3xl font-bold text-foreground">Menu Management</h2>
           <p className="text-foreground/70">Manage your restaurant's menu items and images</p>
         </div>
         <div className="flex gap-2">

@@ -178,25 +178,6 @@ All colors MUST be HSL.
     border: 1px solid oklch(var(--border-raw) / 0.3);
   }
 
-  /* Warm, welcoming gradient for headings */
-  .gradient-text {
-    background: linear-gradient(135deg, 
-      hsl(var(--saffron)) 0%, 
-      hsl(var(--turmeric)) 50%,
-      hsl(var(--curry-red)) 100%
-    );
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 200% 200%;
-    animation: gradient-shift 4s ease infinite;
-  }
-  
-  @keyframes gradient-shift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-  
   /* Indian-inspired card hover effect */
   .card-hover {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

@@ -63,7 +63,7 @@ const Gallery = () => {
       <section
         className="relative h-96 flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(139, 69, 19, 0.5), rgba(205, 133, 63, 0.4)), url('/images/new images/33.png')`
+          backgroundImage: `url('/images/new images/33.png')`
         }}
       >
         <div className="text-center z-10 max-w-4xl mx-auto px-4">
@@ -125,7 +125,7 @@ const Gallery = () => {
   <section className="py-20 px-4 bg-primary/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
               Video Gallery
             </h2>
             <p className="text-xl text-foreground/80 max-w-3xl mx-auto">
