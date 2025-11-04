@@ -4,23 +4,6 @@ import { Mail, Phone, MessageCircle, Clock } from "lucide-react";
 const CustomerSupport = () => {
   return (
     <div className="min-h-screen pt-16">
-      {/* Hero Section */}
-      <section
-        className="relative h-64 flex items-center justify-center bg-cover bg-center"
-        style={{
-          backgroundImage: `url('/images/new images/35.png')`
-        }}
-      >
-        <div className="text-center z-10 max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white animate-fade-in">
-            Customer Support
-          </h1>
-          <p className="text-xl text-white/90 animate-fade-in">
-            We're here to help you
-          </p>
-        </div>
-      </section>
-
       {/* Content Section */}
       <section className="py-16 px-4 max-w-5xl mx-auto">
         <div className="space-y-8">

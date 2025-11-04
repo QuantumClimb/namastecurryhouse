@@ -3,23 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const TermsConditions = () => {
   return (
     <div className="min-h-screen pt-16">
-      {/* Hero Section */}
-      <section
-        className="relative h-64 flex items-center justify-center bg-cover bg-center"
-        style={{
-          backgroundImage: `url('/images/new images/35.png')`
-        }}
-      >
-        <div className="text-center z-10 max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white animate-fade-in">
-            Terms and Conditions
-          </h1>
-          <p className="text-xl text-white/90 animate-fade-in">
-            Please read these terms carefully
-          </p>
-        </div>
-      </section>
-
       {/* Content Section */}
       <section className="py-16 px-4 max-w-5xl mx-auto">
         <div className="space-y-6">
