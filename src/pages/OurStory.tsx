@@ -61,14 +61,6 @@ const OurStory = () => {
           backgroundImage: `url('/images/new images/34.png')`
         }}
       >
-        <div className="text-center z-10 max-w-5xl mx-auto px-4">
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 text-white animate-fade-in">
-            Our Story
-          </h1>
-          <p className="text-xl md:text-2xl text-white/90 leading-relaxed animate-fade-in">
-            Bringing authentic Indian flavors and traditional hospitality to create memorable dining experiences
-          </p>
-        </div>
       </section>
 
       {/* Welcome Section */}
