@@ -211,8 +211,8 @@ const Reservation = () => {
 
       {/* Large Bookings CTA */}
       <section className="py-12 px-4 max-w-4xl mx-auto">
-  <Card className="bg-secondary/10 border-secondary/20 neon-glow">
-          <CardContent className="p-8 text-center">
+        <Card className="bg-secondary/10 border-secondary/20 neon-glow">
+          <CardContent className="p-4 md:p-8 text-center">
             <h3 className="text-2xl font-bold mb-4 text-foreground">Planning a Special Celebration?</h3>
             <p className="text-foreground/80 mb-6 max-w-2xl mx-auto">
               Whether it's a family gathering, birthday celebration, or corporate event, we'll help you create memorable moments with authentic Indian cuisine.
@@ -224,7 +224,7 @@ const Reservation = () => {
                 );
                 window.open(`https://wa.me/351920617185?text=${message}`, "_blank");
               }}
-              className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-8 py-3 text-lg neon-glow"
+              className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-4 md:px-8 py-3 text-base md:text-lg neon-glow w-full md:w-auto"
             >
               <MessageCircle className="w-5 h-5 mr-2" />
               Contact for Large Bookings

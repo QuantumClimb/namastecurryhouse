@@ -15,7 +15,6 @@ export const Navigation = () => {
     { name: "Gallery", href: "/gallery" },
     { name: "Reservation", href: "/reservation" },
     { name: "Contact", href: "/contact" },
-    { name: "Admin", href: "/admin" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -23,13 +22,13 @@ export const Navigation = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20 md:h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-3" aria-label="Namaste Curry House Home">
               <img
                 src="/logo.png"
                 alt="Namaste Curry House Logo"
-                className="h-12 w-12 object-contain drop-shadow-md"
+                className="h-14 w-14 md:h-12 md:w-12 object-contain drop-shadow-md"
                 loading="eager"
               />
               <span className="text-2xl font-bold text-foreground hidden md:inline">Namaste Curry House</span>
@@ -63,9 +62,9 @@ export const Navigation = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(!isOpen)}
-              className="text-foreground"
+              className="text-foreground p-2"
             >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+              {isOpen ? <X size={32} /> : <Menu size={32} />}
             </Button>
           </div>
         </div>

@@ -131,8 +131,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   };
 
   const defaultTrigger = (
-    <Button variant="outline" size="icon" className="relative">
-      <ShoppingBag className="w-4 h-4" />
+    <Button variant="outline" size="icon" className="relative w-10 h-10 md:w-9 md:h-9">
+      <ShoppingBag className="w-6 h-6 md:w-4 md:h-4" />
       {itemCount > 0 && (
         <Badge 
           variant="destructive" 

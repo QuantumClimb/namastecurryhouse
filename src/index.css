@@ -154,11 +154,66 @@ All colors MUST be HSL.
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif font-normal;
+    font-family: var(--font-serif);
+    font-weight: normal;
+    color: oklch(var(--accent-raw)) !important;
   }
 
   button {
     @apply font-mono;
+  }
+
+  /* Mobile-specific styles */
+  @media (max-width: 768px) {
+    body {
+      text-align: center;
+    }
+
+    section, div, main {
+      padding-left: max(3px, env(safe-area-inset-left));
+      padding-right: max(3px, env(safe-area-inset-right));
+    }
+
+    /* Remove padding from menu item cards specifically */
+    .menu-item-card {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    /* Remove padding from hero banners to allow full-width */
+    section.relative.h-96,
+    section[style*="backgroundImage"] {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    /* Menu page specific padding */
+    .menu-page-section {
+      padding-left: 4px !important;
+      padding-right: 4px !important;
+    }
+
+    /* OurStory hero banner - square on mobile, no padding */
+    .hero-banner-ourstory {
+      width: 100vw;
+      height: 100vw;
+      aspect-ratio: 1 / 1;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      padding: 0 !important;
+      margin-left: -8px;
+      margin-right: -8px;
+    }
+  }
+
+  /* Desktop hero banner */
+  @media (min-width: 769px) {
+    .hero-banner-ourstory {
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+    }
   }
 }
 

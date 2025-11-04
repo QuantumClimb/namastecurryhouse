@@ -91,7 +91,7 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
   return (
     <>
       {/* Mobile Layout - Horizontal Card */}
-      <Card className="md:hidden bg-card/50 backdrop-blur-sm border-primary/20 neon-glow overflow-hidden group flex flex-row items-center p-3 relative">
+      <Card className="md:hidden bg-card/50 backdrop-blur-sm border-primary/20 neon-glow overflow-hidden group flex flex-row items-center p-3 relative menu-item-card">
         {/* Dietary Indicator - Top Right */}
         {item.dietary && item.dietary.length > 0 && (
           <div className="absolute top-2 right-2 w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-md" title={item.dietary.join(', ')} />
@@ -110,7 +110,7 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
         </div>
 
         {/* Center: Content */}
-        <div className="flex-1 px-3 py-1 min-w-0">
+        <div className="flex-1 px-3 py-1 min-w-0 text-left">
           <h4 className="text-base font-bold text-foreground truncate mb-1">{item.name}</h4>
           <p className="text-xs text-foreground/60 line-clamp-1 mb-2">{item.description}</p>
           <div className="flex items-center gap-2">
@@ -143,7 +143,7 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
       </Card>
 
       {/* Desktop Layout - Vertical Card */}
-      <Card className="hidden md:block bg-card/50 backdrop-blur-sm border-primary/20 neon-glow overflow-hidden group">
+      <Card className="hidden md:block bg-card/50 backdrop-blur-sm border-primary/20 neon-glow overflow-hidden group menu-item-card">
         {/* Food Image */}
         <div className="relative h-48 overflow-hidden">
           <img
@@ -235,7 +235,7 @@ const Menu = () => {
   return (
     <div className="min-h-screen pt-16">
       {/* Menu Content */}
-      <section className="py-8 px-4 max-w-7xl mx-auto">
+      <section className="py-8 px-4 max-w-7xl mx-auto menu-page-section">
         {loading ? (
           <div className="text-center py-20 text-xl">Loading menu...</div>
         ) : error ? (

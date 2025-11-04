@@ -56,9 +56,9 @@ const OurStory = () => {
     <div className="min-h-screen pt-16">
       {/* Hero Section */}
       <section
-        className="relative h-screen flex items-center justify-center bg-cover bg-center"
+        className="relative h-96 flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `url('/images/new images/34.png')`
+          backgroundImage: `url('/images/banners/OurStoryBanner.png')`
         }}
       >
       </section>
@@ -96,7 +96,7 @@ const OurStory = () => {
           </div>
           <div className="relative">
             <img
-              src="https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+              src="/images/banners/OurStory1.png"
               alt="Namaste Curry House Interior"
               className="rounded-lg shadow-2xl w-full h-96 object-cover neon-glow"
             />
@@ -171,7 +171,7 @@ const OurStory = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="relative">
             <img
-              src="/images/new images/37.png"
+              src="/images/banners/OurStory2.png"
               alt="Namaste Curry House Experience"
               className="rounded-lg shadow-2xl w-full h-96 object-cover neon-glow"
             />

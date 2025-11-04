@@ -63,17 +63,9 @@ const Gallery = () => {
       <section
         className="relative h-96 flex items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage: `url('/images/new images/33.png')`
+          backgroundImage: `url('/images/banners/Gallery.png')`
         }}
       >
-        <div className="text-center z-10 max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white animate-fade-in">
-            Gallery
-          </h1>
-          <p className="text-xl text-white/90 animate-fade-in">
-            Capturing the flavors, colors, and joy of Indian cuisine
-          </p>
-        </div>
       </section>
 
       {/* Filter Buttons */}
