@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { CreditCard } from 'lucide-react';
 import { PaymentMethod } from '@/types/order';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://namastecurryhouse.vercel.app/api';
 
 interface PaymentMethodSelectorProps {
   onSelect: (method: PaymentMethod) => void;
@@ -14,6 +16,26 @@ interface PaymentMethodSelectorProps {
 
 export default function PaymentMethodSelector({ onSelect, onBack, total }: PaymentMethodSelectorProps) {
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
+  const [stripeAvailable, setStripeAvailable] = useState(true);
+  
+  // Check if Stripe is configured
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/stripe/config`)
+      .then(res => {
+        if (!res.ok) {
+          setStripeAvailable(false);
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (!data.publishableKey) {
+          setStripeAvailable(false);
+        }
+      })
+      .catch(() => {
+        setStripeAvailable(false);
+      });
+  }, []);
   
   const handleContinue = () => {
     if (selectedMethod) {
@@ -46,15 +68,19 @@ export default function PaymentMethodSelector({ onSelect, onBack, total }: Payme
             </div>
             
             {/* Stripe Option */}
-            <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
-              <RadioGroupItem value="stripe" id="stripe" />
-              <Label htmlFor="stripe" className="flex items-center gap-3 flex-1 cursor-pointer">
+            <div className={`flex items-center space-x-3 p-4 border rounded-lg ${stripeAvailable ? 'hover:bg-gray-50 cursor-pointer' : 'opacity-50 cursor-not-allowed bg-gray-100'}`}>
+              <RadioGroupItem value="stripe" id="stripe" disabled={!stripeAvailable} />
+              <Label htmlFor="stripe" className={`flex items-center gap-3 flex-1 ${stripeAvailable ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
                 <div className="bg-blue-600 text-white p-2 rounded">
                   <CreditCard className="w-6 h-6" />
                 </div>
                 <div className="flex-1">
                   <p className="font-semibold">Pay with Card (Stripe)</p>
-                  <p className="text-sm text-gray-600">Secure online payment with credit/debit card</p>
+                  <p className="text-sm text-gray-600">
+                    {stripeAvailable 
+                      ? 'Secure online payment with credit/debit card' 
+                      : 'Currently unavailable - please use WhatsApp'}
+                  </p>
                 </div>
               </Label>
             </div>
