@@ -217,44 +217,6 @@ const Menu = () => {
           </Tabs>
         )}
       </section>
-
-      {/* Indian Beverages Section */}
-  <section className="py-20 px-4 bg-primary/5">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 gradient-text">
-            Traditional Indian Beverages
-          </h2>
-          <p className="text-xl text-foreground/80 mb-12 max-w-3xl mx-auto">
-            Complement your meal with our authentic Indian drinks, from refreshing lassis to aromatic chai
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
-              <CardContent className="p-8 text-center">
-                <h3 className="text-2xl font-bold mb-4 text-primary">Lassi Varieties</h3>
-                <p className="text-foreground/70">
-                  Cool, creamy yogurt drinks in sweet, salty, and mango flavors - the perfect complement to spicy dishes
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
-              <CardContent className="p-8 text-center">
-                <h3 className="text-2xl font-bold mb-4 text-secondary">Masala Chai</h3>
-                <p className="text-foreground/70">
-                  Traditional spiced tea brewed with aromatic Indian spices, cardamom, ginger, and milk
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
-              <CardContent className="p-8 text-center">
-                <h3 className="text-2xl font-bold mb-4 text-accent">Soft Drinks & More</h3>
-                <p className="text-foreground/70">
-                  Indian sodas, fresh juices, and imported beverages to complete your authentic dining experience
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
