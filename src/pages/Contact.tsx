@@ -35,25 +35,17 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen pt-16">
-      {/* Hero Section */}
-      <section
-        className="relative h-96 flex items-center justify-center bg-cover bg-center"
-        style={{
-          backgroundImage: `linear-gradient(rgba(139, 69, 19, 0.5), rgba(205, 133, 63, 0.4)), url('/images/new images/38.png')`
-        }}
-      >
-        <div className="text-center z-10 max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white animate-fade-in">
+      {/* Contact Content */}
+      <section className="py-20 px-4 max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 gradient-text">
             Contact Us
           </h1>
-          <p className="text-xl text-white/90 animate-fade-in">
+          <p className="text-xl text-foreground/80 mb-8">
             Get in touch with Namaste Curry House for reservations, events, or inquiries
           </p>
         </div>
-      </section>
-
-      {/* Contact Content */}
-      <section className="py-20 px-4 max-w-7xl mx-auto">
+        
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Form */}
           <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">

@@ -45,25 +45,17 @@ const Reservation = () => {
 
   return (
     <div className="min-h-screen pt-16">
-      {/* Hero Section */}
-      <section
-        className="relative h-96 flex items-center justify-center bg-cover bg-center"
-        style={{
-          backgroundImage: `linear-gradient(rgba(139, 69, 19, 0.5), rgba(205, 133, 63, 0.4)), url('/images/new images/39.png')`
-        }}
-      >
-        <div className="text-center z-10 max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white animate-fade-in">
+      {/* Reservation Form */}
+      <section className="py-20 px-4 max-w-4xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 gradient-text">
             Reservations
           </h1>
-          <p className="text-xl text-white/90 animate-fade-in">
+          <p className="text-xl text-foreground/80 mb-8">
             Secure your spot for an authentic Indian dining experience at Namaste Curry House
           </p>
         </div>
-      </section>
-
-      {/* Reservation Form */}
-      <section className="py-20 px-4 max-w-4xl mx-auto">
+        
         <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
           <CardHeader>
             <CardTitle className="text-3xl font-bold gradient-text text-center">
