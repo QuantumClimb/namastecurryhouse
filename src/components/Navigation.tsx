@@ -10,8 +10,7 @@ export const Navigation = () => {
   const location = useLocation();
 
   const navigation = [
-    { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
+    { name: "Our Story", href: "/" },
     { name: "Menu", href: "/menu" },
     { name: "Gallery", href: "/gallery" },
     { name: "Reservation", href: "/reservation" },
