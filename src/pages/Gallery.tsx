@@ -36,35 +36,6 @@ const Gallery = () => {
 
   return (
     <div className="min-h-screen pt-16">
-      {/* Hero Section */}
-      <section
-        className="relative h-96 flex items-center justify-center bg-cover bg-center"
-        style={{
-          backgroundImage: `url('/images/banners/Gallery.png')`
-        }}
-      >
-      </section>
-
-      {/* Filter Buttons - Hidden for now */}
-      {/* <section className="py-8 px-4 max-w-7xl mx-auto">
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
-          {categories.map((category) => (
-            <Button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              variant={selectedCategory === category ? "default" : "outline"}
-              className={`neon-glow ${
-                selectedCategory === category 
-                  ? "bg-primary hover:bg-primary/90" 
-                  : "border-primary/30 hover:bg-primary/10"
-              }`}
-            >
-              {category}
-            </Button>
-          ))}
-        </div>
-      </section> */}
-
       {/* Photo Gallery */}
       <section className="py-12 px-4 max-w-7xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
