@@ -3,7 +3,10 @@
   "builds": [
     {
       "src": "package.json", 
-      "use": "@vercel/static-build"
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     },
     {
       "src": "server/index.js",
@@ -33,13 +36,23 @@
       ]
     }
   ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "/server/index.js"
     },
     {
-      "source": "/((?!api).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
