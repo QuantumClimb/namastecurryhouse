@@ -1,47 +1,24 @@
 
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { X, ChevronLeft, ChevronRight, Play, Upload } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Replaced images using sequential assets from /images/new images/
-  // Mapping keeps prior categories but uses numbered filenames.
-  const images = Array.from({ length: 30 }, (_, i) => {
-    const index = i + 1; // 1..30 for main gallery
-    // Rough category cycling: Food, Atmosphere, Events, Drinks, Interior
-    const categoriesCycle = ["Food", "Atmosphere", "Events", "Drinks", "Interior"];
-    const category = categoriesCycle[i % categoriesCycle.length];
+  // List of actual images that exist in the folder
+  // Update this array when you add or remove images
+  const imageNumbers = [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+  
+  const images = imageNumbers.map(num => {
+    const paddedIndex = String(num).padStart(3, '0');
     return {
-      src: `/images/new images/${index}.png`,
-      alt: `Gallery Image ${index}`,
-      category
+      src: `/images/new images/Namaste_${paddedIndex}.jpeg`,
+      alt: `Namaste Curry House Gallery`,
     };
   });
-
-  const videos = [
-    {
-      title: "Traditional Indian Cooking",
-      thumbnail: "/images/new images/31.png",
-      embedId: "dQw4w9WgXcQ" // Replace with actual video ID
-    },
-    {
-      title: "Behind the Scenes at Namaste",
-      thumbnail: "/images/new images/32.png",
-      embedId: "dQw4w9WgXcQ" // Replace with actual video ID
-    }
-  ];
-
-  const categories = ["All", "Atmosphere", "Events", "Food", "Drinks", "Interior"];
-  const [selectedCategory, setSelectedCategory] = useState("All");
-
-  const filteredImages = selectedCategory === "All" 
-    ? images 
-    : images.filter(img => img.category === selectedCategory);
 
   const openLightbox = (imageSrc: string) => {
     const index = images.findIndex(img => img.src === imageSrc);
@@ -68,8 +45,8 @@ const Gallery = () => {
       >
       </section>
 
-      {/* Filter Buttons */}
-      <section className="py-8 px-4 max-w-7xl mx-auto">
+      {/* Filter Buttons - Hidden for now */}
+      {/* <section className="py-8 px-4 max-w-7xl mx-auto">
         <div className="flex flex-wrap justify-center gap-4 mb-8">
           {categories.map((category) => (
             <Button
@@ -86,12 +63,12 @@ const Gallery = () => {
             </Button>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* Photo Gallery */}
       <section className="py-12 px-4 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredImages.map((image, index) => (
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {images.map((image, index) => (
             <div
               key={index}
               className="relative group cursor-pointer neon-glow"
@@ -102,49 +79,8 @@ const Gallery = () => {
                 alt={image.alt}
                 className="w-full h-64 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-end">
-                <div className="p-4">
-                  <p className="text-white font-medium">{image.alt}</p>
-                  <p className="text-white/70 text-sm">{image.category}</p>
-                </div>
-              </div>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* Video Section */}
-  <section className="py-20 px-4 bg-primary/5">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
-              Video Gallery
-            </h2>
-            <p className="text-xl text-foreground/80 max-w-3xl mx-auto">
-              Experience the energy and atmosphere of MAUJ through our exclusive video content
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {videos.map((video, index) => (
-              <Card key={index} className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow overflow-hidden">
-                <div className="relative group cursor-pointer">
-                  <img
-                    src={video.thumbnail}
-                    alt={video.title}
-                    className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Play className="w-16 h-16 text-white" />
-                  </div>
-                </div>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold text-foreground mb-2">{video.title}</h3>
-                  <p className="text-foreground/70">Click to watch this exclusive content</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
         </div>
       </section>
 

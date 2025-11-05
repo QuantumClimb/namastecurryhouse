@@ -131,12 +131,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   };
 
   const defaultTrigger = (
-    <Button variant="outline" size="icon" className="relative w-10 h-10 md:w-9 md:h-9">
-      <ShoppingBag className="w-6 h-6 md:w-4 md:h-4" />
+    <Button variant="ghost" size="icon" className="relative w-auto h-auto p-2 hover:bg-transparent" style={{ color: '#D4AF37' }}>
+      <ShoppingBag className="w-10 h-10 md:w-6 md:h-6" />
       {itemCount > 0 && (
         <Badge 
           variant="destructive" 
-          className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+          className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
         >
           {itemCount > 99 ? '99+' : itemCount}
         </Badge>

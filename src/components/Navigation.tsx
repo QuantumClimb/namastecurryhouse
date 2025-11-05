@@ -20,7 +20,7 @@ export const Navigation = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border" style={{ backgroundColor: '#79261f' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 md:h-16">
           <div className="flex items-center">
@@ -31,7 +31,7 @@ export const Navigation = () => {
                 className="h-14 w-14 md:h-12 md:w-12 object-contain drop-shadow-md"
                 loading="eager"
               />
-              <span className="text-2xl font-bold text-foreground hidden md:inline">Namaste Curry House</span>
+              <span className="text-2xl font-bold hidden md:inline" style={{ color: '#D4AF37', fontFamily: 'Forum, serif' }}>Namaste Curry House</span>
             </Link>
           </div>
           
@@ -44,9 +44,13 @@ export const Navigation = () => {
                     to={item.href}
                     className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ${
                       isActive(item.href)
-                        ? "text-primary bg-primary/10 neon-glow"
-                        : "text-foreground/80 hover:text-primary hover:bg-primary/5"
+                        ? "text-white neon-glow"
+                        : "hover:bg-transparent"
                     }`}
+                    style={isActive(item.href) 
+                      ? { backgroundColor: '#D4AF37', color: 'white' }
+                      : { color: '#D4AF37' }
+                    }
                   >
                     {item.name}
                   </Link>
@@ -62,9 +66,10 @@ export const Navigation = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(!isOpen)}
-              className="text-foreground p-2"
+              className="p-2 hover:bg-transparent"
+              style={{ color: '#D4AF37' }}
             >
-              {isOpen ? <X size={32} /> : <Menu size={32} />}
+              {isOpen ? <X size={40} /> : <Menu size={40} />}
             </Button>
           </div>
         </div>
@@ -73,7 +78,7 @@ export const Navigation = () => {
       {/* Mobile menu */}
       {isOpen && (
         <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-background/95 backdrop-blur-md">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 backdrop-blur-md" style={{ backgroundColor: '#79261f' }}>
             {navigation.map((item) => (
               <Link
                 key={item.name}

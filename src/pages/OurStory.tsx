@@ -171,7 +171,7 @@ const OurStory = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="relative">
             <img
-              src="/images/banners/OurStory2.png"
+              src="/images/banners/recommend.jpg"
               alt="Namaste Curry House Experience"
               className="rounded-lg shadow-2xl w-full h-96 object-cover neon-glow"
             />
