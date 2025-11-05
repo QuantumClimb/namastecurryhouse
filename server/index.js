@@ -904,30 +904,35 @@ app.post('/api/orders/whatsapp', express.json(), async (req, res) => {
 // SERVER STARTUP
 // ============================================================================
 
-// Start server
-async function startServer() {
-  try {
-    await ensureDbConnection(true);
-  } catch (error) {
-    console.error('Database connection warning:', error.message);
+// Export for Vercel serverless
+export default app;
+
+// Start server only when not in Vercel serverless environment
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  async function startServer() {
+    try {
+      await ensureDbConnection(true);
+    } catch (error) {
+      console.error('Database connection warning:', error.message);
+    }
+    
+    const server = app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+      console.log(`Database status: ${dbConnected ? 'connected' : 'disconnected'}`);
+    });
+    
+    // Keep reference to server to prevent process from exiting
+    return server;
   }
-  
-  const server = app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`Database status: ${dbConnected ? 'connected' : 'disconnected'}`);
+
+  startServer().catch(err => {
+    console.error('Failed to start server:', err);
+    process.exit(1);
   });
-  
-  // Keep reference to server to prevent process from exiting
-  return server;
+
+  // Graceful shutdown
+  process.on('SIGINT', async () => {
+    await prisma.$disconnect();
+    process.exit(0);
+  });
 }
-
-startServer().catch(err => {
-  console.error('Failed to start server:', err);
-  process.exit(1);
-});
-
-// Graceful shutdown
-process.on('SIGINT', async () => {
-  await prisma.$disconnect();
-  process.exit(0);
-});
