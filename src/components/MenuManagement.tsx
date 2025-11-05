@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Switch } from "@/components/ui/switch";
 import { Trash2, Edit, Plus, Upload, X } from "lucide-react";
 import { API_BASE_URL, SERVER_BASE_URL } from "@/lib/apiConfig";
 
@@ -22,7 +23,7 @@ interface MenuItem {
   description: string;
   price: number;
   dietary: string[];
-  spiceLevel?: number;
+  hasSpiceCustomization?: boolean;
   categoryId: number;
   category: string;
   imageUrl?: string;
@@ -49,7 +50,7 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
     description: "",
     price: "",
     dietary: [] as string[],
-    spiceLevel: "",
+    hasSpiceCustomization: false,
     categoryId: "",
     imageUrl: "",
     // New fields for database image storage
@@ -207,7 +208,7 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
       let submitData = {
         ...formData,
         price: parseFloat(formData.price),
-        spiceLevel: formData.spiceLevel ? parseInt(formData.spiceLevel) : null,
+        hasSpiceCustomization: formData.hasSpiceCustomization,
         categoryId: parseInt(formData.categoryId)
       };
       
@@ -264,7 +265,7 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
       description: item.description,
       price: item.price.toString(),
       dietary: item.dietary,
-      spiceLevel: item.spiceLevel?.toString() || "",
+      hasSpiceCustomization: item.hasSpiceCustomization || false,
       categoryId: item.categoryId.toString(),
       imageUrl: item.imageUrl || "",
       imageData: "",
@@ -297,7 +298,7 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
       description: "",
       price: "",
       dietary: [],
-      spiceLevel: "",
+      hasSpiceCustomization: false,
       categoryId: "",
       imageUrl: "",
       imageData: "",
@@ -464,15 +465,17 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="spiceLevel">Spice Level (1-5)</Label>
-                    <Input
-                      id="spiceLevel"
-                      type="number"
-                      min="1"
-                      max="5"
-                      value={formData.spiceLevel}
-                      onChange={(e) => setFormData(prev => ({ ...prev, spiceLevel: e.target.value }))}
-                    />
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="hasSpiceCustomization">Enable Spice Level Customization</Label>
+                      <Switch
+                        id="hasSpiceCustomization"
+                        checked={formData.hasSpiceCustomization}
+                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, hasSpiceCustomization: checked }))}
+                      />
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      When enabled, customers can select their preferred spice level (0-100%) when ordering this item.
+                    </p>
                   </div>
                 </div>
 
@@ -565,9 +568,9 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
                   <p className="text-foreground/70 text-sm mb-3 line-clamp-2">{item.description}</p>
                   <div className="flex flex-wrap gap-1 mb-3">
                     <Badge variant="secondary" className="text-xs">{item.category}</Badge>
-                    {item.spiceLevel && (
+                    {item.hasSpiceCustomization && (
                       <Badge variant="outline" className="text-xs">
-                        {'🌶️'.repeat(item.spiceLevel)}
+                        🌶️ Customizable
                       </Badge>
                     )}
                     {item.dietary.map((diet, idx) => (

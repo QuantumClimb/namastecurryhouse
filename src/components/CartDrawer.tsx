@@ -27,14 +27,14 @@ const CartItemComponent: React.FC<{ item: CartItem }> = ({ item }) => {
     }
   };
 
-  const getSpiceLevelDisplay = (level?: string) => {
-    switch (level) {
-      case 'mild': return '🌶️';
-      case 'medium': return '🌶️🌶️';
-      case 'hot': return '🌶️🌶️🌶️';
-      case 'extra-hot': return '🌶️🌶️🌶️🌶️';
-      default: return '';
-    }
+  const getSpiceLevelDisplay = (level?: number) => {
+    if (level === undefined) return '';
+    if (level === 0) return '🔵 No Spice';
+    if (level === 25) return '🌶️ Mild';
+    if (level === 50) return '🌶️🌶️ Medium';
+    if (level === 75) return '🌶️🌶️🌶️ Hot';
+    if (level === 100) return '🌶️🌶️🌶️🌶️ Extra Hot';
+    return `🌶️ ${level}% Spicy`;
   };
 
   return (
@@ -46,9 +46,9 @@ const CartItemComponent: React.FC<{ item: CartItem }> = ({ item }) => {
         {/* Customizations */}
         {item.customization && (
           <div className="space-y-1 mb-2">
-            {item.customization.spiceLevel && (
+            {item.customization.spiceLevel !== undefined && (
               <div className="text-xs text-muted-foreground">
-                Spice: {getSpiceLevelDisplay(item.customization.spiceLevel)} {item.customization.spiceLevel}
+                {getSpiceLevelDisplay(item.customization.spiceLevel)}
               </div>
             )}
             {item.customization.extras && item.customization.extras.length > 0 && (

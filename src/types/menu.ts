@@ -6,7 +6,7 @@ export interface MenuItem {
   price: number;
   description?: string;
   dietary?: string[];
-  spiceLevel?: number;
+  hasSpiceCustomization?: boolean;
   imageUrl?: string;    // New field for image URL
 }
 

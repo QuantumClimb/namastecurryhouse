@@ -16,18 +16,18 @@ model MenuCategory {
 }
 
 model MenuItem {
-  id            Int      @id @default(autoincrement())
-  name          String
-  description   String
-  price         Float
-  dietary       String   // comma-separated dietary tags
-  spiceLevel    Int?
-  categoryId    Int
-  category      MenuCategory @relation(fields: [categoryId], references: [id])
-  imageUrl      String?      // Legacy: External image URL
-  imageData     String?      // Base64 encoded image data stored in Neon
-  imageMimeType String?      // MIME type (image/jpeg, image/png, etc.)
-  imageSize     Int?         // Image size in bytes
+  id                      Int      @id @default(autoincrement())
+  name                    String
+  description             String
+  price                   Float
+  dietary                 String   // comma-separated dietary tags
+  hasSpiceCustomization   Boolean  @default(false) // Toggle for spice level customization
+  categoryId              Int
+  category                MenuCategory @relation(fields: [categoryId], references: [id])
+  imageUrl                String?      // Legacy: External image URL
+  imageData               String?      // Base64 encoded image data stored in Neon
+  imageMimeType           String?      // MIME type (image/jpeg, image/png, etc.)
+  imageSize               Int?         // Image size in bytes
 }
 
 model Customer {
