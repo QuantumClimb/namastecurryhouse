@@ -29,9 +29,11 @@ const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => 
 };
 
 const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg: string }) => {
-  const items = useCartStore(state => state.items);
-  const removeItem = useCartStore(state => state.removeItem);
-  const updateQuantity = useCartStore(state => state.updateQuantity);
+  const { items, removeItem, updateQuantity } = useCartStore(state => ({
+    items: state.items,
+    removeItem: state.removeItem,
+    updateQuantity: state.updateQuantity
+  }));
   
   const cartQuantity = useItemCartQuantity(item);
   const isInCart = cartQuantity > 0;
