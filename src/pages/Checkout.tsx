@@ -9,8 +9,15 @@ import CheckoutStepIndicator from '@/components/checkout/CheckoutStepIndicator';
 import StripePaymentForm from '@/components/checkout/StripePaymentForm';
 import StripeProvider from '@/components/StripeProvider';
 import { CustomerInfo, DeliveryAddress, PaymentMethod } from '@/types/order';
+import { QuantityStepper } from '@/components/QuantityStepper';
+import { SpiceLevelDialog } from '@/components/SpiceLevelDialog';
+import { RepeatCustomizationDialog } from '@/components/RepeatCustomizationDialog';
+import { CartCustomization } from '@/types/cart';
 
 type CheckoutStep = 'cart' | 'customer' | 'address' | 'payment' | 'stripe-payment';
+
+// Track last selected spice level for each menu item (outside component for persistence)
+const lastSpiceLevels = new Map<string, number>();
 
 export default function Checkout() {
   const { 
@@ -22,11 +29,92 @@ export default function Checkout() {
     setCustomerInfo,
     setDeliveryAddress,
     setPaymentMethod,
+    addItem,
+    removeItem,
+    updateQuantity,
   } = useCartStore();
   
   const [currentStep, setCurrentStep] = useState<CheckoutStep>('cart');
+  const [isSpiceDialogOpen, setIsSpiceDialogOpen] = useState(false);
+  const [isRepeatDialogOpen, setIsRepeatDialogOpen] = useState(false);
+  const [currentItemForCustomization, setCurrentItemForCustomization] = useState<string | null>(null);
+  
   const deliveryFee = 2.50; // Fixed for now
   const grandTotal = total + deliveryFee;
+  
+  const handleIncrement = (cartItemId: string, itemMenuId: string, hasSpiceCustomization: boolean) => {
+    if (hasSpiceCustomization === true) {
+      const lastSpiceLevel = lastSpiceLevels.get(itemMenuId);
+      if (lastSpiceLevel !== undefined) {
+        // Show repeat dialog
+        setCurrentItemForCustomization(cartItemId);
+        setIsRepeatDialogOpen(true);
+      } else {
+        // No previous spice level, show spice dialog
+        setCurrentItemForCustomization(cartItemId);
+        setIsSpiceDialogOpen(true);
+      }
+    } else {
+      // No customization - directly increment
+      const currentCartItem = items.find(ci => ci.id === cartItemId);
+      if (currentCartItem) {
+        updateQuantity(cartItemId, currentCartItem.quantity + 1);
+      }
+    }
+  };
+
+  const handleDecrement = (cartItemId: string) => {
+    const currentCartItem = items.find(ci => ci.id === cartItemId);
+    if (currentCartItem) {
+      if (currentCartItem.quantity > 1) {
+        updateQuantity(cartItemId, currentCartItem.quantity - 1);
+      } else {
+        // Remove item when quantity reaches 0
+        removeItem(cartItemId);
+      }
+    }
+  };
+
+  const handleSpiceLevelConfirm = (spiceLevel: number) => {
+    if (currentItemForCustomization) {
+      const cartItem = items.find(ci => ci.id === currentItemForCustomization);
+      if (cartItem) {
+        // Store the spice level for this menu item
+        lastSpiceLevels.set(cartItem.menuItem.id, spiceLevel);
+        
+        // Add item to cart with spice level
+        const customization: CartCustomization = {
+          spiceLevel
+        };
+        addItem(cartItem.menuItem, 1, customization);
+      }
+    }
+    setCurrentItemForCustomization(null);
+  };
+
+  const handleRepeatCustomization = () => {
+    if (currentItemForCustomization) {
+      const cartItem = items.find(ci => ci.id === currentItemForCustomization);
+      if (cartItem) {
+        // Use the same spice level as before
+        const lastSpiceLevel = lastSpiceLevels.get(cartItem.menuItem.id);
+        if (lastSpiceLevel !== undefined) {
+          const customization: CartCustomization = {
+            spiceLevel: lastSpiceLevel
+          };
+          addItem(cartItem.menuItem, 1, customization);
+        }
+      }
+    }
+    setIsRepeatDialogOpen(false);
+    setCurrentItemForCustomization(null);
+  };
+
+  const handleNewCustomization = () => {
+    // Close repeat dialog and open spice dialog for new selection
+    setIsRepeatDialogOpen(false);
+    setIsSpiceDialogOpen(true);
+  };
   
   const handleCustomerInfoSubmit = (info: CustomerInfo) => {
     setCustomerInfo(info);
@@ -102,16 +190,30 @@ export default function Checkout() {
               <>
                 <ul className="space-y-3 mb-4">
                   {items.map((item) => (
-                    <li key={item.id} className="flex justify-between">
-                      <span>
-                        {item.quantity} x {item.menuItem.name}
-                        {item.customization && (
-                          <span className="text-sm text-gray-600 ml-2">
-                            ({item.customization.spiceLevel})
+                    <li key={item.id} className="flex justify-between items-center">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{item.menuItem.name}</span>
+                          {item.menuItem.hasSpiceCustomization && (
+                            <span className="text-sm">🌶️</span>
+                          )}
+                        </div>
+                        {item.customization?.spiceLevel !== undefined && (
+                          <span className="text-sm text-gray-600">
+                            Spice Level: {item.customization.spiceLevel}%
                           </span>
                         )}
-                      </span>
-                      <span>€{item.totalPrice.toFixed(2)}</span>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <QuantityStepper
+                          quantity={item.quantity}
+                          onIncrement={() => handleIncrement(item.id, item.menuItem.id, item.menuItem.hasSpiceCustomization || false)}
+                          onDecrement={() => handleDecrement(item.id)}
+                        />
+                        <span className="font-medium min-w-[60px] text-right">
+                          €{item.totalPrice.toFixed(2)}
+                        </span>
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -183,6 +285,34 @@ export default function Checkout() {
           />
         </StripeProvider>
       )}
+      
+      {/* Spice Customization Dialogs */}
+      {currentItemForCustomization && isSpiceDialogOpen && (() => {
+        const cartItem = items.find(ci => ci.id === currentItemForCustomization);
+        return (
+          <SpiceLevelDialog
+            open={isSpiceDialogOpen}
+            onOpenChange={setIsSpiceDialogOpen}
+            onConfirm={handleSpiceLevelConfirm}
+            itemName={cartItem?.menuItem.name || ''}
+          />
+        );
+      })()}
+      
+      {currentItemForCustomization && isRepeatDialogOpen && (() => {
+        const cartItem = items.find(ci => ci.id === currentItemForCustomization);
+        const lastSpiceLevel = cartItem ? lastSpiceLevels.get(cartItem.menuItem.id) : undefined;
+        return (
+          <RepeatCustomizationDialog
+            open={isRepeatDialogOpen}
+            onOpenChange={setIsRepeatDialogOpen}
+            onRepeat={handleRepeatCustomization}
+            onCustomize={handleNewCustomization}
+            itemName={cartItem?.menuItem.name || ''}
+            previousSpiceLevel={lastSpiceLevel || 0}
+          />
+        );
+      })()}
     </div>
   );
 }
