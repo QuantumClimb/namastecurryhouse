@@ -29,10 +29,11 @@ const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => 
 };
 
 const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg: string }) => {
-  const { items, removeItem, updateQuantity } = useCartStore(state => ({
+  const { items, removeItem, updateQuantity, addItem } = useCartStore(state => ({
     items: state.items,
     removeItem: state.removeItem,
-    updateQuantity: state.updateQuantity
+    updateQuantity: state.updateQuantity,
+    addItem: state.addItem
   }));
   
   const cartQuantity = useItemCartQuantity(item);
@@ -40,6 +41,11 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
 
   // Get the first cart item ID for this menu item (for updateQuantity/removeItem)
   const cartItemId = items.find(cartItem => cartItem.menuItem.id === item.id)?.id;
+
+  const handleAddToCart = () => {
+    // For now, add directly - we'll handle customization separately
+    addItem(item, 1);
+  };
 
   const handleIncrement = () => {
     if (cartItemId) {
@@ -127,13 +133,13 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
               size="sm"
             />
           ) : (
-            <AddToCartButton
-              menuItem={item}
+            <Button 
+              onClick={handleAddToCart}
               size="sm"
               className="rounded-full px-6"
-              buttonText="Add"
-              showIcon={false}
-            />
+            >
+              Add
+            </Button>
           )}
         </div>
       </Card>
@@ -189,12 +195,14 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
                   size="sm"
                 />
               ) : (
-                <AddToCartButton
-                  menuItem={item}
+                <Button 
+                  onClick={handleAddToCart}
                   size="sm"
                   className="gap-1"
-                  buttonText="Add"
-                />
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                  Add
+                </Button>
               )}
             </div>
           </div>
