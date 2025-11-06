@@ -1,12 +1,11 @@
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShoppingCart } from "lucide-react";
 import { MenuCategory, MenuItem } from "../types/menu";
-import { getMenuData } from "../services/menuService";
 import { QuantityStepper } from "../components/QuantityStepper";
 import { useItemCartQuantity } from "../hooks/useCartQuantity";
 import useCartStore from "../stores/cartStore";
@@ -14,6 +13,7 @@ import { API_BASE_URL } from "../lib/apiConfig";
 import { SpiceLevelDialog } from "../components/SpiceLevelDialog";
 import { RepeatCustomizationDialog } from "../components/RepeatCustomizationDialog";
 import { CartCustomization } from "../types/cart";
+import { useMenuData } from "../hooks/useMenuData";
 
 // Track last selected spice level for each menu item (outside component for persistence)
 const lastSpiceLevels = new Map<string, number>();
@@ -301,22 +301,8 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
 };
 
 const Menu = () => {
-  const [menuData, setMenuData] = useState<MenuCategory[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setLoading(true);
-    getMenuData()
-      .then((data) => {
-        setMenuData(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
+  const { data: menuData = [], isLoading: loading, error: queryError } = useMenuData();
+  const error = queryError?.message || null;
 
   // Tabs: use categories from menuData
   const tabKeys = menuData.map((cat) => cat.name);
