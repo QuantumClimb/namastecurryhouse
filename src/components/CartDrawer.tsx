@@ -8,7 +8,12 @@ import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
 import useCartStore from '../stores/cartStore';
-import { CartItem } from '../types/cart';
+import { CartItem, CartCustomization } from '../types/cart';
+import { SpiceLevelDialog } from './SpiceLevelDialog';
+import { RepeatCustomizationDialog } from './RepeatCustomizationDialog';
+
+// Track last selected spice level for each menu item (outside component for persistence)
+const lastSpiceLevels = new Map<string, number>();
 
 interface CartDrawerProps {
   trigger?: React.ReactNode;
@@ -16,7 +21,17 @@ interface CartDrawerProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-const CartItemComponent: React.FC<{ item: CartItem }> = ({ item }) => {
+interface CartItemComponentProps {
+  item: CartItem;
+  onShowSpiceDialog: (itemId: string) => void;
+  onShowRepeatDialog: (itemId: string) => void;
+}
+
+const CartItemComponent: React.FC<CartItemComponentProps> = ({ 
+  item, 
+  onShowSpiceDialog, 
+  onShowRepeatDialog 
+}) => {
   const { updateQuantity, removeItem } = useCartStore();
 
   const handleQuantityChange = (newQuantity: number) => {
@@ -25,6 +40,27 @@ const CartItemComponent: React.FC<{ item: CartItem }> = ({ item }) => {
     } else {
       updateQuantity(item.id, newQuantity);
     }
+  };
+
+  const handleIncrement = () => {
+    // If item has spice customization, show dialogs instead of directly incrementing
+    if (item.menuItem.hasSpiceCustomization === true) {
+      const lastSpiceLevel = lastSpiceLevels.get(item.menuItem.id);
+      if (lastSpiceLevel !== undefined) {
+        // Show repeat dialog
+        onShowRepeatDialog(item.id);
+      } else {
+        // No previous spice level, show spice dialog
+        onShowSpiceDialog(item.id);
+      }
+    } else {
+      // No customization - directly increment
+      handleQuantityChange(item.quantity + 1);
+    }
+  };
+
+  const handleDecrement = () => {
+    handleQuantityChange(item.quantity - 1);
   };
 
   const getSpiceLevelDisplay = (level?: number) => {
@@ -74,7 +110,7 @@ const CartItemComponent: React.FC<{ item: CartItem }> = ({ item }) => {
             variant="outline"
             size="icon"
             className="h-6 w-6"
-            onClick={() => handleQuantityChange(item.quantity - 1)}
+            onClick={handleDecrement}
           >
             <Minus className="w-3 h-3" />
           </Button>
@@ -89,7 +125,7 @@ const CartItemComponent: React.FC<{ item: CartItem }> = ({ item }) => {
             variant="outline"
             size="icon"
             className="h-6 w-6"
-            onClick={() => handleQuantityChange(item.quantity + 1)}
+            onClick={handleIncrement}
           >
             <Plus className="w-3 h-3" />
           </Button>
@@ -117,8 +153,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   onOpenChange: controlledOnOpenChange
 }) => {
   const [open, setOpen] = useState(controlledOpen ?? false);
-  const { items, total, itemCount, clearCart } = useCartStore();
+  const { items, total, itemCount, clearCart, addItem } = useCartStore();
   const navigate = useNavigate();
+  
+  const [isSpiceDialogOpen, setIsSpiceDialogOpen] = useState(false);
+  const [isRepeatDialogOpen, setIsRepeatDialogOpen] = useState(false);
+  const [currentItemForCustomization, setCurrentItemForCustomization] = useState<string | null>(null);
 
   // Sync controlled open state
   useEffect(() => {
@@ -128,6 +168,57 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const handleOpenChange = (nextOpen: boolean) => {
     setOpen(nextOpen);
     controlledOnOpenChange?.(nextOpen);
+  };
+
+  const handleShowSpiceDialog = (cartItemId: string) => {
+    setCurrentItemForCustomization(cartItemId);
+    setIsSpiceDialogOpen(true);
+  };
+
+  const handleShowRepeatDialog = (cartItemId: string) => {
+    setCurrentItemForCustomization(cartItemId);
+    setIsRepeatDialogOpen(true);
+  };
+
+  const handleSpiceLevelConfirm = (spiceLevel: number) => {
+    if (currentItemForCustomization) {
+      const cartItem = items.find(ci => ci.id === currentItemForCustomization);
+      if (cartItem) {
+        // Store the spice level for this menu item
+        lastSpiceLevels.set(cartItem.menuItem.id, spiceLevel);
+        
+        // Add item to cart with spice level
+        const customization: CartCustomization = {
+          spiceLevel
+        };
+        addItem(cartItem.menuItem, 1, customization);
+      }
+    }
+    setCurrentItemForCustomization(null);
+  };
+
+  const handleRepeatCustomization = () => {
+    if (currentItemForCustomization) {
+      const cartItem = items.find(ci => ci.id === currentItemForCustomization);
+      if (cartItem) {
+        // Use the same spice level as before
+        const lastSpiceLevel = lastSpiceLevels.get(cartItem.menuItem.id);
+        if (lastSpiceLevel !== undefined) {
+          const customization: CartCustomization = {
+            spiceLevel: lastSpiceLevel
+          };
+          addItem(cartItem.menuItem, 1, customization);
+        }
+      }
+    }
+    setIsRepeatDialogOpen(false);
+    setCurrentItemForCustomization(null);
+  };
+
+  const handleNewCustomization = () => {
+    // Close repeat dialog and open spice dialog for new selection
+    setIsRepeatDialogOpen(false);
+    setIsSpiceDialogOpen(true);
   };
 
   const defaultTrigger = (
@@ -184,7 +275,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <ScrollArea className="flex-1 -mx-6 px-6">
                 <div className="space-y-3 py-4">
                   {items.map((item) => (
-                    <CartItemComponent key={item.id} item={item} />
+                    <CartItemComponent 
+                      key={item.id} 
+                      item={item}
+                      onShowSpiceDialog={handleShowSpiceDialog}
+                      onShowRepeatDialog={handleShowRepeatDialog}
+                    />
                   ))}
                 </div>
               </ScrollArea>
@@ -223,6 +319,34 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             </>
           )}
         </div>
+        
+        {/* Spice Customization Dialogs */}
+        {currentItemForCustomization && isSpiceDialogOpen && (() => {
+          const cartItem = items.find(ci => ci.id === currentItemForCustomization);
+          return (
+            <SpiceLevelDialog
+              open={isSpiceDialogOpen}
+              onOpenChange={setIsSpiceDialogOpen}
+              onConfirm={handleSpiceLevelConfirm}
+              itemName={cartItem?.menuItem.name || ''}
+            />
+          );
+        })()}
+        
+        {currentItemForCustomization && isRepeatDialogOpen && (() => {
+          const cartItem = items.find(ci => ci.id === currentItemForCustomization);
+          const lastSpiceLevel = cartItem ? lastSpiceLevels.get(cartItem.menuItem.id) : undefined;
+          return (
+            <RepeatCustomizationDialog
+              open={isRepeatDialogOpen}
+              onOpenChange={setIsRepeatDialogOpen}
+              onRepeat={handleRepeatCustomization}
+              onCustomize={handleNewCustomization}
+              itemName={cartItem?.menuItem.name || ''}
+              previousSpiceLevel={lastSpiceLevel || 0}
+            />
+          );
+        })()}
       </SheetContent>
     </Sheet>
   );
