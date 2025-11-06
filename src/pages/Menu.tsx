@@ -29,7 +29,6 @@ const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => 
 };
 
 const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg: string }) => {
-  const addItem = useCartStore(state => state.addItem);
   const items = useCartStore(state => state.items);
   const removeItem = useCartStore(state => state.removeItem);
   const updateQuantity = useCartStore(state => state.updateQuantity);
@@ -39,11 +38,6 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
 
   // Get the first cart item ID for this menu item (for updateQuantity/removeItem)
   const cartItemId = items.find(cartItem => cartItem.menuItem.id === item.id)?.id;
-
-  const handleAddToCart = () => {
-    // Add item with quantity 1, no customization for quick add
-    addItem(item, 1);
-  };
 
   const handleIncrement = () => {
     if (cartItemId) {
@@ -131,13 +125,12 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
               size="sm"
             />
           ) : (
-            <Button 
-              onClick={handleAddToCart}
+            <AddToCartButton
+              menuItem={item}
               size="sm"
               className="rounded-full px-6"
-            >
-              Add
-            </Button>
+              buttonText="Add"
+            />
           )}
         </div>
       </Card>
@@ -193,14 +186,12 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
                   size="sm"
                 />
               ) : (
-                <Button 
-                  onClick={handleAddToCart}
+                <AddToCartButton
+                  menuItem={item}
                   size="sm"
                   className="gap-1"
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  Add
-                </Button>
+                  buttonText="Add"
+                />
               )}
             </div>
           </div>
