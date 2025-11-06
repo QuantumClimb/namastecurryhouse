@@ -107,16 +107,14 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
             itemName={menuItem.name}
           />
 
-          {hasItemInCart && lastSpiceLevels.has(menuItem.id) && (
-            <RepeatCustomizationDialog
-              open={isRepeatDialogOpen}
-              onOpenChange={setIsRepeatDialogOpen}
-              onRepeat={handleRepeatCustomization}
-              onCustomize={handleNewCustomization}
-              itemName={menuItem.name}
-              previousSpiceLevel={lastSpiceLevels.get(menuItem.id) || 0}
-            />
-          )}
+          <RepeatCustomizationDialog
+            open={isRepeatDialogOpen}
+            onOpenChange={setIsRepeatDialogOpen}
+            onRepeat={handleRepeatCustomization}
+            onCustomize={handleNewCustomization}
+            itemName={menuItem.name}
+            previousSpiceLevel={lastSpiceLevels.get(menuItem.id) || 0}
+          />
         </>
       )}
     </>
