@@ -34,56 +34,42 @@ const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => 
 };
 
 const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg: string }) => {
-  console.log('MenuItemCard rendering:', { 
-    itemId: item.id, 
-    itemName: item.name, 
-    hasSpiceCustomization: item.hasSpiceCustomization,
-    hasSpiceCustomizationType: typeof item.hasSpiceCustomization
-  });
-  
   const [isSpiceDialogOpen, setIsSpiceDialogOpen] = useState(false);
   const [isRepeatDialogOpen, setIsRepeatDialogOpen] = useState(false);
   
-  const { items, removeItem, updateQuantity, addItem } = useCartStore(state => ({
-    items: state.items,
-    removeItem: state.removeItem,
-    updateQuantity: state.updateQuantity,
-    addItem: state.addItem
-  }));
+  // Only subscribe to actions, not items (to avoid re-renders)
+  const addItem = useCartStore(state => state.addItem);
+  const removeItem = useCartStore(state => state.removeItem);
+  const updateQuantity = useCartStore(state => state.updateQuantity);
   
+  // Get cart-specific info for this item
   const cartQuantity = useItemCartQuantity(item);
   const isInCart = cartQuantity > 0;
-
+  
   // Get the first cart item ID for this menu item (for updateQuantity/removeItem)
+  const items = useCartStore(state => state.items);
   const cartItemId = items.find(cartItem => cartItem.menuItem.id === item.id)?.id;
 
   const handleAddToCart = () => {
-    console.log('handleAddToCart called for:', item.name, { hasSpiceCustomization: item.hasSpiceCustomization });
-    
     // Check if item has spice customization enabled
     if (item.hasSpiceCustomization === true) {
-      console.log('Item has spice customization, checking cart status...');
       // Check if we've added this item before
       const lastSpiceLevel = lastSpiceLevels.get(item.id);
       
       if (isInCart && lastSpiceLevel !== undefined) {
-        console.log('Opening repeat dialog, last spice level:', lastSpiceLevel);
         // Item already in cart and we have a previous spice level - show repeat dialog
         setIsRepeatDialogOpen(true);
       } else {
-        console.log('Opening spice level dialog for first time');
         // First time adding or no previous spice level - show spice dialog
         setIsSpiceDialogOpen(true);
       }
     } else {
-      console.log('No customization, adding directly to cart');
       // No customization needed - add directly
       addItem(item, 1);
     }
   };
 
   const handleSpiceLevelConfirm = (spiceLevel: number) => {
-    console.log('Spice level confirmed:', spiceLevel, 'for item:', item.name);
     // Store the spice level for this menu item
     lastSpiceLevels.set(item.id, spiceLevel);
     
@@ -95,7 +81,6 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
   };
 
   const handleRepeatCustomization = () => {
-    console.log('Repeating previous customization for:', item.name);
     // Use the same spice level as before
     const lastSpiceLevel = lastSpiceLevels.get(item.id);
     if (lastSpiceLevel !== undefined) {
@@ -108,7 +93,6 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
   };
 
   const handleNewCustomization = () => {
-    console.log('Requesting new customization for:', item.name);
     // Close repeat dialog and open spice dialog for new selection
     setIsRepeatDialogOpen(false);
     setIsSpiceDialogOpen(true);
@@ -157,12 +141,9 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
       // Priority 3: Fallback to placeholder
       return placeholderImg;
     } catch (error) {
-      console.error('Error generating imageUrl for item:', item.name, error);
       return placeholderImg;
     }
   })();
-
-  console.log('Rendering card for:', item.name, { imageUrl, isInCart, cartQuantity });
 
   return (
     <>
