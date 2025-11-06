@@ -191,7 +191,7 @@ const Contact = () => {
             <CardContent className="p-0">
               <div className="w-full h-96">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3112.8789123456789!2d-9.1456789!3d38.7222222!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd19347a0c3f6e97%3A0x1234567890abcdef!2sR.%20Agostinho%20Louren%C3%A7o%20339%2C%201000-011%20Lisboa%2C%20Portugal!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus"
+                  src="https://www.google.com/maps?q=R.+Agostinho+Lourenço+339,+1000-011+Lisboa,+Portugal&output=embed"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
