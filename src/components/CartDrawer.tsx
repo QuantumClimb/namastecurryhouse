@@ -12,9 +12,6 @@ import { CartItem, CartCustomization } from '../types/cart';
 import { SpiceLevelDialog } from './SpiceLevelDialog';
 import { RepeatCustomizationDialog } from './RepeatCustomizationDialog';
 
-// Track last selected spice level for each menu item (outside component for persistence)
-const lastSpiceLevels = new Map<string, number>();
-
 interface CartDrawerProps {
   trigger?: React.ReactNode;
   open?: boolean;
@@ -45,12 +42,13 @@ const CartItemComponent: React.FC<CartItemComponentProps> = ({
   const handleIncrement = () => {
     // If item has spice customization, show dialogs instead of directly incrementing
     if (item.menuItem.hasSpiceCustomization === true) {
-      const lastSpiceLevel = lastSpiceLevels.get(item.menuItem.id);
-      if (lastSpiceLevel !== undefined) {
-        // Show repeat dialog
+      // Check if this specific cart item already has a spice level
+      const currentSpiceLevel = item.customization?.spiceLevel;
+      if (currentSpiceLevel !== undefined) {
+        // This cart item already has a spice level - show repeat dialog
         onShowRepeatDialog(item.id);
       } else {
-        // No previous spice level, show spice dialog
+        // This cart item doesn't have a spice level yet - show spice dialog
         onShowSpiceDialog(item.id);
       }
     } else {
@@ -184,9 +182,6 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     if (currentItemForCustomization) {
       const cartItem = items.find(ci => ci.id === currentItemForCustomization);
       if (cartItem) {
-        // Store the spice level for this menu item
-        lastSpiceLevels.set(cartItem.menuItem.id, spiceLevel);
-        
         // Add item to cart with spice level
         const customization: CartCustomization = {
           spiceLevel
@@ -201,11 +196,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     if (currentItemForCustomization) {
       const cartItem = items.find(ci => ci.id === currentItemForCustomization);
       if (cartItem) {
-        // Use the same spice level as before
-        const lastSpiceLevel = lastSpiceLevels.get(cartItem.menuItem.id);
-        if (lastSpiceLevel !== undefined) {
+        // Use THIS cart item's existing spice level
+        const existingSpiceLevel = cartItem.customization?.spiceLevel;
+        if (existingSpiceLevel !== undefined) {
           const customization: CartCustomization = {
-            spiceLevel: lastSpiceLevel
+            spiceLevel: existingSpiceLevel
           };
           addItem(cartItem.menuItem, 1, customization);
         }
@@ -335,7 +330,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
         
         {currentItemForCustomization && isRepeatDialogOpen && (() => {
           const cartItem = items.find(ci => ci.id === currentItemForCustomization);
-          const lastSpiceLevel = cartItem ? lastSpiceLevels.get(cartItem.menuItem.id) : undefined;
+          const existingSpiceLevel = cartItem?.customization?.spiceLevel;
           return (
             <RepeatCustomizationDialog
               open={isRepeatDialogOpen}
@@ -343,7 +338,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               onRepeat={handleRepeatCustomization}
               onCustomize={handleNewCustomization}
               itemName={cartItem?.menuItem.name || ''}
-              previousSpiceLevel={lastSpiceLevel || 0}
+              previousSpiceLevel={existingSpiceLevel || 0}
             />
           );
         })()}
