@@ -208,7 +208,7 @@ app.get('/api/menu', async (req, res) => {
         description: item.description,
         price: item.price,
         dietary: item.dietary ? item.dietary.split(',').filter(d => d.trim()) : [],
-        spiceLevel: item.spiceLevel,
+        hasSpiceCustomization: item.hasSpiceCustomization || false,
         // Use database-served image endpoint or external URL fallback
         imageUrl: item.imageData ? `/api/images/${item.id}` : item.imageUrl
       }))
@@ -253,7 +253,7 @@ app.get('/api/menu/category/:categoryName', async (req, res) => {
       description: item.description,
       price: item.price,
       dietary: item.dietary ? item.dietary.split(',').filter(d => d.trim()) : [],
-      spiceLevel: item.spiceLevel,
+      hasSpiceCustomization: item.hasSpiceCustomization || false,
       // Use database-served image endpoint or external URL fallback
       imageUrl: item.imageData ? `/api/images/${item.id}` : item.imageUrl
     }));
@@ -310,7 +310,7 @@ app.get('/api/menu/search', async (req, res) => {
       description: item.description,
       price: item.price,
       dietary: item.dietary ? item.dietary.split(',').filter(d => d.trim()) : [],
-      spiceLevel: item.spiceLevel,
+      hasSpiceCustomization: item.hasSpiceCustomization || false,
       category: item.category.name,
       imageUrl: item.imageUrl
     }));
@@ -348,7 +348,7 @@ app.post('/api/admin/menu-items', async (req, res) => {
     if (!(await ensureDbConnection())) {
       return res.status(503).json({ error: 'Database unavailable' });
     }
-    const { name, description, price, dietary, spiceLevel, categoryId, imageUrl, imageData, imageMimeType, imageSize } = req.body;
+    const { name, description, price, dietary, hasSpiceCustomization, categoryId, imageUrl, imageData, imageMimeType, imageSize } = req.body;
     
     const newItem = await prisma.menuItem.create({
       data: {
@@ -356,7 +356,7 @@ app.post('/api/admin/menu-items', async (req, res) => {
         description,
         price: parseFloat(price),
         dietary: Array.isArray(dietary) ? dietary.join(',') : dietary || '',
-        spiceLevel: spiceLevel ? parseInt(spiceLevel) : null,
+        hasSpiceCustomization: hasSpiceCustomization || false,
         categoryId: parseInt(categoryId),
         imageUrl: imageUrl || null,
         imageData: imageData || null,
@@ -374,7 +374,7 @@ app.post('/api/admin/menu-items', async (req, res) => {
       description: newItem.description,
       price: newItem.price,
       dietary: newItem.dietary ? newItem.dietary.split(',').filter(d => d.trim()) : [],
-      spiceLevel: newItem.spiceLevel,
+      hasSpiceCustomization: newItem.hasSpiceCustomization,
       categoryId: newItem.categoryId,
       category: newItem.category.name,
       imageUrl: newItem.imageData ? `/api/images/${newItem.id}` : newItem.imageUrl
@@ -392,7 +392,7 @@ app.put('/api/admin/menu-items/:id', async (req, res) => {
       return res.status(503).json({ error: 'Database unavailable' });
     }
     const { id } = req.params;
-    const { name, description, price, dietary, spiceLevel, categoryId, imageUrl, imageData, imageMimeType, imageSize } = req.body;
+    const { name, description, price, dietary, hasSpiceCustomization, categoryId, imageUrl, imageData, imageMimeType, imageSize } = req.body;
     
     const updatedItem = await prisma.menuItem.update({
       where: { id: parseInt(id) },
@@ -401,7 +401,7 @@ app.put('/api/admin/menu-items/:id', async (req, res) => {
         description,
         price: parseFloat(price),
         dietary: Array.isArray(dietary) ? dietary.join(',') : dietary || '',
-        spiceLevel: spiceLevel ? parseInt(spiceLevel) : null,
+        hasSpiceCustomization: hasSpiceCustomization || false,
         categoryId: parseInt(categoryId),
         imageUrl: imageUrl || null,
         imageData: imageData || null,
@@ -419,7 +419,7 @@ app.put('/api/admin/menu-items/:id', async (req, res) => {
       description: updatedItem.description,
       price: updatedItem.price,
       dietary: updatedItem.dietary ? updatedItem.dietary.split(',').filter(d => d.trim()) : [],
-      spiceLevel: updatedItem.spiceLevel,
+      hasSpiceCustomization: updatedItem.hasSpiceCustomization,
       categoryId: updatedItem.categoryId,
       category: updatedItem.category.name,
       imageUrl: updatedItem.imageData ? `/api/images/${updatedItem.id}` : updatedItem.imageUrl
@@ -552,7 +552,7 @@ app.get('/api/admin/menu-items', async (req, res) => {
       description: item.description,
       price: item.price,
       dietary: item.dietary ? item.dietary.split(',').filter(d => d.trim()) : [],
-      spiceLevel: item.spiceLevel,
+      hasSpiceCustomization: item.hasSpiceCustomization || false,
       categoryId: item.categoryId,
       category: item.category.name,
       // Use database-served image endpoint or external URL fallback
