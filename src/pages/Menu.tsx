@@ -130,6 +130,7 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
               size="sm"
               className="rounded-full px-6"
               buttonText="Add"
+              showIcon={false}
             />
           )}
         </div>

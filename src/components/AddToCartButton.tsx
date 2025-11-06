@@ -13,6 +13,7 @@ interface AddToCartButtonProps {
   size?: 'sm' | 'default' | 'lg';
   className?: string;
   buttonText?: string;
+  showIcon?: boolean;
 }
 
 // Track last selected spice level for each menu item
@@ -23,7 +24,8 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   variant = 'default',
   size = 'default',
   className,
-  buttonText = 'Add to Cart'
+  buttonText = 'Add to Cart',
+  showIcon = true
 }) => {
   const [isSpiceDialogOpen, setIsSpiceDialogOpen] = useState(false);
   const [isRepeatDialogOpen, setIsRepeatDialogOpen] = useState(false);
@@ -92,7 +94,7 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
         className={className}
         onClick={handleAddToCart}
       >
-        <ShoppingCart className="w-4 h-4 mr-2" />
+        {showIcon && <ShoppingCart className="w-4 h-4 mr-2" />}
         {buttonText}
       </Button>
 
