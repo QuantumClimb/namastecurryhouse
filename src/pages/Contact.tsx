@@ -189,17 +189,25 @@ const Contact = () => {
           
           <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow overflow-hidden">
             <CardContent className="p-0">
-              <div className="w-full h-96">
-                <iframe
-                  src="https://www.google.com/maps?q=R.+Agostinho+Lourenço+339,+1000-011+Lisboa,+Portugal&output=embed"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Namaste Curry House Location"
-                ></iframe>
+              <div className="w-full h-96 relative">
+                {/* Static Map Image with Click to Open */}
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=R.+Agostinho+Lourenço+339,+1000-011+Lisboa,+Portugal"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full h-full relative group"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                    <div className="text-center p-8 bg-card/80 backdrop-blur-sm rounded-lg border-2 border-primary/30 group-hover:border-primary/60 transition-all duration-300 group-hover:scale-105">
+                      <MapPin className="w-16 h-16 text-primary mx-auto mb-4" />
+                      <h3 className="text-2xl font-bold text-foreground mb-2">View on Google Maps</h3>
+                      <p className="text-foreground/80 mb-4">R. Agostinho Lourenço 339<br />1000-011 Lisboa, Portugal</p>
+                      <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                        Open in Maps
+                      </Button>
+                    </div>
+                  </div>
+                </a>
               </div>
             </CardContent>
           </Card>
