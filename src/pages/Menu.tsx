@@ -34,6 +34,13 @@ const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => 
 };
 
 const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg: string }) => {
+  console.log('MenuItemCard rendering:', { 
+    itemId: item.id, 
+    itemName: item.name, 
+    hasSpiceCustomization: item.hasSpiceCustomization,
+    hasSpiceCustomizationType: typeof item.hasSpiceCustomization
+  });
+  
   const [isSpiceDialogOpen, setIsSpiceDialogOpen] = useState(false);
   const [isRepeatDialogOpen, setIsRepeatDialogOpen] = useState(false);
   
@@ -51,25 +58,32 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
   const cartItemId = items.find(cartItem => cartItem.menuItem.id === item.id)?.id;
 
   const handleAddToCart = () => {
+    console.log('handleAddToCart called for:', item.name, { hasSpiceCustomization: item.hasSpiceCustomization });
+    
     // Check if item has spice customization enabled
     if (item.hasSpiceCustomization === true) {
+      console.log('Item has spice customization, checking cart status...');
       // Check if we've added this item before
       const lastSpiceLevel = lastSpiceLevels.get(item.id);
       
       if (isInCart && lastSpiceLevel !== undefined) {
+        console.log('Opening repeat dialog, last spice level:', lastSpiceLevel);
         // Item already in cart and we have a previous spice level - show repeat dialog
         setIsRepeatDialogOpen(true);
       } else {
+        console.log('Opening spice level dialog for first time');
         // First time adding or no previous spice level - show spice dialog
         setIsSpiceDialogOpen(true);
       }
     } else {
+      console.log('No customization, adding directly to cart');
       // No customization needed - add directly
       addItem(item, 1);
     }
   };
 
   const handleSpiceLevelConfirm = (spiceLevel: number) => {
+    console.log('Spice level confirmed:', spiceLevel, 'for item:', item.name);
     // Store the spice level for this menu item
     lastSpiceLevels.set(item.id, spiceLevel);
     
@@ -81,6 +95,7 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
   };
 
   const handleRepeatCustomization = () => {
+    console.log('Repeating previous customization for:', item.name);
     // Use the same spice level as before
     const lastSpiceLevel = lastSpiceLevels.get(item.id);
     if (lastSpiceLevel !== undefined) {
@@ -93,6 +108,7 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
   };
 
   const handleNewCustomization = () => {
+    console.log('Requesting new customization for:', item.name);
     // Close repeat dialog and open spice dialog for new selection
     setIsRepeatDialogOpen(false);
     setIsSpiceDialogOpen(true);
@@ -123,23 +139,30 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
   };
 
   const imageUrl = (() => {
-    // Priority 1: Check if image is in database (no placeholder imageUrl, or has placeholder)
-    // If imageUrl is null/empty OR is a placeholder, try database first
-    if (!item.imageUrl || item.imageUrl.includes('placeholder')) {
-      if (item.id) {
-        const baseUrl = import.meta.env.DEV 
-          ? 'https://namastecurryhouse.vercel.app/api' 
-          : '/api';
-        return `${baseUrl}/images/${item.id}`;
+    try {
+      // Priority 1: Check if image is in database (no placeholder imageUrl, or has placeholder)
+      // If imageUrl is null/empty OR is a placeholder, try database first
+      if (!item.imageUrl || item.imageUrl.includes('placeholder')) {
+        if (item.id) {
+          const baseUrl = import.meta.env.DEV 
+            ? 'https://namastecurryhouse.vercel.app/api' 
+            : '/api';
+          return `${baseUrl}/images/${item.id}`;
+        }
       }
+      // Priority 2: Use imageUrl if it exists and is not a placeholder
+      if (item.imageUrl && !item.imageUrl.includes('placeholder')) {
+        return item.imageUrl;
+      }
+      // Priority 3: Fallback to placeholder
+      return placeholderImg;
+    } catch (error) {
+      console.error('Error generating imageUrl for item:', item.name, error);
+      return placeholderImg;
     }
-    // Priority 2: Use imageUrl if it exists and is not a placeholder
-    if (item.imageUrl && !item.imageUrl.includes('placeholder')) {
-      return item.imageUrl;
-    }
-    // Priority 3: Fallback to placeholder
-    return placeholderImg;
   })();
+
+  console.log('Rendering card for:', item.name, { imageUrl, isInCart, cartQuantity });
 
   return (
     <>
