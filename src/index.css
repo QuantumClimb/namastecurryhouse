@@ -16,7 +16,7 @@ All colors MUST be HSL.
     --card-foreground-raw: 0.2800 0.0200 38.0000;   /* Rich brown text */
     --popover-raw: 1.0000 0.0030 55.0000;           /* Clean white */
     --popover-foreground-raw: 0.2500 0.0200 40.0000;
-    --primary-raw: 0.6800 0.1800 45.0000;           /* Saffron/turmeric orange - iconic Indian color */
+    --primary-raw: 0.7500 0.1200 85.0000;           /* Gold (#D4AF37) - elegant and sophisticated */
     --primary-foreground-raw: 1.0000 0 0;           /* White text on primary */
     --secondary-raw: 0.5500 0.1500 135.0000;        /* Fresh cilantro green */
     --secondary-foreground-raw: 1.0000 0 0;         /* White text */
@@ -28,9 +28,9 @@ All colors MUST be HSL.
     --destructive-foreground-raw: 1.0000 0 0;
     --border-raw: 0.8800 0.0200 50.0000;            /* Soft spice border */
     --input-raw: 0.9600 0.0150 52.0000;             /* Light input background */
-    --ring-raw: 0.6800 0.1800 45.0000;              /* Saffron focus ring */
+    --ring-raw: 0.7500 0.1200 85.0000;              /* Gold focus ring */
     /* Charts raw - Indian spice palette */
-    --chart-1-raw: 0.6800 0.1800 45.0000;           /* Saffron */
+    --chart-1-raw: 0.7500 0.1200 85.0000;           /* Gold */
     --chart-2-raw: 0.7200 0.1600 65.0000;           /* Turmeric */
     --chart-3-raw: 0.5500 0.1500 135.0000;          /* Cilantro green */
     --chart-4-raw: 0.5800 0.1900 25.0000;           /* Curry red */
@@ -38,12 +38,12 @@ All colors MUST be HSL.
     /* Sidebar raw */
     --sidebar-background-raw: 0.9800 0.0100 52.0000;
     --sidebar-foreground-raw: 0.2800 0.0200 38.0000;
-    --sidebar-primary-raw: 0.6800 0.1800 45.0000;
+    --sidebar-primary-raw: 0.7500 0.1200 85.0000;   /* Gold */
     --sidebar-primary-foreground-raw: 1.0000 0 0;
     --sidebar-accent-raw: 0.7200 0.1600 65.0000;
     --sidebar-accent-foreground-raw: 0.2800 0.0200 40.0000;
     --sidebar-border-raw: 0.8800 0.0200 50.0000;
-    --sidebar-ring-raw: 0.6800 0.1800 45.0000;
+    --sidebar-ring-raw: 0.7500 0.1200 85.0000;      /* Gold */
 
     /* Derived OKLCH colors from raw */
     --background: oklch(var(--background-raw));
@@ -104,7 +104,7 @@ All colors MUST be HSL.
     --shadow-2xl: 0px 4px 8px -1px hsl(0 0% 0% / 0.25);
 
     /* Indian Restaurant Custom Colors (HSL for compatibility) */
-    --saffron: 30 90% 55%;          /* Primary Indian color */
+    --saffron: 45 65% 53%;          /* Gold color (#D4AF37) */
     --turmeric: 45 95% 60%;         /* Golden yellow */
     --curry-red: 10 75% 50%;        /* Rich red */
     --cilantro-green: 135 60% 45%;  /* Fresh green */
@@ -120,7 +120,7 @@ All colors MUST be HSL.
     --card-foreground-raw: 0.9500 0.0100 50.0000;
     --popover-raw: 0.2600 0.0180 38.0000;
     --popover-foreground-raw: 0.9500 0.0100 50.0000;
-    --primary-raw: 0.6800 0.1800 45.0000;           /* Saffron orange (consistent) */
+    --primary-raw: 0.7500 0.1200 85.0000;           /* Gold (#D4AF37) - elegant and sophisticated */
     --primary-foreground-raw: 1.0000 0 0;
     --secondary-raw: 0.5500 0.1500 135.0000;        /* Cilantro green */
     --secondary-foreground-raw: 1.0000 0 0;
@@ -132,10 +132,10 @@ All colors MUST be HSL.
     --destructive-foreground-raw: 1.0000 0 0;
     --border-raw: 0.4000 0.0300 42.0000;            /* Border spice */
     --input-raw: 0.3200 0.0220 39.0000;             /* Input brown */
-    --ring-raw: 0.6800 0.1800 45.0000;              /* Saffron ring */
+    --ring-raw: 0.7500 0.1200 85.0000;              /* Gold ring */
     --sidebar-background-raw: 0.2000 0.0120 33.0000;
     --sidebar-foreground-raw: 0.9500 0.0100 50.0000;
-    --sidebar-primary-raw: 0.6800 0.1800 45.0000;
+    --sidebar-primary-raw: 0.7500 0.1200 85.0000;   /* Gold */
     --sidebar-primary-foreground-raw: 1.0000 0 0;
     --sidebar-accent-raw: 0.7200 0.1600 65.0000;
     --sidebar-accent-foreground-raw: 0.2200 0.0150 35.0000;
