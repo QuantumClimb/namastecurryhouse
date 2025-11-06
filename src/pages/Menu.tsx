@@ -99,11 +99,23 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
   };
 
   const handleIncrement = () => {
-    if (cartItemId) {
-      // Get current cart item to update its quantity
-      const currentCartItem = items.find(ci => ci.id === cartItemId);
-      if (currentCartItem) {
-        updateQuantity(cartItemId, currentCartItem.quantity + 1);
+    // If item has spice customization, show repeat dialog instead of directly incrementing
+    if (item.hasSpiceCustomization === true) {
+      const lastSpiceLevel = lastSpiceLevels.get(item.id);
+      if (lastSpiceLevel !== undefined) {
+        // Show repeat dialog
+        setIsRepeatDialogOpen(true);
+      } else {
+        // No previous spice level, show spice dialog
+        setIsSpiceDialogOpen(true);
+      }
+    } else {
+      // No customization - directly increment
+      if (cartItemId) {
+        const currentCartItem = items.find(ci => ci.id === cartItemId);
+        if (currentCartItem) {
+          updateQuantity(cartItemId, currentCartItem.quantity + 1);
+        }
       }
     }
   };
