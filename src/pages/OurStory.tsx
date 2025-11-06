@@ -66,7 +66,7 @@ const OurStory = () => {
       {/* Welcome Section */}
       <section className="py-20 px-4 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
             Welcome to Namaste Curry House
           </h2>
           <p className="text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed">
@@ -79,7 +79,7 @@ const OurStory = () => {
       <section className="py-20 px-4 max-w-7xl mx-auto bg-primary/5">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">
+            <h2 className="text-4xl md:text-5xl font-bold mb-8 text-primary">
               Where It All Began
             </h2>
             <div className="space-y-6 text-lg text-foreground/80 leading-relaxed">
@@ -107,7 +107,7 @@ const OurStory = () => {
       {/* Features Section */}
       <section className="py-20 px-4 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
             The Namaste Experience
           </h2>
           <p className="text-xl text-foreground/80 max-w-3xl mx-auto">
@@ -122,7 +122,7 @@ const OurStory = () => {
                 <div className="text-primary mb-4 flex justify-center">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-foreground">
+                <h3 className="text-xl font-bold mb-3 text-primary">
                   {feature.title}
                 </h3>
                 <p className="text-foreground/70">
@@ -138,7 +138,7 @@ const OurStory = () => {
       <section className="py-20 px-4 bg-primary/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
               What Drives Us
             </h2>
             <p className="text-xl text-foreground/80 max-w-3xl mx-auto">
@@ -153,7 +153,7 @@ const OurStory = () => {
                   <div className="text-primary mb-6">
                     {value.icon}
                   </div>
-                  <h3 className="text-2xl font-bold mb-4 text-foreground">
+                  <h3 className="text-2xl font-bold mb-4 text-primary">
                     {value.title}
                   </h3>
                   <p className="text-foreground/70 leading-relaxed">
@@ -177,7 +177,7 @@ const OurStory = () => {
             />
           </div>
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
               Tradition Perfected
             </h2>
             <p className="text-lg text-foreground/80 mb-6 leading-relaxed">
@@ -193,7 +193,7 @@ const OurStory = () => {
       {/* Vision Section */}
       <section className="py-20 px-4 max-w-7xl mx-auto bg-accent/10">
         <div className="text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-primary">
             Our Vision
           </h2>
           <div className="max-w-4xl mx-auto">
@@ -213,7 +213,7 @@ const OurStory = () => {
       {/* CTA Section */}
       <section className="py-20 px-4 text-center">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
             Experience Authentic India
           </h2>
           <p className="text-xl text-foreground/80 mb-8 max-w-2xl mx-auto">
