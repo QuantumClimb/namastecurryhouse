@@ -52,7 +52,7 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
 
   const handleAddToCart = () => {
     // Check if item has spice customization enabled
-    if (item.hasSpiceCustomization) {
+    if (item.hasSpiceCustomization === true) {
       // Check if we've added this item before
       const lastSpiceLevel = lastSpiceLevels.get(item.id);
       
@@ -168,7 +168,7 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
           <p className="text-xs text-foreground/60 line-clamp-1 mb-2">{item.description}</p>
           <div className="flex items-center gap-2">
             <span className="text-sm font-bold text-accent">€{item.price.toFixed(2)}</span>
-            {item.hasSpiceCustomization && (
+            {item.hasSpiceCustomization === true && (
               <span className="text-xs">🌶️</span>
             )}
           </div>
@@ -226,7 +226,7 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
           )}
           <div className="flex justify-between items-center gap-3">
             <div className="flex items-center space-x-2 flex-1 min-w-0">
-              {item.hasSpiceCustomization && (
+              {item.hasSpiceCustomization === true && (
                 <Badge variant="outline" className="text-xs">
                   🌶️ Customizable
                 </Badge>
@@ -261,7 +261,7 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
       </Card>
 
       {/* Spice Customization Dialogs */}
-      {item.hasSpiceCustomization && (
+      {item.hasSpiceCustomization === true && (
         <>
           <SpiceLevelDialog
             open={isSpiceDialogOpen}
