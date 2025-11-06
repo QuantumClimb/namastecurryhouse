@@ -7,11 +7,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShoppingCart } from "lucide-react";
 import { MenuCategory, MenuItem } from "../types/menu";
 import { getMenuData } from "../services/menuService";
-import { AddToCartButton } from "../components/AddToCartButton";
 import { QuantityStepper } from "../components/QuantityStepper";
 import { useItemCartQuantity } from "../hooks/useCartQuantity";
 import useCartStore from "../stores/cartStore";
 import { API_BASE_URL } from "../lib/apiConfig";
+import { SpiceLevelDialog } from "../components/SpiceLevelDialog";
+import { RepeatCustomizationDialog } from "../components/RepeatCustomizationDialog";
+import { CartCustomization } from "../types/cart";
+
+// Track last selected spice level for each menu item (outside component for persistence)
+const lastSpiceLevels = new Map<string, number>();
 
 const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => {
   const placeholderImg = "/images/placeholder-food.svg";
@@ -29,6 +34,9 @@ const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => 
 };
 
 const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg: string }) => {
+  const [isSpiceDialogOpen, setIsSpiceDialogOpen] = useState(false);
+  const [isRepeatDialogOpen, setIsRepeatDialogOpen] = useState(false);
+  
   const { items, removeItem, updateQuantity, addItem } = useCartStore(state => ({
     items: state.items,
     removeItem: state.removeItem,
@@ -43,8 +51,51 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
   const cartItemId = items.find(cartItem => cartItem.menuItem.id === item.id)?.id;
 
   const handleAddToCart = () => {
-    // For now, add directly - we'll handle customization separately
-    addItem(item, 1);
+    // Check if item has spice customization enabled
+    if (item.hasSpiceCustomization) {
+      // Check if we've added this item before
+      const lastSpiceLevel = lastSpiceLevels.get(item.id);
+      
+      if (isInCart && lastSpiceLevel !== undefined) {
+        // Item already in cart and we have a previous spice level - show repeat dialog
+        setIsRepeatDialogOpen(true);
+      } else {
+        // First time adding or no previous spice level - show spice dialog
+        setIsSpiceDialogOpen(true);
+      }
+    } else {
+      // No customization needed - add directly
+      addItem(item, 1);
+    }
+  };
+
+  const handleSpiceLevelConfirm = (spiceLevel: number) => {
+    // Store the spice level for this menu item
+    lastSpiceLevels.set(item.id, spiceLevel);
+    
+    // Add item to cart with spice level
+    const customization: CartCustomization = {
+      spiceLevel
+    };
+    addItem(item, 1, customization);
+  };
+
+  const handleRepeatCustomization = () => {
+    // Use the same spice level as before
+    const lastSpiceLevel = lastSpiceLevels.get(item.id);
+    if (lastSpiceLevel !== undefined) {
+      const customization: CartCustomization = {
+        spiceLevel: lastSpiceLevel
+      };
+      addItem(item, 1, customization);
+    }
+    setIsRepeatDialogOpen(false);
+  };
+
+  const handleNewCustomization = () => {
+    // Close repeat dialog and open spice dialog for new selection
+    setIsRepeatDialogOpen(false);
+    setIsSpiceDialogOpen(true);
   };
 
   const handleIncrement = () => {
@@ -208,6 +259,27 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
           </div>
         </CardContent>
       </Card>
+
+      {/* Spice Customization Dialogs */}
+      {item.hasSpiceCustomization && (
+        <>
+          <SpiceLevelDialog
+            open={isSpiceDialogOpen}
+            onOpenChange={setIsSpiceDialogOpen}
+            onConfirm={handleSpiceLevelConfirm}
+            itemName={item.name}
+          />
+
+          <RepeatCustomizationDialog
+            open={isRepeatDialogOpen}
+            onOpenChange={setIsRepeatDialogOpen}
+            onRepeat={handleRepeatCustomization}
+            onCustomize={handleNewCustomization}
+            itemName={item.name}
+            previousSpiceLevel={lastSpiceLevels.get(item.id) || 0}
+          />
+        </>
+      )}
     </>
   );
 };
