@@ -24,12 +24,21 @@ const prisma = new PrismaClient({
 const RESTAURANT_WHATSAPP = process.env.RESTAURANT_WHATSAPP || '+351920617185';
 const RESTAURANT_EMAIL = process.env.RESTAURANT_EMAIL || 'namastecurrylisboa@gmail.com';
 
+// RESEND TEST MODE: Send all emails to account owner until domain is verified
+// Set to true to test email flow, false for production with verified domain
+const RESEND_TEST_MODE = process.env.RESEND_TEST_MODE === 'true' || true; // Default to test mode
+const RESEND_TEST_EMAIL = 'juncando@gmail.com'; // Resend account owner email
+
 // Initialize Resend (for email notifications)
 let resend = null;
 if (process.env.RESEND_API_KEY) {
   try {
     resend = new Resend(process.env.RESEND_API_KEY);
     console.log('✅ Resend initialized for email notifications');
+    if (RESEND_TEST_MODE) {
+      console.log('⚠️  RESEND TEST MODE: All emails will be sent to', RESEND_TEST_EMAIL);
+      console.log('   Set RESEND_TEST_MODE=false after verifying domain');
+    }
   } catch (error) {
     console.warn('⚠️  Resend initialization failed:', error.message);
   }
@@ -835,6 +844,12 @@ async function sendCustomerConfirmationEmail(order) {
         </div>
         
         <div style="background-color: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          ${RESEND_TEST_MODE ? `
+          <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 0 0 20px 0;">
+            <p style="margin: 0; font-weight: bold; color: #92400e;">⚠️ TEST MODE</p>
+            <p style="margin: 5px 0 0; color: #92400e; font-size: 13px;">This email was sent to ${RESEND_TEST_EMAIL} for testing. Original recipient: ${order.customerEmail}</p>
+          </div>
+          ` : ''}
           <p style="font-size: 18px; color: #059669; font-weight: bold; margin-top: 0;">✓ Order Confirmed!</p>
           
           <p>Dear ${order.customerName},</p>
@@ -908,12 +923,16 @@ async function sendCustomerConfirmationEmail(order) {
 
     const result = await resend.emails.send({
       from: 'Namaste Curry House <onboarding@resend.dev>',
-      to: order.customerEmail,
+      to: RESEND_TEST_MODE ? RESEND_TEST_EMAIL : order.customerEmail,
       subject: `Order Confirmation - ${order.orderNumber}`,
       html: htmlContent,
     });
 
-    console.log(`✅ Customer confirmation email sent to ${order.customerEmail}`);
+    const emailTo = RESEND_TEST_MODE ? RESEND_TEST_EMAIL : order.customerEmail;
+    console.log(`✅ Customer confirmation email sent to ${emailTo}${RESEND_TEST_MODE ? ' (TEST MODE)' : ''}`);
+    if (RESEND_TEST_MODE && order.customerEmail !== RESEND_TEST_EMAIL) {
+      console.log(`   (Original recipient: ${order.customerEmail})`);
+    }
     return result;
   } catch (error) {
     console.error('❌ Error sending customer email:', error);
@@ -950,6 +969,12 @@ async function sendOwnerNotificationEmail(order) {
         </div>
         
         <div style="background-color: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          ${RESEND_TEST_MODE ? `
+          <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 0 0 20px 0;">
+            <p style="margin: 0; font-weight: bold; color: #92400e;">⚠️ TEST MODE</p>
+            <p style="margin: 5px 0 0; color: #92400e; font-size: 13px;">This email was sent to ${RESEND_TEST_EMAIL} for testing. Original recipient: ${RESTAURANT_EMAIL}</p>
+          </div>
+          ` : ''}
           <div style="background-color: #fef2f2; border-left: 4px solid #dc2626; padding: 15px; margin-bottom: 20px;">
             <p style="margin: 0; font-size: 18px; font-weight: bold; color: #dc2626;">ACTION REQUIRED: Prepare Order</p>
             <p style="margin: 5px 0 0; color: #991b1b;">Order Time: ${new Date(order.createdAt).toLocaleString('en-GB', { timeZone: 'Europe/Lisbon' })}</p>
@@ -1016,12 +1041,16 @@ async function sendOwnerNotificationEmail(order) {
 
     const result = await resend.emails.send({
       from: 'Namaste Orders <onboarding@resend.dev>',
-      to: RESTAURANT_EMAIL,
+      to: RESEND_TEST_MODE ? RESEND_TEST_EMAIL : RESTAURANT_EMAIL,
       subject: `🔔 NEW ORDER: ${order.orderNumber} - €${order.total.toFixed(2)}`,
       html: htmlContent,
     });
 
-    console.log(`✅ Owner notification email sent to ${RESTAURANT_EMAIL}`);
+    const emailTo = RESEND_TEST_MODE ? RESEND_TEST_EMAIL : RESTAURANT_EMAIL;
+    console.log(`✅ Owner notification email sent to ${emailTo}${RESEND_TEST_MODE ? ' (TEST MODE)' : ''}`);
+    if (RESEND_TEST_MODE && RESTAURANT_EMAIL !== RESEND_TEST_EMAIL) {
+      console.log(`   (Original recipient: ${RESTAURANT_EMAIL})`);
+    }
     return result;
   } catch (error) {
     console.error('❌ Error sending owner email:', error);
