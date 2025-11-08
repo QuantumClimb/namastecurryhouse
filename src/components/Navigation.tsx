@@ -85,9 +85,13 @@ export const Navigation = () => {
                 to={item.href}
                 className={`block px-3 py-2 rounded-md text-base font-medium transition-all duration-300 ${
                   isActive(item.href)
-                    ? "text-primary bg-primary/10"
-                    : "text-foreground/80 hover:text-primary hover:bg-primary/5"
+                    ? "text-white"
+                    : "hover:bg-transparent"
                 }`}
+                style={isActive(item.href) 
+                  ? { backgroundColor: '#D4AF37', color: 'white' }
+                  : { color: '#D4AF37' }
+                }
                 onClick={() => setIsOpen(false)}
               >
                 {item.name}
