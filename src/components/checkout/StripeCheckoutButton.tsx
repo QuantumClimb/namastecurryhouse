@@ -30,12 +30,21 @@ export default function StripeCheckoutButton({
     setError(null);
     
     try {
+      // Transform cart items to flat structure expected by API
+      const transformedItems = orderItems.map(item => ({
+        name: item.menuItem.name,
+        quantity: item.quantity,
+        totalPrice: item.totalPrice,
+        price: item.menuItem.price,
+        spiceLevel: item.customization?.spiceLevel,
+      }));
+      
       // Create checkout session
       const response = await fetch(`${API_BASE_URL}/stripe/create-checkout-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          orderItems,
+          orderItems: transformedItems,
           customerInfo,
           deliveryAddress,
         }),
