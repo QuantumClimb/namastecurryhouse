@@ -6,6 +6,7 @@ import path from 'path';
 import fs from 'fs';
 import { PrismaClient } from '@prisma/client';
 import Stripe from 'stripe';
+import { Resend } from 'resend';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 
@@ -19,8 +20,22 @@ const prisma = new PrismaClient({
   log: ['warn', 'error']
 });
 
-// Restaurant WhatsApp number for notifications
+// Restaurant contact info
 const RESTAURANT_WHATSAPP = process.env.RESTAURANT_WHATSAPP || '+351920617185';
+const RESTAURANT_EMAIL = process.env.RESTAURANT_EMAIL || 'namastecurrylisboa@gmail.com';
+
+// Initialize Resend (for email notifications)
+let resend = null;
+if (process.env.RESEND_API_KEY) {
+  try {
+    resend = new Resend(process.env.RESEND_API_KEY);
+    console.log('✅ Resend initialized for email notifications');
+  } catch (error) {
+    console.warn('⚠️  Resend initialization failed:', error.message);
+  }
+} else {
+  console.warn('⚠️  Resend not configured - email notifications will not work');
+}
 
 // Initialize Stripe (only if key is configured)
 let stripe = null;
@@ -780,6 +795,240 @@ function logWhatsAppNotification(order) {
   return whatsappLink;
 }
 
+// Helper: Send email notification to customer
+async function sendCustomerConfirmationEmail(order) {
+  if (!resend) {
+    console.warn('⚠️  Resend not configured - skipping customer email');
+    return null;
+  }
+
+  try {
+    const orderItemsHtml = order.orderItems.map(item => `
+      <tr>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
+          ${item.name}
+          ${item.spiceLevel ? `<br><small style="color: #6b7280;">Spice Level: ${item.spiceLevel}</small>` : ''}
+        </td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: center;">${item.quantity}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right;">€${(item.price * item.quantity).toFixed(2)}</td>
+      </tr>
+    `).join('');
+
+    const deliveryAddress = order.deliveryAddress;
+    const addressHtml = `
+      ${deliveryAddress.street}${deliveryAddress.apartment ? `, ${deliveryAddress.apartment}` : ''}<br>
+      ${deliveryAddress.city}, ${deliveryAddress.postalCode}<br>
+      ${deliveryAddress.country}
+    `;
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      </head>
+      <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb;">
+        <div style="background-color: #000000; color: #D4AF37; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+          <h1 style="margin: 0; font-size: 28px; font-family: 'Forum', serif;">Namaste Curry House</h1>
+          <p style="margin: 10px 0 0; font-size: 16px;">Order Confirmation</p>
+        </div>
+        
+        <div style="background-color: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          <p style="font-size: 18px; color: #059669; font-weight: bold; margin-top: 0;">✓ Order Confirmed!</p>
+          
+          <p>Dear ${order.customerName},</p>
+          
+          <p>Thank you for your order! We've received your payment and are preparing your delicious meal.</p>
+          
+          <div style="background-color: #f3f4f6; padding: 15px; border-radius: 6px; margin: 20px 0;">
+            <p style="margin: 0; font-weight: bold; color: #374151;">Order Number:</p>
+            <p style="margin: 5px 0 0; font-size: 20px; color: #D4AF37;">${order.orderNumber}</p>
+          </div>
+
+          <h2 style="color: #D4AF37; border-bottom: 2px solid #D4AF37; padding-bottom: 10px;">Order Details</h2>
+          
+          <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+            <thead>
+              <tr style="background-color: #f9fafb;">
+                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #D4AF37;">Item</th>
+                <th style="padding: 12px; text-align: center; border-bottom: 2px solid #D4AF37;">Qty</th>
+                <th style="padding: 12px; text-align: right; border-bottom: 2px solid #D4AF37;">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${orderItemsHtml}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2" style="padding: 12px; text-align: right; font-weight: bold; border-top: 2px solid #D4AF37;">Subtotal:</td>
+                <td style="padding: 12px; text-align: right; border-top: 2px solid #D4AF37;">€${order.subtotal.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td colspan="2" style="padding: 12px; text-align: right; font-weight: bold;">Delivery Fee:</td>
+                <td style="padding: 12px; text-align: right;">€${order.deliveryFee.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td colspan="2" style="padding: 12px; text-align: right; font-weight: bold; font-size: 18px; color: #D4AF37;">Total:</td>
+                <td style="padding: 12px; text-align: right; font-size: 18px; font-weight: bold; color: #D4AF37;">€${order.total.toFixed(2)}</td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <h2 style="color: #D4AF37; border-bottom: 2px solid #D4AF37; padding-bottom: 10px; margin-top: 30px;">Delivery Address</h2>
+          <p style="margin: 15px 0; line-height: 1.8;">${addressHtml}</p>
+          ${order.deliveryInstructions ? `
+            <p style="margin: 15px 0;"><strong>Delivery Instructions:</strong><br>${order.deliveryInstructions}</p>
+          ` : ''}
+
+          <h2 style="color: #D4AF37; border-bottom: 2px solid #D4AF37; padding-bottom: 10px; margin-top: 30px;">What Happens Next?</h2>
+          <ol style="line-height: 2;">
+            <li>Our kitchen is preparing your order</li>
+            <li>We'll send it out for delivery soon</li>
+            <li>Expected delivery: 30-45 minutes</li>
+          </ol>
+
+          <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0; color: #92400e;"><strong>Need to change something?</strong><br>
+            Contact us immediately at <a href="tel:${RESTAURANT_WHATSAPP}" style="color: #D4AF37;">${RESTAURANT_WHATSAPP}</a></p>
+          </div>
+
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+          
+          <div style="text-align: center; color: #6b7280; font-size: 14px;">
+            <p><strong>Namaste Curry House</strong></p>
+            <p>Authentic Indian Cuisine in Portugal</p>
+            <p>Phone: ${RESTAURANT_WHATSAPP} | Email: ${RESTAURANT_EMAIL}</p>
+            <p style="margin-top: 20px;">Thank you for choosing us! 🙏</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const result = await resend.emails.send({
+      from: 'Namaste Curry House <onboarding@resend.dev>',
+      to: order.customerEmail,
+      subject: `Order Confirmation - ${order.orderNumber}`,
+      html: htmlContent,
+    });
+
+    console.log(`✅ Customer confirmation email sent to ${order.customerEmail}`);
+    return result;
+  } catch (error) {
+    console.error('❌ Error sending customer email:', error);
+    return null;
+  }
+}
+
+// Helper: Send email notification to restaurant owner
+async function sendOwnerNotificationEmail(order) {
+  if (!resend) {
+    console.warn('⚠️  Resend not configured - skipping owner email');
+    return null;
+  }
+
+  try {
+    const orderItemsText = order.orderItems.map(item => 
+      `${item.quantity}x ${item.name}${item.spiceLevel ? ` (${item.spiceLevel})` : ''} - €${(item.price * item.quantity).toFixed(2)}`
+    ).join('\n');
+
+    const deliveryAddress = order.deliveryAddress;
+    const addressText = `${deliveryAddress.street}${deliveryAddress.apartment ? `, ${deliveryAddress.apartment}` : ''}, ${deliveryAddress.city}, ${deliveryAddress.postalCode}, ${deliveryAddress.country}`;
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      </head>
+      <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb;">
+        <div style="background-color: #dc2626; color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+          <h1 style="margin: 0; font-size: 28px;">🔔 NEW ORDER RECEIVED</h1>
+          <p style="margin: 10px 0 0; font-size: 18px; font-weight: bold;">${order.orderNumber}</p>
+        </div>
+        
+        <div style="background-color: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          <div style="background-color: #fef2f2; border-left: 4px solid #dc2626; padding: 15px; margin-bottom: 20px;">
+            <p style="margin: 0; font-size: 18px; font-weight: bold; color: #dc2626;">ACTION REQUIRED: Prepare Order</p>
+            <p style="margin: 5px 0 0; color: #991b1b;">Order Time: ${new Date(order.createdAt).toLocaleString('en-GB', { timeZone: 'Europe/Lisbon' })}</p>
+          </div>
+
+          <h2 style="color: #dc2626; border-bottom: 2px solid #dc2626; padding-bottom: 10px;">Customer Information</h2>
+          <table style="width: 100%; margin: 15px 0;">
+            <tr>
+              <td style="padding: 8px 0; font-weight: bold;">Name:</td>
+              <td style="padding: 8px 0;">${order.customerName}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; font-weight: bold;">Phone:</td>
+              <td style="padding: 8px 0;"><a href="tel:${order.customerPhone}" style="color: #dc2626;">${order.customerPhone}</a></td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; font-weight: bold;">Email:</td>
+              <td style="padding: 8px 0;">${order.customerEmail}</td>
+            </tr>
+          </table>
+
+          <h2 style="color: #dc2626; border-bottom: 2px solid #dc2626; padding-bottom: 10px; margin-top: 25px;">Order Items</h2>
+          <pre style="background-color: #f9fafb; padding: 15px; border-radius: 6px; white-space: pre-wrap; font-size: 14px; line-height: 1.8;">${orderItemsText}</pre>
+          
+          <table style="width: 100%; margin: 15px 0; font-size: 16px;">
+            <tr>
+              <td style="padding: 8px 0; text-align: right; font-weight: bold;">Subtotal:</td>
+              <td style="padding: 8px 0 8px 20px; text-align: right; width: 100px;">€${order.subtotal.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; text-align: right; font-weight: bold;">Delivery Fee:</td>
+              <td style="padding: 8px 0 8px 20px; text-align: right;">€${order.deliveryFee.toFixed(2)}</td>
+            </tr>
+            <tr style="border-top: 2px solid #dc2626;">
+              <td style="padding: 12px 0; text-align: right; font-weight: bold; font-size: 18px; color: #dc2626;">TOTAL:</td>
+              <td style="padding: 12px 0 12px 20px; text-align: right; font-size: 18px; font-weight: bold; color: #dc2626;">€${order.total.toFixed(2)}</td>
+            </tr>
+          </table>
+
+          <h2 style="color: #dc2626; border-bottom: 2px solid #dc2626; padding-bottom: 10px; margin-top: 25px;">Delivery Address</h2>
+          <p style="background-color: #fef2f2; padding: 15px; border-radius: 6px; margin: 15px 0; line-height: 1.8; font-size: 15px;">${addressText}</p>
+          
+          ${order.deliveryInstructions ? `
+            <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+              <p style="margin: 0; font-weight: bold; color: #92400e;">Delivery Instructions:</p>
+              <p style="margin: 5px 0 0; color: #92400e;">${order.deliveryInstructions}</p>
+            </div>
+          ` : ''}
+
+          <div style="background-color: #dcfce7; border-left: 4px solid #16a34a; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0; font-weight: bold; color: #166534;">Payment Status:</p>
+            <p style="margin: 5px 0 0; color: #166534; font-size: 18px; font-weight: bold;">✓ PAID (${order.paymentMethod})</p>
+          </div>
+
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+          
+          <div style="text-align: center;">
+            <a href="https://www.namastecurry.house/admin#orders" style="display: inline-block; background-color: #dc2626; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 10px;">View in Admin Dashboard</a>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const result = await resend.emails.send({
+      from: 'Namaste Orders <onboarding@resend.dev>',
+      to: RESTAURANT_EMAIL,
+      subject: `🔔 NEW ORDER: ${order.orderNumber} - €${order.total.toFixed(2)}`,
+      html: htmlContent,
+    });
+
+    console.log(`✅ Owner notification email sent to ${RESTAURANT_EMAIL}`);
+    return result;
+  } catch (error) {
+    console.error('❌ Error sending owner email:', error);
+    return null;
+  }
+}
+
 // GET /api/stripe/config - Get publishable key for frontend
 app.get('/api/stripe/config', (req, res) => {
   if (!stripe) {
@@ -1034,11 +1283,17 @@ async function handleCheckoutSessionCompleted(session) {
       
       console.log(`✅ Checkout completed for order ${order.orderNumber}`);
       
-      // Send WhatsApp notification to restaurant
-      logWhatsAppNotification(order);
+      // Get updated order with all details
+      const updatedOrder = await prisma.order.findUnique({
+        where: { id: order.id },
+      });
       
-      // TODO: Send confirmation email to customer
-      // TODO: Send notification email to owner
+      // Send WhatsApp notification to restaurant
+      logWhatsAppNotification(updatedOrder);
+      
+      // Send email notifications
+      await sendCustomerConfirmationEmail(updatedOrder);
+      await sendOwnerNotificationEmail(updatedOrder);
     } else {
       console.warn(`⚠️  Order not found for session: ${session.id}`);
     }
@@ -1071,10 +1326,17 @@ async function handlePaymentSuccess(paymentIntent) {
       
       console.log(`✅ Payment succeeded for order ${order.orderNumber}`);
       
-      // Send WhatsApp notification to restaurant
-      logWhatsAppNotification(order);
+      // Get updated order with all details
+      const updatedOrder = await prisma.order.findUnique({
+        where: { id: order.id },
+      });
       
-      // TODO: Send confirmation email to customer
+      // Send WhatsApp notification to restaurant
+      logWhatsAppNotification(updatedOrder);
+      
+      // Send email notifications
+      await sendCustomerConfirmationEmail(updatedOrder);
+      await sendOwnerNotificationEmail(updatedOrder);
     }
   } catch (error) {
     console.error('Error handling payment success:', error);
