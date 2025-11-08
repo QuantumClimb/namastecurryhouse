@@ -987,6 +987,27 @@ async function handleChargeSuccess(charge) {
   }
 }
 
+// GET /api/orders - Get all orders (for admin)
+app.get('/api/orders', async (req, res) => {
+  try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
+
+    const orders = await prisma.order.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      },
+      take: 100 // Last 100 orders
+    });
+    
+    res.json(orders);
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
+
 // GET /api/orders/:id - Get order by ID
 app.get('/api/orders/:id', async (req, res) => {
   try {

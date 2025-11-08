@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import MenuManagement from "@/components/MenuManagement";
+import OrderManagement from "@/components/admin/OrderManagement";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const ADMIN_USER = "NamasteAdmin";
@@ -20,12 +21,14 @@ export default function Admin() {
   const location = useLocation();
   
   // Get active view from URL hash
-  const getActiveViewFromUrl = (): "dashboard" | "menu-management" => {
+  const getActiveViewFromUrl = (): "dashboard" | "menu-management" | "orders" => {
     const hash = location.hash.replace('#', '');
-    return hash === 'menu-management' ? 'menu-management' : 'dashboard';
+    if (hash === 'menu-management') return 'menu-management';
+    if (hash === 'orders') return 'orders';
+    return 'dashboard';
   };
   
-  const [activeView, setActiveView] = useState<"dashboard" | "menu-management">(getActiveViewFromUrl());
+  const [activeView, setActiveView] = useState<"dashboard" | "menu-management" | "orders">(getActiveViewFromUrl());
 
   // Check if session is still valid
   const isSessionValid = (): boolean => {
@@ -56,11 +59,13 @@ export default function Admin() {
     localStorage.removeItem("namaste-admin-login-time");
   };
 
-  const setActiveViewWithUrl = (view: "dashboard" | "menu-management") => {
+  const setActiveViewWithUrl = (view: "dashboard" | "menu-management" | "orders") => {
     setActiveView(view);
     // Update URL hash to persist view state
     if (view === "menu-management") {
       navigate('/admin#menu-management');
+    } else if (view === "orders") {
+      navigate('/admin#orders');
     } else {
       navigate('/admin');
     }
@@ -106,6 +111,16 @@ export default function Admin() {
   <div className="min-h-screen pt-16 bg-primary/5">
           <div className="container mx-auto px-4 py-8">
             <MenuManagement onClose={() => setActiveViewWithUrl("dashboard")} />
+          </div>
+        </div>
+      );
+    }
+
+    if (activeView === "orders") {
+      return (
+  <div className="min-h-screen pt-16 bg-primary/5">
+          <div className="container mx-auto px-4 py-8">
+            <OrderManagement onClose={() => setActiveViewWithUrl("dashboard")} />
           </div>
         </div>
       );
@@ -202,11 +217,13 @@ export default function Admin() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-foreground/70">
-                    Manage incoming orders and delivery status.
+                    View and manage incoming orders in real-time.
                   </p>
-                  <Badge variant="secondary">Coming Soon</Badge>
-                  <Button disabled className="w-full">
-                    Manage Orders
+                  <Button 
+                    className="w-full"
+                    onClick={() => setActiveViewWithUrl("orders")}
+                  >
+                    View Orders
                   </Button>
                 </CardContent>
               </Card>
