@@ -1105,6 +1105,11 @@ app.post('/api/stripe/create-checkout-session', express.json(), async (req, res)
 
     const { orderItems, customerInfo, deliveryAddress } = req.body;
     
+    // Debug logging
+    console.log('🔍 Checkout session request received');
+    console.log('Order items count:', orderItems?.length);
+    console.log('Order items:', JSON.stringify(orderItems, null, 2));
+    
     // Validate input
     if (!orderItems || !orderItems.length) {
       return res.status(400).json({ error: 'Order items are required' });
@@ -1143,7 +1148,27 @@ app.post('/api/stripe/create-checkout-session', express.json(), async (req, res)
     });
     
     // Create line items for Stripe Checkout
-    const lineItems = orderItems.map(item => {
+    console.log('🔍 Creating line items for Stripe...');
+    const lineItems = orderItems.map((item, index) => {
+      console.log(`Item ${index}:`, {
+        name: item.name,
+        quantity: item.quantity,
+        totalPrice: item.totalPrice,
+        price: item.price,
+        spiceLevel: item.spiceLevel,
+      });
+      
+      // Validate required fields
+      if (!item.name) {
+        throw new Error(`Item at index ${index} is missing name`);
+      }
+      if (!item.quantity || item.quantity <= 0) {
+        throw new Error(`Item at index ${index} has invalid quantity: ${item.quantity}`);
+      }
+      if (!item.totalPrice && !item.price) {
+        throw new Error(`Item at index ${index} is missing price information`);
+      }
+      
       const productData = {
         name: item.name,
       };
@@ -1153,15 +1178,22 @@ app.post('/api/stripe/create-checkout-session', express.json(), async (req, res)
         productData.description = `Spice Level: ${item.spiceLevel}`;
       }
       
+      const unitPrice = item.totalPrice ? item.totalPrice / item.quantity : item.price;
+      const unitAmount = Math.round(unitPrice * 100);
+      
+      console.log(`  → Unit amount: ${unitAmount} cents (€${(unitAmount / 100).toFixed(2)})`);
+      
       return {
         price_data: {
           currency: process.env.STRIPE_CURRENCY || 'eur',
-          unit_amount: Math.round((item.totalPrice / item.quantity) * 100), // Price per item in cents
+          unit_amount: unitAmount,
           product_data: productData,
         },
         quantity: item.quantity,
       };
     });
+    
+    console.log('✅ Line items created:', lineItems.length);
     
     // Add delivery fee as a line item
     if (deliveryFee > 0) {
