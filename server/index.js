@@ -599,11 +599,35 @@ app.get('/api/stripe/config', (req, res) => {
   });
 });
 
+// GET /api/stripe/health - Diagnostic endpoint (does not expose sensitive data)
+app.get('/api/stripe/health', (req, res) => {
+  const secretKeySet = !!process.env.STRIPE_SECRET_KEY;
+  const publishableKeySet = !!process.env.STRIPE_PUBLISHABLE_KEY;
+  const webhookSecretSet = !!process.env.STRIPE_WEBHOOK_SECRET;
+  const currencySet = !!process.env.STRIPE_CURRENCY;
+  
+  res.json({
+    stripeInitialized: !!stripe,
+    environment: {
+      STRIPE_SECRET_KEY: secretKeySet ? 'SET (' + process.env.STRIPE_SECRET_KEY.substring(0, 12) + '...)' : 'NOT SET',
+      STRIPE_PUBLISHABLE_KEY: publishableKeySet ? 'SET (' + process.env.STRIPE_PUBLISHABLE_KEY.substring(0, 12) + '...)' : 'NOT SET',
+      STRIPE_WEBHOOK_SECRET: webhookSecretSet ? 'SET' : 'NOT SET',
+      STRIPE_CURRENCY: process.env.STRIPE_CURRENCY || 'NOT SET',
+    },
+    secretKeyIsTestMode: process.env.STRIPE_SECRET_KEY?.includes('_test_') || false,
+    publishableKeyIsTestMode: process.env.STRIPE_PUBLISHABLE_KEY?.includes('_test_') || false,
+  });
+});
+
 // POST /api/stripe/create-payment-intent
 app.post('/api/stripe/create-payment-intent', express.json(), async (req, res) => {
   try {
     if (!stripe) {
-      return res.status(503).json({ error: 'Stripe not configured' });
+      console.error('❌ Stripe not initialized - check STRIPE_SECRET_KEY environment variable');
+      return res.status(503).json({ 
+        error: 'Stripe not configured',
+        details: 'Payment service is not available. Please contact support.'
+      });
     }
     
     if (!(await ensureDbConnection())) {
@@ -678,8 +702,18 @@ app.post('/api/stripe/create-payment-intent', express.json(), async (req, res) =
     });
     
   } catch (error) {
-    console.error('Error creating payment intent:', error);
-    res.status(500).json({ error: 'Failed to create payment intent' });
+    console.error('❌ Error creating payment intent:', error);
+    console.error('Error details:', {
+      message: error.message,
+      type: error.type,
+      code: error.code,
+      stack: error.stack?.split('\n').slice(0, 3).join('\n')
+    });
+    
+    res.status(500).json({ 
+      error: 'Failed to create payment intent',
+      details: error.message || 'An unexpected error occurred'
+    });
   }
 });
 
