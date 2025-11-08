@@ -19,6 +19,9 @@ const prisma = new PrismaClient({
   log: ['warn', 'error']
 });
 
+// Restaurant WhatsApp number for notifications
+const RESTAURANT_WHATSAPP = process.env.RESTAURANT_WHATSAPP || '+351920617185';
+
 // Initialize Stripe (only if key is configured)
 let stripe = null;
 if (process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY !== 'sk_test_YOUR_SECRET_KEY_HERE') {
@@ -589,6 +592,53 @@ function calculateDeliveryFee(address) {
   return 2.50; // €2.50 delivery fee
 }
 
+// Helper: Format order for WhatsApp message
+function formatOrderForWhatsApp(order) {
+  const items = order.orderItems.map(item => 
+    `• ${item.quantity}x ${item.name} (€${item.totalPrice.toFixed(2)})${item.spiceLevel !== undefined ? ` - ${item.spiceLevel}% spice` : ''}`
+  ).join('\n');
+  
+  const address = typeof order.deliveryAddress === 'string' 
+    ? order.deliveryAddress 
+    : `${order.deliveryAddress.street}, ${order.deliveryAddress.city}, ${order.deliveryAddress.postalCode}`;
+  
+  return `🔔 *NEW ORDER - ${order.orderNumber}*
+
+👤 *Customer:* ${order.customerName}
+📞 *Phone:* ${order.customerPhone}
+📧 *Email:* ${order.customerEmail}
+
+📦 *Items:*
+${items}
+
+💰 *Subtotal:* €${order.subtotal.toFixed(2)}
+🚚 *Delivery:* €${order.deliveryFee.toFixed(2)}
+💳 *Total:* €${order.total.toFixed(2)}
+
+📍 *Delivery Address:*
+${address}
+
+💳 *Payment:* ${order.paymentMethod === 'STRIPE_CARD' ? 'Card (PAID ✅)' : 'Cash on Delivery'}
+📊 *Status:* ${order.status}`;
+}
+
+// Helper: Send WhatsApp notification (console log + link for manual sending)
+function logWhatsAppNotification(order) {
+  const message = formatOrderForWhatsApp(order);
+  const encodedMessage = encodeURIComponent(message);
+  const whatsappLink = `https://wa.me/${RESTAURANT_WHATSAPP.replace(/\+/g, '')}?text=${encodedMessage}`;
+  
+  console.log('\n📱 ═══════════════════════════════════════════');
+  console.log('   WHATSAPP NOTIFICATION');
+  console.log('   ═══════════════════════════════════════════');
+  console.log(message);
+  console.log('   ═══════════════════════════════════════════');
+  console.log(`   🔗 Send manually: ${whatsappLink}`);
+  console.log('   ═══════════════════════════════════════════\n');
+  
+  return whatsappLink;
+}
+
 // GET /api/stripe/config - Get publishable key for frontend
 app.get('/api/stripe/config', (req, res) => {
   if (!stripe) {
@@ -791,8 +841,10 @@ async function handlePaymentSuccess(paymentIntent) {
       
       console.log(`✅ Payment succeeded for order ${order.orderNumber}`);
       
-      // TODO: Send confirmation email
-      // TODO: Notify restaurant staff
+      // Send WhatsApp notification to restaurant
+      logWhatsAppNotification(order);
+      
+      // TODO: Send confirmation email to customer
     }
   } catch (error) {
     console.error('Error handling payment success:', error);
@@ -891,6 +943,39 @@ app.get('/api/orders/number/:orderNumber', async (req, res) => {
   } catch (error) {
     console.error('Error fetching order:', error);
     res.status(500).json({ error: 'Failed to fetch order' });
+  }
+});
+
+// GET /api/orders/:id/whatsapp-link - Generate WhatsApp notification link for an order
+app.get('/api/orders/:id/whatsapp-link', async (req, res) => {
+  try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
+
+    const orderId = parseInt(req.params.id);
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+    });
+    
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    const message = formatOrderForWhatsApp(order);
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappLink = `https://wa.me/${RESTAURANT_WHATSAPP.replace(/\+/g, '')}?text=${encodedMessage}`;
+    
+    res.json({
+      orderId: order.id,
+      orderNumber: order.orderNumber,
+      whatsappLink,
+      message,
+      restaurantWhatsApp: RESTAURANT_WHATSAPP
+    });
+  } catch (error) {
+    console.error('Error generating WhatsApp link:', error);
+    res.status(500).json({ error: 'Failed to generate WhatsApp link' });
   }
 });
 
