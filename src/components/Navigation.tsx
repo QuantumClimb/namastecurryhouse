@@ -1,13 +1,15 @@
 
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CartDrawer } from "./CartDrawer";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { language, toggleLanguage } = useLanguage();
 
   const navigation = [
     { name: "Our Story", href: "/" },
@@ -56,11 +58,32 @@ export const Navigation = () => {
                   </Link>
                 ))}
               </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleLanguage}
+                className="px-3 py-2 text-sm font-medium hover:bg-transparent transition-all duration-300 flex items-center gap-2"
+                style={{ color: '#D4AF37' }}
+                title={language === 'en' ? 'Switch to Portuguese' : 'Mudar para Inglês'}
+              >
+                <Languages size={18} />
+                <span className="font-bold">{language === 'en' ? 'PT' : 'EN'}</span>
+              </Button>
               <CartDrawer />
             </div>
           </div>
           
           <div className="md:hidden flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleLanguage}
+              className="p-2 hover:bg-transparent transition-all duration-300"
+              style={{ color: '#D4AF37' }}
+              title={language === 'en' ? 'Switch to Portuguese' : 'Mudar para Inglês'}
+            >
+              <span className="text-sm font-bold">{language === 'en' ? 'PT' : 'EN'}</span>
+            </Button>
             <CartDrawer />
             <Button
               variant="ghost"

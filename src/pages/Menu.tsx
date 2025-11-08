@@ -14,6 +14,7 @@ import { SpiceLevelDialog } from "../components/SpiceLevelDialog";
 import { RepeatCustomizationDialog } from "../components/RepeatCustomizationDialog";
 import { CartCustomization } from "../types/cart";
 import { useMenuData } from "../hooks/useMenuData";
+import { useLanguage } from "../contexts/LanguageContext";
 
 // Track last selected spice level for each menu item (outside component for persistence)
 const lastSpiceLevels = new Map<string, number>();
@@ -36,6 +37,7 @@ const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => 
 const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg: string }) => {
   const [isSpiceDialogOpen, setIsSpiceDialogOpen] = useState(false);
   const [isRepeatDialogOpen, setIsRepeatDialogOpen] = useState(false);
+  const { t } = useLanguage();
   
   // Only subscribe to actions, not items (to avoid re-renders)
   const addItem = useCartStore(state => state.addItem);
@@ -49,6 +51,10 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
   // Get the first cart item ID for this menu item (for updateQuantity/removeItem)
   const items = useCartStore(state => state.items);
   const cartItemId = items.find(cartItem => cartItem.menuItem.id === item.id)?.id;
+
+  // Get translated name and description
+  const displayName = t(item.name, item.namePt);
+  const displayDescription = t(item.description || '', item.descriptionPt);
 
   const handleAddToCart = () => {
     // Check if item has spice customization enabled
@@ -170,7 +176,7 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
         <div className="relative w-24 h-24 flex-shrink-0 overflow-hidden rounded-lg">
           <img
             src={imageUrl}
-            alt={item.name}
+            alt={displayName}
             className="w-full h-full object-cover"
             onError={(e) => {
               e.currentTarget.src = placeholderImg;
@@ -180,8 +186,8 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
 
         {/* Center: Content */}
         <div className="flex-1 px-3 py-1 min-w-0 text-left">
-          <h4 className="text-base font-bold text-foreground truncate mb-1">{item.name}</h4>
-          <p className="text-xs text-foreground/60 line-clamp-1 mb-2">{item.description}</p>
+          <h4 className="text-base font-bold text-foreground truncate mb-1">{displayName}</h4>
+          <p className="text-xs text-foreground/60 line-clamp-1 mb-2">{displayDescription}</p>
           <div className="flex items-center gap-2">
             <span className="text-sm font-bold text-accent">€{item.price.toFixed(2)}</span>
             {item.hasSpiceCustomization === true && (
@@ -217,7 +223,7 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
         <div className="relative h-48 overflow-hidden">
           <img
             src={imageUrl}
-            alt={item.name}
+            alt={displayName}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             onError={(e) => {
               e.currentTarget.src = placeholderImg;
@@ -227,10 +233,10 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
         </div>
         <CardContent className="p-6">
           <div className="flex justify-between items-start mb-3">
-            <h4 className="text-xl font-bold text-foreground">{item.name}</h4>
+            <h4 className="text-xl font-bold text-foreground">{displayName}</h4>
             <span className="text-lg font-bold text-accent">€{item.price.toFixed(2)}</span>
           </div>
-          <p className="text-foreground/70 mb-4 leading-relaxed">{item.description}</p>
+          <p className="text-foreground/70 mb-4 leading-relaxed">{displayDescription}</p>
           {item.dietary && item.dietary.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
               {item.dietary.map((diet: string, idx: number) => (
@@ -283,7 +289,7 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
             open={isSpiceDialogOpen}
             onOpenChange={setIsSpiceDialogOpen}
             onConfirm={handleSpiceLevelConfirm}
-            itemName={item.name}
+            itemName={displayName}
           />
 
           <RepeatCustomizationDialog
@@ -291,7 +297,7 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
             onOpenChange={setIsRepeatDialogOpen}
             onRepeat={handleRepeatCustomization}
             onCustomize={handleNewCustomization}
-            itemName={item.name}
+            itemName={displayName}
             previousSpiceLevel={lastSpiceLevels.get(item.id) || 0}
           />
         </>

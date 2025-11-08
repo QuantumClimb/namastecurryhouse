@@ -1,10 +1,11 @@
 export interface MenuItem {
   id: string;
   name: string;
-  namePt: string;
+  namePt?: string;
   category: string;
   price: number;
   description?: string;
+  descriptionPt?: string;
   dietary?: string[];
   hasSpiceCustomization?: boolean;
   imageUrl?: string;    // New field for image URL

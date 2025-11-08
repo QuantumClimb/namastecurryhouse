@@ -20,7 +20,9 @@ interface MenuCategory {
 interface MenuItem {
   id: string;
   name: string;
+  namePt?: string;
   description: string;
+  descriptionPt?: string;
   price: number;
   dietary: string[];
   hasSpiceCustomization?: boolean;
@@ -47,7 +49,9 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
   // Form state
   const [formData, setFormData] = useState({
     name: "",
+    namePt: "",
     description: "",
+    descriptionPt: "",
     price: "",
     dietary: [] as string[],
     hasSpiceCustomization: false,
@@ -262,7 +266,9 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
     setEditingItem(item);
     setFormData({
       name: item.name,
+      namePt: item.namePt || "",
       description: item.description,
+      descriptionPt: item.descriptionPt || "",
       price: item.price.toString(),
       dietary: item.dietary,
       hasSpiceCustomization: item.hasSpiceCustomization || false,
@@ -295,7 +301,9 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
   const resetForm = () => {
     setFormData({
       name: "",
+      namePt: "",
       description: "",
+      descriptionPt: "",
       price: "",
       dietary: [],
       hasSpiceCustomization: false,
@@ -414,7 +422,7 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
                 {/* Basic Information */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Name *</Label>
+                    <Label htmlFor="name">Name (English) *</Label>
                     <Input
                       id="name"
                       value={formData.name}
@@ -423,25 +431,46 @@ export default function MenuManagement({ onClose }: MenuManagementProps) {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="price">Price (€) *</Label>
+                    <Label htmlFor="namePt">Name (Portuguese)</Label>
                     <Input
-                      id="price"
-                      type="number"
-                      step="0.01"
-                      value={formData.price}
-                      onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                      required
+                      id="namePt"
+                      value={formData.namePt}
+                      onChange={(e) => setFormData(prev => ({ ...prev, namePt: e.target.value }))}
+                      placeholder="Nome em português"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="price">Price (€) *</Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description (English)</Label>
                   <Textarea
                     id="description"
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                     rows={3}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="descriptionPt">Description (Portuguese)</Label>
+                  <Textarea
+                    id="descriptionPt"
+                    value={formData.descriptionPt}
+                    onChange={(e) => setFormData(prev => ({ ...prev, descriptionPt: e.target.value }))}
+                    rows={3}
+                    placeholder="Descrição em português"
                   />
                 </div>
 

@@ -232,7 +232,9 @@ app.get('/api/menu', async (req, res) => {
       items: category.items.map(item => ({
         id: item.id.toString(),
         name: item.name,
+        namePt: item.namePt,
         description: item.description,
+        descriptionPt: item.descriptionPt,
         price: item.price,
         dietary: item.dietary ? item.dietary.split(',').filter(d => d.trim()) : [],
         hasSpiceCustomization: item.hasSpiceCustomization || false,
@@ -277,7 +279,9 @@ app.get('/api/menu/category/:categoryName', async (req, res) => {
     const menuItems = category.items.map(item => ({
       id: item.id.toString(),
       name: item.name,
+      namePt: item.namePt,
       description: item.description,
+      descriptionPt: item.descriptionPt,
       price: item.price,
       dietary: item.dietary ? item.dietary.split(',').filter(d => d.trim()) : [],
       hasSpiceCustomization: item.hasSpiceCustomization || false,
@@ -319,7 +323,19 @@ app.get('/api/menu/search', async (req, res) => {
             }
           },
           {
+            namePt: {
+              contains: q,
+              mode: 'insensitive'
+            }
+          },
+          {
             description: {
+              contains: q,
+              mode: 'insensitive'
+            }
+          },
+          {
+            descriptionPt: {
               contains: q,
               mode: 'insensitive'
             }
@@ -334,7 +350,9 @@ app.get('/api/menu/search', async (req, res) => {
     const searchResults = items.map(item => ({
       id: item.id.toString(),
       name: item.name,
+      namePt: item.namePt,
       description: item.description,
+      descriptionPt: item.descriptionPt,
       price: item.price,
       dietary: item.dietary ? item.dietary.split(',').filter(d => d.trim()) : [],
       hasSpiceCustomization: item.hasSpiceCustomization || false,
@@ -516,12 +534,14 @@ app.post('/api/admin/menu-items', async (req, res) => {
     if (!(await ensureDbConnection())) {
       return res.status(503).json({ error: 'Database unavailable' });
     }
-    const { name, description, price, dietary, hasSpiceCustomization, categoryId, imageUrl, imageData, imageMimeType, imageSize } = req.body;
+    const { name, namePt, description, descriptionPt, price, dietary, hasSpiceCustomization, categoryId, imageUrl, imageData, imageMimeType, imageSize } = req.body;
     
     const newItem = await prisma.menuItem.create({
       data: {
         name,
+        namePt: namePt || null,
         description,
+        descriptionPt: descriptionPt || null,
         price: parseFloat(price),
         dietary: Array.isArray(dietary) ? dietary.join(',') : dietary || '',
         hasSpiceCustomization: hasSpiceCustomization || false,
@@ -539,7 +559,9 @@ app.post('/api/admin/menu-items', async (req, res) => {
     res.json({
       id: newItem.id.toString(),
       name: newItem.name,
+      namePt: newItem.namePt,
       description: newItem.description,
+      descriptionPt: newItem.descriptionPt,
       price: newItem.price,
       dietary: newItem.dietary ? newItem.dietary.split(',').filter(d => d.trim()) : [],
       hasSpiceCustomization: newItem.hasSpiceCustomization,
@@ -560,13 +582,15 @@ app.put('/api/admin/menu-items/:id', async (req, res) => {
       return res.status(503).json({ error: 'Database unavailable' });
     }
     const { id } = req.params;
-    const { name, description, price, dietary, hasSpiceCustomization, categoryId, imageUrl, imageData, imageMimeType, imageSize } = req.body;
+    const { name, namePt, description, descriptionPt, price, dietary, hasSpiceCustomization, categoryId, imageUrl, imageData, imageMimeType, imageSize } = req.body;
     
     const updatedItem = await prisma.menuItem.update({
       where: { id: parseInt(id) },
       data: {
         name,
+        namePt: namePt || null,
         description,
+        descriptionPt: descriptionPt || null,
         price: parseFloat(price),
         dietary: Array.isArray(dietary) ? dietary.join(',') : dietary || '',
         hasSpiceCustomization: hasSpiceCustomization || false,
@@ -584,7 +608,9 @@ app.put('/api/admin/menu-items/:id', async (req, res) => {
     res.json({
       id: updatedItem.id.toString(),
       name: updatedItem.name,
+      namePt: updatedItem.namePt,
       description: updatedItem.description,
+      descriptionPt: updatedItem.descriptionPt,
       price: updatedItem.price,
       dietary: updatedItem.dietary ? updatedItem.dietary.split(',').filter(d => d.trim()) : [],
       hasSpiceCustomization: updatedItem.hasSpiceCustomization,
@@ -717,7 +743,9 @@ app.get('/api/admin/menu-items', async (req, res) => {
     const menuItems = items.map(item => ({
       id: item.id.toString(),
       name: item.name,
+      namePt: item.namePt,
       description: item.description,
+      descriptionPt: item.descriptionPt,
       price: item.price,
       dietary: item.dietary ? item.dietary.split(',').filter(d => d.trim()) : [],
       hasSpiceCustomization: item.hasSpiceCustomization || false,

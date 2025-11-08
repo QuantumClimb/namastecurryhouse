@@ -18,7 +18,9 @@ model MenuCategory {
 model MenuItem {
   id                      Int      @id @default(autoincrement())
   name                    String
+  namePt                  String?      // Portuguese translation of name
   description             String
+  descriptionPt           String?      // Portuguese translation of description
   price                   Float
   dietary                 String   // comma-separated dietary tags
   hasSpiceCustomization   Boolean  @default(false) // Toggle for spice level customization
