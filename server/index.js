@@ -336,12 +336,153 @@ app.get('/api/admin/categories', async (req, res) => {
     const categories = await prisma.menuCategory.findMany({
       orderBy: {
         name: 'asc'
+      },
+      include: {
+        _count: {
+          select: { items: true }
+        }
       }
     });
     res.json(categories);
   } catch (error) {
     console.error('Error fetching categories:', error);
     res.status(500).json({ error: 'Failed to fetch categories' });
+  }
+});
+
+// Create new category
+app.post('/api/admin/categories', async (req, res) => {
+  try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
+    const { name } = req.body;
+    
+    if (!name || name.trim() === '') {
+      return res.status(400).json({ error: 'Category name is required' });
+    }
+
+    // Check if category already exists
+    const existingCategory = await prisma.menuCategory.findFirst({
+      where: {
+        name: {
+          equals: name.trim(),
+          mode: 'insensitive'
+        }
+      }
+    });
+
+    if (existingCategory) {
+      return res.status(409).json({ error: 'Category already exists' });
+    }
+
+    const newCategory = await prisma.menuCategory.create({
+      data: {
+        name: name.trim()
+      },
+      include: {
+        _count: {
+          select: { items: true }
+        }
+      }
+    });
+
+    res.status(201).json(newCategory);
+  } catch (error) {
+    console.error('Error creating category:', error);
+    res.status(500).json({ error: 'Failed to create category' });
+  }
+});
+
+// Update category
+app.put('/api/admin/categories/:id', async (req, res) => {
+  try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
+    const { id } = req.params;
+    const { name } = req.body;
+
+    if (!name || name.trim() === '') {
+      return res.status(400).json({ error: 'Category name is required' });
+    }
+
+    // Check if another category with this name exists
+    const existingCategory = await prisma.menuCategory.findFirst({
+      where: {
+        name: {
+          equals: name.trim(),
+          mode: 'insensitive'
+        },
+        NOT: {
+          id: parseInt(id)
+        }
+      }
+    });
+
+    if (existingCategory) {
+      return res.status(409).json({ error: 'Category name already exists' });
+    }
+
+    const updatedCategory = await prisma.menuCategory.update({
+      where: { id: parseInt(id) },
+      data: { name: name.trim() },
+      include: {
+        _count: {
+          select: { items: true }
+        }
+      }
+    });
+
+    res.json(updatedCategory);
+  } catch (error) {
+    console.error('Error updating category:', error);
+    if (error.code === 'P2025') {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+    res.status(500).json({ error: 'Failed to update category' });
+  }
+});
+
+// Delete category
+app.delete('/api/admin/categories/:id', async (req, res) => {
+  try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
+    const { id } = req.params;
+
+    // Check if category has any menu items
+    const category = await prisma.menuCategory.findUnique({
+      where: { id: parseInt(id) },
+      include: {
+        _count: {
+          select: { items: true }
+        }
+      }
+    });
+
+    if (!category) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+
+    if (category._count.items > 0) {
+      return res.status(409).json({ 
+        error: `Cannot delete category with ${category._count.items} menu item(s). Please move or delete the items first.` 
+      });
+    }
+
+    await prisma.menuCategory.delete({
+      where: { id: parseInt(id) }
+    });
+
+    res.json({ message: 'Category deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting category:', error);
+    if (error.code === 'P2025') {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+    res.status(500).json({ error: 'Failed to delete category' });
   }
 });
 
