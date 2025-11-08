@@ -1,4 +1,4 @@
-# Project Status Report - November 2, 2025
+# Project Status Report - November 8, 2025
 
 ## 🎯 **Current Project State**
 
@@ -40,12 +40,15 @@
 - **Payment Processing**: Stripe integration (optional, configurable)
 
 #### **💳 Payment System**
-- **Stripe Integration**: Multi-step checkout with Stripe payment support
+- **Stripe Integration**: Checkout Sessions for secure hosted payments
 - **Dual Payment Methods**: WhatsApp ordering + Stripe card payments
 - **Order Management**: Database-backed order tracking and history
 - **Customer Data**: Secure customer information and delivery address storage
 - **Payment Status Tracking**: Real-time payment status updates via webhooks
 - **Order Confirmation**: Professional confirmation page with order details
+- **Webhook Handling**: Automated order status updates on payment completion
+- **WhatsApp Notifications**: Console-based notifications with clickable wa.me links
+- **Admin Orders Dashboard**: Real-time orders view with auto-refresh (30s intervals)
 
 ### **📊 DATABASE STATUS**
 
@@ -64,22 +67,24 @@
 
 ### **🌍 LIVE URLS**
 - **Production Site**: https://namastecurryhouse.vercel.app
-- **Admin Panel**: https://namastecurryhouse.vercel.app/admin
-- **Menu Management**: https://namastecurryhouse.vercel.app/admin#menu-management
-- **API Health**: https://namastecurryhouse.vercel.app/api/health
+- **Custom Domain**: https://www.namastecurry.house
+- **Admin Panel**: https://www.namastecurry.house/admin
+- **Menu Management**: https://www.namastecurry.house/admin#menu-management
+- **Orders Dashboard**: https://www.namastecurry.house/admin#orders
+- **API Health**: https://www.namastecurry.house/api/health
 
 ---
 
 ## 🚧 **NEXT PRIORITIES**
 
-### **� Stripe Configuration**
-1. **Get Stripe API keys**: Sign up at https://stripe.com and get test keys
-2. **Add to Vercel**: Configure environment variables in Vercel dashboard
-3. **Test payments**: Use test card 4242 4242 4242 4242
-4. **Set up webhook**: Configure webhook endpoint for payment confirmations
-5. **Go live**: Switch to live Stripe keys after testing
+### **📧 Email Notification System**
+1. **Set up Resend account**: Sign up at https://resend.com
+2. **Add API key to Vercel**: Configure RESEND_API_KEY environment variable
+3. **Implement email templates**: Customer order confirmations and owner notifications
+4. **Test email flow**: Verify emails sent on successful payment
+5. **Enable Stripe receipts**: Configure basic receipts in Stripe dashboard settings
 
-### **�🖼️ Image Upload Tasks**
+### **🖼️ Image Upload Tasks**
 1. **Upload remaining menu images** (30 items need real images)
 2. **Image optimization**: Resize large images to 400×300px, under 250KB
 3. **Batch upload tool**: Consider creating for faster image management
@@ -97,8 +102,8 @@
 4. **Input sanitization**: Additional validation layers
 
 ### **📱 Feature Additions**
-1. **Google Maps integration**: Address autocomplete and current location
-2. **Email notifications**: Order confirmations via SendGrid/Resend
+1. **Email notifications**: Order confirmations via Resend (NEXT PRIORITY)
+2. **Google Maps integration**: Address autocomplete and current location
 3. **SMS notifications**: Delivery updates via Twilio
 4. **Inventory tracking**: Stock levels for menu items
 5. **Analytics dashboard**: View popular items, sales data
@@ -114,11 +119,18 @@
 # Database
 DATABASE_URL="postgresql://neondb_owner:npg_naN0htcZIP1T@ep-green-heart-agnkym2y-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require"
 
-# Stripe (Optional - for payment processing)
-STRIPE_SECRET_KEY="sk_test_..."              # Get from Stripe Dashboard
-STRIPE_PUBLISHABLE_KEY="pk_test_..."         # Get from Stripe Dashboard  
-STRIPE_WEBHOOK_SECRET="whsec_..."            # Get after webhook setup
+# Stripe Payment Processing
+STRIPE_SECRET_KEY="sk_test_51QKOTc2NhYfKNfZW..."     # Configured in Vercel
+STRIPE_PUBLISHABLE_KEY="pk_test_51QKOTc2NhYfKNfZW..."  # Configured in Vercel
+STRIPE_WEBHOOK_SECRET="whsec_..."                      # Configured in Vercel
 STRIPE_CURRENCY="eur"
+
+# Restaurant Contact (for WhatsApp notifications)
+RESTAURANT_PHONE="+351920617185"
+RESTAURANT_EMAIL="namastecurrylisboa@gmail.com"
+
+# Email Notifications (Phase 2 - Pending Resend account)
+RESEND_API_KEY="re_..."                                # To be configured
 ```
 
 ### **Key Scripts**
@@ -144,20 +156,24 @@ npm run db:seed          # Seed database with menu data
 
 ### **API Endpoints**
 ```
-GET  /api/health                       # Server health check
-GET  /api/menu                         # Public menu data
-GET  /api/images/{id}                  # Serve database images
-POST /api/admin/upload-image           # Upload images
-GET  /api/admin/menu-items             # Admin menu management
-PUT  /api/admin/menu-items/{id}        # Update menu item
+GET  /api/health                         # Server health check
+GET  /api/menu                           # Public menu data
+GET  /api/images/{id}                    # Serve database images
+POST /api/admin/upload-image             # Upload images
+GET  /api/admin/menu-items               # Admin menu management
+PUT  /api/admin/menu-items/{id}          # Update menu item
 
-# Stripe Payment Endpoints (NEW)
-GET  /api/stripe/config                # Get Stripe publishable key
-POST /api/stripe/create-payment-intent # Create payment intent
-POST /api/stripe/webhook               # Handle Stripe webhooks
-GET  /api/orders/:id                   # Get order by ID
-GET  /api/orders/number/:orderNumber   # Get order by order number
-POST /api/orders/whatsapp              # Create WhatsApp order
+# Stripe Payment Endpoints
+GET  /api/stripe/config                  # Get Stripe publishable key
+POST /api/stripe/create-checkout-session # Create Stripe Checkout session
+POST /api/stripe/webhook                 # Handle Stripe webhooks
+
+# Order Management Endpoints
+GET  /api/orders                         # Get all orders (admin)
+GET  /api/orders/:id                     # Get order by ID
+GET  /api/orders/number/:orderNumber     # Get order by order number
+GET  /api/orders/:id/whatsapp-link       # Generate WhatsApp notification link
+POST /api/orders/whatsapp                # Create WhatsApp order
 ```
 
 ---
@@ -167,57 +183,68 @@ POST /api/orders/whatsapp              # Create WhatsApp order
 ```
 namastecurry/
 ├── server/
-│   └── index.js                      # Express API server + Stripe
+│   └── index.js                      # Express API server + Stripe + Orders
 ├── src/
 │   ├── components/
 │   │   ├── MenuManagement.tsx        # Admin menu interface
-│   │   ├── StripeProvider.tsx        # Stripe Elements wrapper (NEW)
-│   │   └── checkout/                 # Checkout components (NEW)
+│   │   ├── StripeProvider.tsx        # Stripe Elements wrapper
+│   │   ├── admin/
+│   │   │   └── OrderManagement.tsx   # Orders dashboard (NEW)
+│   │   └── checkout/                 # Checkout components
 │   │       ├── CustomerInfoForm.tsx
 │   │       ├── DeliveryAddressForm.tsx
 │   │       ├── PaymentMethodSelector.tsx
 │   │       ├── CheckoutStepIndicator.tsx
-│   │       └── StripePaymentForm.tsx
+│   │       └── StripeCheckoutButton.tsx  # Simplified checkout (NEW)
 │   ├── pages/
-│   │   ├── Admin.tsx                 # Admin panel with auth
+│   │   ├── Admin.tsx                 # Admin panel with orders view (UPDATED)
 │   │   ├── Menu.tsx                  # Public menu display
-│   │   ├── Checkout.tsx              # Multi-step checkout (UPDATED)
-│   │   └── OrderConfirmation.tsx     # Order success page (NEW)
+│   │   ├── Checkout.tsx              # Stripe Checkout integration (UPDATED)
+│   │   └── OrderConfirmation.tsx     # Order success page
 │   ├── services/
 │   │   └── menuService.ts            # API communication
 │   ├── stores/
-│   │   └── cartStore.ts              # Cart + checkout state (UPDATED)
+│   │   └── cartStore.ts              # Cart + checkout state
 │   └── types/
 │       ├── cart.ts                   # Cart types
-│       └── order.ts                  # Order types (NEW)
+│       └── order.ts                  # Order types
 ├── prisma/
-│   ├── schema.prisma                 # Database schema (UPDATED)
+│   ├── schema.prisma                 # Database schema (stripeSessionId added)
 │   └── migrations/                   # Database migrations
-│       └── 20251102050635_add_orders_and_customers/  # NEW
+│       ├── 20251102050635_add_orders_and_customers/
+│       └── 20251108074523_add_stripe_session_id/  # NEW
 ├── docs/
-│   └── STRIPE_INTEGRATION.md         # Complete Stripe guide (NEW)
+│   └── STRIPE_INTEGRATION.md         # Complete Stripe guide
 ├── public/
 │   └── images/                       # Static images
-├── STRIPE_SETUP_COMPLETE.md          # Quick setup guide (NEW)
+├── STRIPE_SETUP_COMPLETE.md          # Quick setup guide
 ├── vercel.json                       # Deployment configuration
 └── package.json                      # Dependencies and scripts
 ```
 
 ---
 
-## 🔄 **RECENT CHANGES (Last 24 Hours)**
+## 🔄 **RECENT CHANGES (Last 7 Days)**
 
-### **November 2, 2025 - Stripe Payment Integration**
-1. ✅ **Added Stripe payment processing** - Full Stripe integration with card payments
-2. ✅ **Multi-step checkout flow** - 4-step checkout: Cart → Customer Info → Address → Payment
-3. ✅ **Order management system** - Database-backed order tracking with unique order numbers
-4. ✅ **Customer data collection** - Forms for customer info and delivery addresses
-5. ✅ **Dual payment methods** - WhatsApp ordering + Stripe card payments
-6. ✅ **Payment webhooks** - Real-time payment status updates
-7. ✅ **Order confirmation page** - Professional order summary after payment
-8. ✅ **Database migration** - Added Order and Customer models with status enums
-9. ✅ **Fixed Stripe initialization** - Made optional to prevent server crashes
-10. ✅ **Comprehensive documentation** - Full implementation guide and setup instructions
+### **November 8, 2025 - Orders Management Dashboard**
+1. ✅ **Stripe Checkout migration** - Switched from Payment Intents to Checkout Sessions
+2. ✅ **Added stripeSessionId to schema** - Database migration for session tracking
+3. ✅ **WhatsApp notification system** - Console-based notifications with clickable links
+4. ✅ **Orders Management component** - Real-time orders dashboard with auto-refresh
+5. ✅ **Admin orders view** - Integrated into admin panel at /admin#orders
+6. ✅ **Orders API endpoint** - GET /api/orders for fetching all orders
+7. ✅ **WhatsApp link generation** - GET /api/orders/:id/whatsapp-link endpoint
+8. ✅ **Cleaned test database** - Removed 15 old test orders
+9. ✅ **Fixed image 404 errors** - Updated broken image URLs to placeholder
+10. ✅ **Fixed apple-touch-icon** - Replaced 0-byte file with valid logo
+
+### **November 2-7, 2025 - Stripe Integration & Testing**
+1. ✅ **Stripe test keys configured** - Added to Vercel environment variables
+2. ✅ **Webhook endpoint setup** - Configured for payment event handling
+3. ✅ **Payment flow testing** - Verified test payments end-to-end
+4. ✅ **Order status automation** - Webhook updates order status on payment
+5. ✅ **Custom domain setup** - www.namastecurry.house configured
+6. ✅ **Comprehensive Stripe documentation** - Setup guides and integration docs
 
 ### **November 1, 2025 - Previous Updates**
 1. ✅ **Fixed SPA routing** - No more 404 on page refresh
@@ -235,11 +262,13 @@ namastecurry/
 - ✅ Admin authentication with timeout
 - ✅ Menu item CRUD operations
 - ✅ SPA routing for all pages
-- ✅ Multi-step checkout flow
-- ✅ Stripe payment integration (requires API keys)
+- ✅ Stripe Checkout integration (test mode)
 - ✅ WhatsApp order integration
 - ✅ Order confirmation and tracking
 - ✅ Customer data persistence
+- ✅ Webhook-based order status updates
+- ✅ Admin orders dashboard with real-time viewing
+- ✅ WhatsApp notification link generation
 
 ---
 
@@ -248,19 +277,28 @@ namastecurry/
 ### **Immediate Setup (New Environment)**
 - [ ] Clone repository: `git clone https://github.com/QuantumClimb/namastecurryhouse.git`
 - [ ] Install dependencies: `npm install`
-- [ ] Create `.env` file with DATABASE_URL and Stripe keys (optional)
+- [ ] Create `.env` file with DATABASE_URL and Stripe keys
 - [ ] Test database connection: `node test-db-connection.mjs`
 - [ ] Start development servers: `npm run dev:full`
 - [ ] Verify admin panel: http://localhost:8080/admin
-- [ ] Test checkout flow: Add items to cart and test both payment methods
+- [ ] Test checkout flow: Add items to cart and test Stripe Checkout
+- [ ] Test orders dashboard: Verify orders appear at /admin#orders
 
-### **Stripe Setup (Optional)**
-- [ ] Sign up at https://stripe.com
-- [ ] Get test API keys from dashboard
-- [ ] Add keys to `.env` file
-- [ ] Test with card: 4242 4242 4242 4242
-- [ ] Add keys to Vercel environment variables
-- [ ] Configure webhook endpoint in Stripe Dashboard
+### **Stripe Setup (Completed)**
+- [x] Sign up at https://stripe.com
+- [x] Get test API keys from dashboard
+- [x] Add keys to Vercel environment variables
+- [x] Configure webhook endpoint: https://www.namastecurry.house/api/stripe/webhook
+- [x] Test with card: 4242 4242 4242 4242
+- [ ] Enable basic receipts in Stripe dashboard (Settings → Emails)
+- [ ] Switch to live keys after testing period
+
+### **Email Notification Setup (Phase 2)**
+- [ ] Create Resend account at https://resend.com
+- [ ] Get API key from Resend dashboard
+- [ ] Add RESEND_API_KEY to Vercel environment variables
+- [ ] Implement email templates for customer and owner
+- [ ] Test email delivery with test order
 
 ### **Image Upload Priority**
 - [ ] Upload images for Main Curries (6 items)
@@ -286,19 +324,21 @@ namastecurry/
 - ✅ **Zero File System Pollution** - Clean database-only storage
 - ✅ **Secure Authentication** - Time-based session management
 - ✅ **100% SPA Routing** - No navigation issues
-- ✅ **Dual Payment Options** - WhatsApp + Stripe integration
-- ✅ **Order Tracking** - Full order management system
+- ✅ **Stripe Checkout Integration** - Simplified, secure payment flow
+- ✅ **Order Tracking** - Full order management system with admin dashboard
 - ✅ **Type Safety** - Complete TypeScript coverage
+- ✅ **Real-time Notifications** - WhatsApp links for instant owner alerts
+- ✅ **Custom Domain** - www.namastecurry.house fully operational
 
 ### **Goals for Next Session**
-- 🎯 **Configure Stripe keys** in Vercel for live payments
+- 🎯 **Set up Resend account** for email notifications (Phase 2)
+- 🎯 **Test new Stripe Checkout** end-to-end on live site
 - 🎯 **Upload 10+ menu images** to improve visual appeal
-- 🎯 **Test payment flow** end-to-end with real Stripe account
-- 🎯 **Add Google Maps** integration for address autocomplete
-- 🎯 **Implement email notifications** for order confirmations
+- 🎯 **Enable Stripe receipts** in dashboard settings
+- 🎯 **Monitor first real orders** using admin orders dashboard
 
 ---
 
-**Project Status**: 🟢 **PRODUCTION READY** (Stripe requires configuration)  
-**Last Updated**: November 2, 2025  
-**Next Review**: Stripe configuration and Google Maps integration
+**Project Status**: 🟢 **PRODUCTION READY** (Email notifications Phase 2 pending)  
+**Last Updated**: November 8, 2025  
+**Next Review**: Email notification implementation with Resend
