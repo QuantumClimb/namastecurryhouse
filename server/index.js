@@ -1143,17 +1143,25 @@ app.post('/api/stripe/create-checkout-session', express.json(), async (req, res)
     });
     
     // Create line items for Stripe Checkout
-    const lineItems = orderItems.map(item => ({
-      price_data: {
-        currency: process.env.STRIPE_CURRENCY || 'eur',
-        unit_amount: Math.round((item.totalPrice / item.quantity) * 100), // Price per item in cents
-        product_data: {
-          name: item.name,
-          description: item.spiceLevel !== undefined ? `Spice Level: ${item.spiceLevel}%` : undefined,
+    const lineItems = orderItems.map(item => {
+      const productData = {
+        name: item.name,
+      };
+      
+      // Only add description if spiceLevel exists
+      if (item.spiceLevel !== undefined && item.spiceLevel !== null) {
+        productData.description = `Spice Level: ${item.spiceLevel}`;
+      }
+      
+      return {
+        price_data: {
+          currency: process.env.STRIPE_CURRENCY || 'eur',
+          unit_amount: Math.round((item.totalPrice / item.quantity) * 100), // Price per item in cents
+          product_data: productData,
         },
-      },
-      quantity: item.quantity,
-    }));
+        quantity: item.quantity,
+      };
+    });
     
     // Add delivery fee as a line item
     if (deliveryFee > 0) {
