@@ -70,6 +70,7 @@ model Order {
   paymentMethod         PaymentMethod
   stripePaymentIntentId String?       @unique
   stripeChargeId        String?
+  stripeSessionId       String?       @unique // Stripe Checkout Session ID
   
   // Timestamps
   createdAt             DateTime      @default(now())

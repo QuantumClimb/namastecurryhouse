@@ -6,8 +6,7 @@ import CustomerInfoForm from '@/components/checkout/CustomerInfoForm';
 import DeliveryAddressForm from '@/components/checkout/DeliveryAddressForm';
 import PaymentMethodSelector from '@/components/checkout/PaymentMethodSelector';
 import CheckoutStepIndicator from '@/components/checkout/CheckoutStepIndicator';
-import StripePaymentForm from '@/components/checkout/StripePaymentForm';
-import StripeProvider from '@/components/StripeProvider';
+import StripeCheckoutButton from '@/components/checkout/StripeCheckoutButton';
 import { CustomerInfo, DeliveryAddress, PaymentMethod } from '@/types/order';
 import { QuantityStepper } from '@/components/QuantityStepper';
 import { SpiceLevelDialog } from '@/components/SpiceLevelDialog';
@@ -275,15 +274,13 @@ export default function Checkout() {
       
       {/* Stripe Payment */}
       {currentStep === 'stripe-payment' && customerInfo && deliveryAddress && (
-        <StripeProvider>
-          <StripePaymentForm 
-            orderItems={items}
-            customerInfo={customerInfo}
-            deliveryAddress={deliveryAddress}
-            total={grandTotal}
-            onBack={() => setCurrentStep('payment')}
-          />
-        </StripeProvider>
+        <StripeCheckoutButton 
+          orderItems={items}
+          customerInfo={customerInfo}
+          deliveryAddress={deliveryAddress}
+          total={grandTotal}
+          onBack={() => setCurrentStep('payment')}
+        />
       )}
       
       {/* Spice Customization Dialogs */}

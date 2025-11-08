@@ -669,8 +669,8 @@ app.get('/api/stripe/health', (req, res) => {
   });
 });
 
-// POST /api/stripe/create-payment-intent
-app.post('/api/stripe/create-payment-intent', express.json(), async (req, res) => {
+// POST /api/stripe/create-checkout-session
+app.post('/api/stripe/create-checkout-session', express.json(), async (req, res) => {
   try {
     if (!stripe) {
       console.error('❌ Stripe not initialized - check STRIPE_SECRET_KEY environment variable');
@@ -723,36 +723,78 @@ app.post('/api/stripe/create-payment-intent', express.json(), async (req, res) =
       },
     });
     
-    // Create Stripe Payment Intent
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(total * 100), // Convert to cents
-      currency: process.env.STRIPE_CURRENCY || 'eur',
+    // Create line items for Stripe Checkout
+    const lineItems = orderItems.map(item => ({
+      price_data: {
+        currency: process.env.STRIPE_CURRENCY || 'eur',
+        unit_amount: Math.round((item.totalPrice / item.quantity) * 100), // Price per item in cents
+        product_data: {
+          name: item.name,
+          description: item.spiceLevel !== undefined ? `Spice Level: ${item.spiceLevel}%` : undefined,
+        },
+      },
+      quantity: item.quantity,
+    }));
+    
+    // Add delivery fee as a line item
+    if (deliveryFee > 0) {
+      lineItems.push({
+        price_data: {
+          currency: process.env.STRIPE_CURRENCY || 'eur',
+          unit_amount: Math.round(deliveryFee * 100),
+          product_data: {
+            name: 'Delivery Fee',
+            description: 'Home delivery service',
+          },
+        },
+        quantity: 1,
+      });
+    }
+    
+    // Get the base URL for redirects
+    const baseUrl = process.env.FRONTEND_URL || 'https://www.namastecurry.house';
+    
+    // Create Stripe Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: lineItems,
+      mode: 'payment',
+      success_url: `${baseUrl}/order-confirmation?session_id={CHECKOUT_SESSION_ID}&order_number=${order.orderNumber}`,
+      cancel_url: `${baseUrl}/checkout?canceled=true`,
+      customer_email: customerInfo.email,
+      client_reference_id: order.id.toString(),
       metadata: {
         orderId: order.id.toString(),
         orderNumber: order.orderNumber,
-        customerEmail: customerInfo.email,
+        customerPhone: customerInfo.phone,
       },
-      description: `Order ${order.orderNumber} - Namaste Curry House`,
-      receipt_email: customerInfo.email,
+      billing_address_collection: 'auto',
+      shipping_address_collection: {
+        allowed_countries: ['PT'], // Portugal only for now
+      },
     });
     
-    // Update order with payment intent ID
+    // Update order with session ID
     await prisma.order.update({
       where: { id: order.id },
-      data: { stripePaymentIntentId: paymentIntent.id },
+      data: { 
+        stripePaymentIntentId: session.payment_intent, // Will be set after payment
+        stripeSessionId: session.id 
+      },
     });
     
-    console.log(`✅ Payment intent created for order ${order.orderNumber}`);
+    console.log(`✅ Checkout session created for order ${order.orderNumber}`);
     
     res.json({
-      clientSecret: paymentIntent.client_secret,
+      sessionId: session.id,
+      url: session.url,
       orderId: order.id,
       orderNumber: order.orderNumber,
       amount: total,
     });
     
   } catch (error) {
-    console.error('❌ Error creating payment intent:', error);
+    console.error('❌ Error creating checkout session:', error);
     console.error('Error details:', {
       message: error.message,
       type: error.type,
@@ -761,7 +803,7 @@ app.post('/api/stripe/create-payment-intent', express.json(), async (req, res) =
     });
     
     res.status(500).json({ 
-      error: 'Failed to create payment intent',
+      error: 'Failed to create checkout session',
       details: error.message || 'An unexpected error occurred'
     });
   }
@@ -791,6 +833,11 @@ app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async
   // Handle the event
   try {
     switch (event.type) {
+      case 'checkout.session.completed':
+        const session = event.data.object;
+        await handleCheckoutSessionCompleted(session);
+        break;
+        
       case 'payment_intent.succeeded':
         const paymentIntent = event.data.object;
         await handlePaymentSuccess(paymentIntent);
@@ -816,6 +863,45 @@ app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async
     res.status(500).json({ error: 'Webhook processing failed' });
   }
 });
+
+// Helper: Handle checkout session completed
+async function handleCheckoutSessionCompleted(session) {
+  try {
+    if (!(await ensureDbConnection())) {
+      console.error('Database unavailable for checkout session handling');
+      return;
+    }
+
+    // Find order by session ID
+    const order = await prisma.order.findFirst({
+      where: { stripeSessionId: session.id },
+    });
+    
+    if (order) {
+      await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          paymentStatus: 'SUCCEEDED',
+          status: 'CONFIRMED',
+          confirmedAt: new Date(),
+          stripePaymentIntentId: session.payment_intent, // Now we have the payment intent ID
+        },
+      });
+      
+      console.log(`✅ Checkout completed for order ${order.orderNumber}`);
+      
+      // Send WhatsApp notification to restaurant
+      logWhatsAppNotification(order);
+      
+      // TODO: Send confirmation email to customer
+      // TODO: Send notification email to owner
+    } else {
+      console.warn(`⚠️  Order not found for session: ${session.id}`);
+    }
+  } catch (error) {
+    console.error('Error handling checkout session:', error);
+  }
+}
 
 // Helper: Handle successful payment
 async function handlePaymentSuccess(paymentIntent) {
