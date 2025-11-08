@@ -6,6 +6,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import MenuManagement from "@/components/MenuManagement";
 import OrderManagement from "@/components/admin/OrderManagement";
+import CategoryManagement from "@/components/admin/CategoryManagement";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const ADMIN_USER = "NamasteAdmin";
@@ -21,14 +22,15 @@ export default function Admin() {
   const location = useLocation();
   
   // Get active view from URL hash
-  const getActiveViewFromUrl = (): "dashboard" | "menu-management" | "orders" => {
+  const getActiveViewFromUrl = (): "dashboard" | "menu-management" | "orders" | "categories" => {
     const hash = location.hash.replace('#', '');
     if (hash === 'menu-management') return 'menu-management';
     if (hash === 'orders') return 'orders';
+    if (hash === 'categories') return 'categories';
     return 'dashboard';
   };
   
-  const [activeView, setActiveView] = useState<"dashboard" | "menu-management" | "orders">(getActiveViewFromUrl());
+  const [activeView, setActiveView] = useState<"dashboard" | "menu-management" | "orders" | "categories">(getActiveViewFromUrl());
 
   // Check if session is still valid
   const isSessionValid = (): boolean => {
@@ -59,13 +61,15 @@ export default function Admin() {
     localStorage.removeItem("namaste-admin-login-time");
   };
 
-  const setActiveViewWithUrl = (view: "dashboard" | "menu-management" | "orders") => {
+  const setActiveViewWithUrl = (view: "dashboard" | "menu-management" | "orders" | "categories") => {
     setActiveView(view);
     // Update URL hash to persist view state
     if (view === "menu-management") {
       navigate('/admin#menu-management');
     } else if (view === "orders") {
       navigate('/admin#orders');
+    } else if (view === "categories") {
+      navigate('/admin#categories');
     } else {
       navigate('/admin');
     }
@@ -126,6 +130,16 @@ export default function Admin() {
       );
     }
 
+    if (activeView === "categories") {
+      return (
+  <div className="min-h-screen pt-16 bg-primary/5">
+          <div className="container mx-auto px-4 py-8">
+            <CategoryManagement onClose={() => setActiveViewWithUrl("dashboard")} />
+          </div>
+        </div>
+      );
+    }
+
     return (
   <div className="min-h-screen pt-16 bg-primary/5">
         <div className="container mx-auto px-4 py-8">
@@ -148,13 +162,31 @@ export default function Admin() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-foreground/70">
-                    Manage menu items, categories, and images.
+                    Manage menu items, prices, and descriptions.
                   </p>
                   <Button 
                     className="w-full"
                     onClick={() => setActiveViewWithUrl("menu-management")}
                   >
                     Manage Menu Items
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Category Management Card */}
+              <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
+                <CardHeader>
+                  <CardTitle className="text-primary">Category Management</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-foreground/70">
+                    Create and manage menu categories.
+                  </p>
+                  <Button 
+                    className="w-full"
+                    onClick={() => setActiveViewWithUrl("categories")}
+                  >
+                    Manage Categories
                   </Button>
                 </CardContent>
               </Card>
