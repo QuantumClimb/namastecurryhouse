@@ -913,6 +913,9 @@ app.post('/api/stripe/create-checkout-session', express.json(), async (req, res)
       shipping_address_collection: {
         allowed_countries: ['PT'], // Portugal only for now
       },
+      payment_intent_data: {
+        receipt_email: customerInfo.email, // Ensure receipt email is sent
+      },
     });
     
     // Update order with session ID
