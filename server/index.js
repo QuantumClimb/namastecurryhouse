@@ -167,7 +167,15 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
     message: 'Server is running',
-    database: dbConnected ? 'connected' : 'disconnected'
+    database: dbConnected ? 'connected' : 'disconnected',
+    stripe: {
+      configured: stripe ? true : false,
+      webhookSecretSet: process.env.STRIPE_WEBHOOK_SECRET ? true : false
+    },
+    resend: {
+      configured: resend ? true : false,
+      testMode: RESEND_TEST_MODE
+    }
   });
 });
 
