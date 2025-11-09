@@ -17,7 +17,7 @@ export const Footer = () => {
               />
               <span className="text-3xl font-bold" style={{ color: '#D4AF37', fontFamily: 'Forum, serif' }}>Namaste Curry House</span>
             </div>
-            <p className="mb-6 max-w-md mx-auto md:mx-0" style={{ color: '#D4AF37' }}>
+            <p className="mb-6 max-w-md mx-auto md:mx-0 text-white">
               Experience authentic Indian flavors and traditional hospitality. 
               Savor our carefully crafted curries, aromatic biryanis, and warm service in a welcoming atmosphere.
             </p>
@@ -37,10 +37,10 @@ export const Footer = () => {
           <div className="text-center md:text-left">
             <h3 className="text-lg font-semibold mb-4" style={{ color: '#D4AF37' }}>Legal & Support</h3>
             <ul className="space-y-2">
-              <li><Link to="/customer-support" className="transition-colors hover:opacity-80" style={{ color: '#D4AF37' }}>Customer Support</Link></li>
-              <li><Link to="/terms-and-conditions" className="transition-colors hover:opacity-80" style={{ color: '#D4AF37' }}>Terms and Conditions</Link></li>
-              <li><Link to="/privacy-policy" className="transition-colors hover:opacity-80" style={{ color: '#D4AF37' }}>Privacy Policy</Link></li>
-              <li><Link to="/cancellation-refund" className="transition-colors hover:opacity-80" style={{ color: '#D4AF37' }}>Cancellation & Refund</Link></li>
+              <li><Link to="/customer-support" className="text-white transition-colors hover:opacity-80">Customer Support</Link></li>
+              <li><Link to="/terms-and-conditions" className="text-white transition-colors hover:opacity-80">Terms and Conditions</Link></li>
+              <li><Link to="/privacy-policy" className="text-white transition-colors hover:opacity-80">Privacy Policy</Link></li>
+              <li><Link to="/cancellation-refund" className="text-white transition-colors hover:opacity-80">Cancellation & Refund</Link></li>
             </ul>
           </div>
 
@@ -50,19 +50,19 @@ export const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-start space-x-3 justify-center md:justify-start">
                 <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: '#D4AF37' }} />
-                <p style={{ color: '#D4AF37' }}>R. Agostinho Lourenço 339, 1000-011 Lisboa, Portugal</p>
+                <p className="text-white">R. Agostinho Lourenço 339, 1000-011 Lisboa, Portugal</p>
               </div>
               <div className="flex items-center space-x-3 justify-center md:justify-start">
                 <Phone className="w-5 h-5 flex-shrink-0" style={{ color: '#D4AF37' }} />
-                <p style={{ color: '#D4AF37' }}>+351 920 617 185</p>
+                <p className="text-white">+351 920 617 185</p>
               </div>
               <div className="flex items-center space-x-3 justify-center md:justify-start">
                 <Mail className="w-5 h-5 flex-shrink-0" style={{ color: '#D4AF37' }} />
-                <p style={{ color: '#D4AF37' }}>info@namastecurryhouse.com</p>
+                <p className="text-white">info@namastecurryhouse.com</p>
               </div>
               <div className="flex items-start space-x-3 justify-center md:justify-start">
                 <Clock className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: '#D4AF37' }} />
-                <div style={{ color: '#D4AF37' }}>
+                <div className="text-white">
                   <p>Mon-Sun: 11AM - 10PM</p>
                   <p>Delivery: 11AM - 9:30PM</p>
                 </div>
@@ -72,7 +72,7 @@ export const Footer = () => {
         </div>
 
         <div className="border-t mt-8 pt-8 text-center" style={{ borderColor: '#D4AF37' }}>
-          <p style={{ color: '#D4AF37' }}>
+          <p className="text-white">
             © 2024 Namaste Curry House. All rights reserved.
           </p>
         </div>
