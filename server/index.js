@@ -1612,6 +1612,55 @@ app.get('/api/orders/:id/whatsapp-link', async (req, res) => {
   }
 });
 
+// POST /api/orders/:id/send-emails - Manually trigger email notifications for an order (testing/retry)
+app.post('/api/orders/:id/send-emails', express.json(), async (req, res) => {
+  try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
+
+    const orderId = parseInt(req.params.id);
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+    });
+    
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    console.log(`📧 Manual email trigger for order ${order.orderNumber}...`);
+    
+    const results = {
+      orderNumber: order.orderNumber,
+      customerEmail: null,
+      ownerEmail: null,
+      resendConfigured: resend ? true : false,
+      testMode: RESEND_TEST_MODE,
+    };
+
+    // Send customer confirmation email
+    console.log('📧 Sending customer confirmation email...');
+    const customerResult = await sendCustomerConfirmationEmail(order);
+    results.customerEmail = {
+      sent: customerResult ? true : false,
+      result: customerResult,
+    };
+
+    // Send owner notification email
+    console.log('📧 Sending owner notification email...');
+    const ownerResult = await sendOwnerNotificationEmail(order);
+    results.ownerEmail = {
+      sent: ownerResult ? true : false,
+      result: ownerResult,
+    };
+
+    res.json(results);
+  } catch (error) {
+    console.error('Error sending emails:', error);
+    res.status(500).json({ error: 'Failed to send emails', details: error.message });
+  }
+});
+
 // POST /api/orders/whatsapp - Create order via WhatsApp
 app.post('/api/orders/whatsapp', express.json(), async (req, res) => {
   try {
