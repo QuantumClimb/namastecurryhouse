@@ -9,41 +9,68 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
 export default function OrderConfirmation() {
   const [searchParams] = useSearchParams();
-  const orderNumber = searchParams.get('orderNumber');
+  // Support both order_number (from Stripe) and orderNumber (legacy)
+  const orderNumber = searchParams.get('order_number') || searchParams.get('orderNumber');
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    if (orderNumber) {
-      fetch(`${API_BASE_URL}/orders/number/${orderNumber}`)
-        .then(res => res.json())
-        .then(data => {
-          setOrder(data);
-          setLoading(false);
-        })
-        .catch(err => {
-          console.error('Failed to load order:', err);
-          setLoading(false);
-        });
+    console.log('OrderConfirmation: orderNumber =', orderNumber);
+    console.log('OrderConfirmation: URL params =', Object.fromEntries(searchParams.entries()));
+    
+    if (!orderNumber) {
+      console.error('OrderConfirmation: No order number in URL');
+      setError('No order number provided');
+      setLoading(false);
+      return;
     }
+    
+    console.log('OrderConfirmation: Fetching order from API...');
+    fetch(`${API_BASE_URL}/orders/number/${orderNumber}`)
+      .then(res => {
+        console.log('OrderConfirmation: Response status =', res.status);
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(data => {
+        console.log('OrderConfirmation: Order data received:', data);
+        setOrder(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('OrderConfirmation: Failed to load order:', err);
+        setError(err.message || 'Failed to load order');
+        setLoading(false);
+      });
   }, [orderNumber]);
   
   if (loading) {
     return (
       <div className="max-w-2xl mx-auto p-6">
         <div className="flex justify-center items-center min-h-[400px]">
-          <p className="text-lg text-gray-600">Loading your order...</p>
+          <div className="text-center">
+            <p className="text-lg text-gray-600">Loading your order...</p>
+            <p className="text-sm text-gray-400 mt-2">Order Number: {orderNumber}</p>
+          </div>
         </div>
       </div>
     );
   }
   
-  if (!order) {
+  if (error || !order) {
     return (
       <div className="max-w-2xl mx-auto p-6">
         <Card>
           <CardContent className="pt-6">
-            <p className="text-center mb-4">Order not found.</p>
+            <p className="text-center text-red-600 mb-4">
+              {error || 'Order not found'}
+            </p>
+            <p className="text-center text-gray-600 mb-4">
+              Order Number: {orderNumber || 'Not provided'}
+            </p>
             <Link to="/menu" className="block">
               <Button className="w-full">Back to Menu</Button>
             </Link>
@@ -101,7 +128,12 @@ export default function OrderConfirmation() {
               <ul className="space-y-2">
                 {(order.orderItems as any).map((item: any, idx: number) => (
                   <li key={idx} className="flex justify-between text-sm">
-                    <span>{item.quantity} x {item.menuItem.name}</span>
+                    <span>
+                      {item.quantity} x {item.name}
+                      {item.spiceLevel !== undefined && item.spiceLevel !== null && (
+                        <span className="text-gray-500 ml-2">(Spice: {item.spiceLevel}%)</span>
+                      )}
+                    </span>
                     <span>€{item.totalPrice.toFixed(2)}</span>
                   </li>
                 ))}
