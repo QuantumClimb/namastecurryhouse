@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, Package, Clock } from 'lucide-react';
 import { Order } from '@/types/order';
 import useCartStore from '@/stores/cartStore';
+import { MenuItemImage } from '@/components/MenuItemImage';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -133,16 +134,37 @@ export default function OrderConfirmation() {
             
             <div className="border-t pt-4">
               <h3 className="font-semibold mb-3">Order Items</h3>
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {(order.orderItems as any).map((item: any, idx: number) => (
-                  <li key={idx} className="flex justify-between text-sm">
-                    <span>
-                      {item.quantity} x {item.name}
-                      {item.spiceLevel !== undefined && item.spiceLevel !== null && (
-                        <span className="text-gray-500 ml-2">(Spice: {item.spiceLevel}%)</span>
-                      )}
-                    </span>
-                    <span>€{item.totalPrice.toFixed(2)}</span>
+                  <li key={idx} className="flex items-start gap-3 pb-3 border-b last:border-0">
+                    {/* Menu Item Image */}
+                    <MenuItemImage 
+                      menuItem={{ 
+                        id: item.menuItemId || idx.toString(), 
+                        name: item.name,
+                        imageUrl: item.imageUrl 
+                      }}
+                      size="large"
+                      className="rounded-md"
+                    />
+                    
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-medium">
+                            {item.quantity} × {item.name}
+                          </p>
+                          {item.spiceLevel !== undefined && item.spiceLevel !== null && (
+                            <span className="text-xs text-gray-500">
+                              Spice Level: {item.spiceLevel}%
+                            </span>
+                          )}
+                        </div>
+                        <span className="font-semibold whitespace-nowrap ml-4">
+                          €{item.totalPrice.toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
                   </li>
                 ))}
               </ul>

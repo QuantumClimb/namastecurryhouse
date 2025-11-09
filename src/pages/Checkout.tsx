@@ -12,6 +12,7 @@ import { QuantityStepper } from '@/components/QuantityStepper';
 import { SpiceLevelDialog } from '@/components/SpiceLevelDialog';
 import { RepeatCustomizationDialog } from '@/components/RepeatCustomizationDialog';
 import { CartCustomization } from '@/types/cart';
+import { MenuItemImage } from '@/components/MenuItemImage';
 
 type CheckoutStep = 'cart' | 'customer' | 'address' | 'payment' | 'stripe-payment';
 
@@ -189,29 +190,36 @@ export default function Checkout() {
               <>
                 <ul className="space-y-3 mb-4">
                   {items.map((item) => (
-                    <li key={item.id} className="flex justify-between items-center">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
+                    <li key={item.id} className="flex items-start gap-3 pb-3 border-b last:border-0">
+                      {/* Menu Item Image */}
+                      <MenuItemImage 
+                        menuItem={item.menuItem}
+                        size="medium"
+                        className="rounded-md"
+                      />
+                      
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
                           <span className="font-medium">{item.menuItem.name}</span>
                           {item.menuItem.hasSpiceCustomization && (
                             <span className="text-sm">🌶️</span>
                           )}
                         </div>
                         {item.customization?.spiceLevel !== undefined && (
-                          <span className="text-sm text-gray-600">
+                          <span className="text-sm text-gray-600 block mb-2">
                             Spice Level: {item.customization.spiceLevel}%
                           </span>
                         )}
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <QuantityStepper
-                          quantity={item.quantity}
-                          onIncrement={() => handleIncrement(item.id, item.menuItem.id, item.menuItem.hasSpiceCustomization || false)}
-                          onDecrement={() => handleDecrement(item.id)}
-                        />
-                        <span className="font-medium min-w-[60px] text-right">
-                          €{item.totalPrice.toFixed(2)}
-                        </span>
+                        <div className="flex items-center justify-between">
+                          <QuantityStepper
+                            quantity={item.quantity}
+                            onIncrement={() => handleIncrement(item.id, item.menuItem.id, item.menuItem.hasSpiceCustomization || false)}
+                            onDecrement={() => handleDecrement(item.id)}
+                          />
+                          <span className="font-medium min-w-[60px] text-right">
+                            €{item.totalPrice.toFixed(2)}
+                          </span>
+                        </div>
                       </div>
                     </li>
                   ))}

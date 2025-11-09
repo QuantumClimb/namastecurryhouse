@@ -11,6 +11,7 @@ import useCartStore from '../stores/cartStore';
 import { CartItem, CartCustomization } from '../types/cart';
 import { SpiceLevelDialog } from './SpiceLevelDialog';
 import { RepeatCustomizationDialog } from './RepeatCustomizationDialog';
+import { MenuItemImage } from './MenuItemImage';
 
 interface CartDrawerProps {
   trigger?: React.ReactNode;
@@ -73,6 +74,13 @@ const CartItemComponent: React.FC<CartItemComponentProps> = ({
 
   return (
     <div className="flex items-start space-x-3 p-3 border rounded-lg">
+      {/* Menu Item Image */}
+      <MenuItemImage 
+        menuItem={item.menuItem}
+        size="small"
+        className="rounded-md"
+      />
+      
       <div className="flex-1 min-w-0">
         <h4 className="font-medium text-sm truncate">{item.menuItem.name}</h4>
         <p className="text-xs text-muted-foreground mb-2">€{item.menuItem.price.toFixed(2)} each</p>
