@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Package, Clock } from 'lucide-react';
 import { Order } from '@/types/order';
+import useCartStore from '@/stores/cartStore';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -14,6 +15,8 @@ export default function OrderConfirmation() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const clearCart = useCartStore(state => state.clearCart);
+  const clearCheckoutData = useCartStore(state => state.clearCheckoutData);
   
   useEffect(() => {
     console.log('OrderConfirmation: orderNumber =', orderNumber);
@@ -39,13 +42,18 @@ export default function OrderConfirmation() {
         console.log('OrderConfirmation: Order data received:', data);
         setOrder(data);
         setLoading(false);
+        
+        // Clear cart and checkout data after successful order
+        console.log('OrderConfirmation: Clearing cart and checkout data');
+        clearCart();
+        clearCheckoutData();
       })
       .catch(err => {
         console.error('OrderConfirmation: Failed to load order:', err);
         setError(err.message || 'Failed to load order');
         setLoading(false);
       });
-  }, [orderNumber]);
+  }, [orderNumber, clearCart, clearCheckoutData]);
   
   if (loading) {
     return (

@@ -834,12 +834,17 @@ function logWhatsAppNotification(order) {
 
 // Helper: Send email notification to customer
 async function sendCustomerConfirmationEmail(order) {
+  console.log(`📧 sendCustomerConfirmationEmail called for order ${order.orderNumber}`);
+  
   if (!resend) {
     console.warn('⚠️  Resend not configured - skipping customer email');
+    console.warn('   RESEND_API_KEY:', process.env.RESEND_API_KEY ? 'SET' : 'NOT SET');
     return null;
   }
 
   try {
+    console.log(`   Preparing email for ${RESEND_TEST_MODE ? RESEND_TEST_EMAIL : order.customerEmail}...`);
+    
     const orderItemsHtml = order.orderItems.map(item => `
       <tr>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
@@ -957,13 +962,17 @@ async function sendCustomerConfirmationEmail(order) {
     });
 
     const emailTo = RESEND_TEST_MODE ? RESEND_TEST_EMAIL : order.customerEmail;
-    console.log(`✅ Customer confirmation email sent to ${emailTo}${RESEND_TEST_MODE ? ' (TEST MODE)' : ''}`);
+    console.log(`✅ Customer confirmation email sent successfully!`);
+    console.log(`   To: ${emailTo}${RESEND_TEST_MODE ? ' (TEST MODE)' : ''}`);
+    console.log(`   Message ID:`, result.data?.id || result.id);
     if (RESEND_TEST_MODE && order.customerEmail !== RESEND_TEST_EMAIL) {
       console.log(`   (Original recipient: ${order.customerEmail})`);
     }
     return result;
   } catch (error) {
-    console.error('❌ Error sending customer email:', error);
+    console.error('❌ Error sending customer email:');
+    console.error('   Error message:', error.message);
+    console.error('   Error details:', error);
     return null;
   }
 }
@@ -1357,6 +1366,8 @@ app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async
 // Helper: Handle checkout session completed
 async function handleCheckoutSessionCompleted(session) {
   try {
+    console.log(`📧 Checkout session completed: ${session.id}`);
+    
     if (!(await ensureDbConnection())) {
       console.error('Database unavailable for checkout session handling');
       return;
@@ -1368,6 +1379,8 @@ async function handleCheckoutSessionCompleted(session) {
     });
     
     if (order) {
+      console.log(`✅ Found order: ${order.orderNumber} (ID: ${order.id})`);
+      
       await prisma.order.update({
         where: { id: order.id },
         data: {
@@ -1385,12 +1398,22 @@ async function handleCheckoutSessionCompleted(session) {
         where: { id: order.id },
       });
       
+      console.log(`📧 Attempting to send notifications for order ${updatedOrder.orderNumber}...`);
+      console.log(`   Customer email: ${updatedOrder.customerEmail}`);
+      console.log(`   Resend configured: ${resend ? 'YES' : 'NO'}`);
+      console.log(`   Test mode: ${RESEND_TEST_MODE}`);
+      
       // Send WhatsApp notification to restaurant
       logWhatsAppNotification(updatedOrder);
       
       // Send email notifications
-      await sendCustomerConfirmationEmail(updatedOrder);
-      await sendOwnerNotificationEmail(updatedOrder);
+      console.log('📧 Sending customer confirmation email...');
+      const customerEmailResult = await sendCustomerConfirmationEmail(updatedOrder);
+      console.log(`   Customer email result:`, customerEmailResult ? 'SUCCESS' : 'FAILED');
+      
+      console.log('📧 Sending owner notification email...');
+      const ownerEmailResult = await sendOwnerNotificationEmail(updatedOrder);
+      console.log(`   Owner email result:`, ownerEmailResult ? 'SUCCESS' : 'FAILED');
     } else {
       console.warn(`⚠️  Order not found for session: ${session.id}`);
     }
