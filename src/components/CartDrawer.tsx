@@ -261,7 +261,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           </SheetTitle>
         </SheetHeader>
 
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-[calc(100vh-8rem)] mt-6">
           {items.length === 0 ? (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
@@ -275,7 +275,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           ) : (
             <>
               {/* Cart Items */}
-              <ScrollArea className="flex-1 -mx-6 px-6">
+              <ScrollArea className="flex-1 -mx-6 px-6 overflow-y-auto">
                 <div className="space-y-3 py-4">
                   {items.map((item) => (
                     <CartItemComponent 
@@ -289,7 +289,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </ScrollArea>
 
               {/* Cart Summary */}
-              <div className="border-t pt-4 space-y-4">
+              <div className="border-t pt-4 space-y-4 flex-shrink-0">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Subtotal ({itemCount} items)</span>
