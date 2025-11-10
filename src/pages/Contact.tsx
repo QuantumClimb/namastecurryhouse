@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MapPin, Phone, Mail, Clock, MessageCircle } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, MessageCircle, Facebook, Instagram } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const Contact = () => {
@@ -38,120 +38,24 @@ const Contact = () => {
       {/* Contact Content */}
       <section className="py-8 px-4 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
+          {/* QR Code for Reviews */}
           <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
             <CardHeader>
-              <CardTitle className="text-3xl font-bold text-foreground">
-                Send us a Message
+              <CardTitle className="text-3xl font-bold text-foreground text-center">
+                Scan for Reviews
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Name
-                  </label>
-                  <Input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="bg-background/50 border-primary/30 focus:border-primary neon-glow"
-                    placeholder="Your full name"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Email
-                  </label>
-                  <Input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="bg-background/50 border-primary/30 focus:border-primary neon-glow"
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Message
-                  </label>
-                  <Textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows={6}
-                    className="bg-background/50 border-primary/30 focus:border-primary neon-glow resize-none"
-                    placeholder="Tell us about your inquiry, event, or reservation needs..."
-                  />
-                </div>
-                
-                <Button
-                  type="submit"
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-lg neon-glow"
-                >
-                  Send Message
-                </Button>
-              </form>
+            <CardContent className="flex flex-col items-center justify-center p-8">
+              <img 
+                src="/images/QR.jpg" 
+                alt="Scan QR Code for Reviews" 
+                className="w-full mx-auto rounded-lg"
+              />
             </CardContent>
           </Card>
 
-          {/* Contact Information */}
+          {/* WhatsApp Card */}
           <div className="space-y-8">
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold mb-6 text-foreground">Contact Information</h3>
-                <div className="space-y-6">
-                  <div className="flex items-start space-x-4">
-                    <MapPin className="w-6 h-6 text-primary mt-1" />
-                    <div>
-                      <h4 className="font-semibold text-foreground">Address</h4>
-                      <p className="text-foreground/70">
-                        R. Agostinho Lourenço 339,<br />
-                        1000-011 Lisboa<br />
-                        Portugal
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-4">
-                    <Phone className="w-6 h-6 text-primary mt-1" />
-                    <div>
-                      <h4 className="font-semibold text-foreground">Phone</h4>
-                      <p className="text-foreground/70">+351 920 617 185</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-4">
-                    <Mail className="w-6 h-6 text-primary mt-1" />
-                    <div>
-                      <h4 className="font-semibold text-foreground">Email</h4>
-                      <p className="text-foreground/70">info@namastecurryhouse.com</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-4">
-                    <Clock className="w-6 h-6 text-primary mt-1" />
-                    <div>
-                      <h4 className="font-semibold text-foreground">Hours</h4>
-                      <div className="text-foreground/70">
-                        <p>Monday - Sunday: 11:00 AM - 10:00 PM</p>
-                        <p>Kitchen closes at 9:30 PM</p>
-                        <p>Delivery: 11:00 AM - 9:30 PM</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* WhatsApp Card */}
             <Card className="bg-secondary/10 border-secondary/20 neon-glow">
               <CardContent className="p-8 text-center">
                 <MessageCircle className="w-12 h-12 text-secondary mx-auto mb-4" />
@@ -173,6 +77,23 @@ const Contact = () => {
                 </Button>
               </CardContent>
             </Card>
+
+            {/* Social Media Card */}
+            <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
+              <CardContent className="p-8 text-center">
+                <h3 className="text-2xl font-bold mb-6 text-foreground">Follow Us</h3>
+                <div className="flex space-x-8 justify-center">
+                  <a href="https://www.facebook.com/profile.php?id=61562044322831" target="_blank" rel="noopener noreferrer" 
+                     className="transition-all hover:opacity-80 hover:scale-110 p-3" style={{ color: '#D4AF37' }}>
+                    <Facebook className="w-12 h-12" />
+                  </a>
+                  <a href="https://www.instagram.com/namastecurry.lisbon/" target="_blank" rel="noopener noreferrer"
+                     className="transition-all hover:opacity-80 hover:scale-110 p-3" style={{ color: '#D4AF37' }}>
+                    <Instagram className="w-12 h-12" />
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -190,24 +111,29 @@ const Contact = () => {
           <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow overflow-hidden">
             <CardContent className="p-0">
               <div className="w-full h-96 relative">
-                {/* Static Map Image with Click to Open */}
-                <a
-                  href="https://www.google.com/maps/search/?api=1&query=R.+Agostinho+Lourenço+339,+1000-011+Lisboa,+Portugal"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full h-full relative group"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                    <div className="text-center p-8 bg-card/80 backdrop-blur-sm rounded-lg border-2 border-primary/30 group-hover:border-primary/60 transition-all duration-300 group-hover:scale-105">
-                      <MapPin className="w-16 h-16 text-primary mx-auto mb-4" />
-                      <h3 className="text-2xl font-bold text-foreground mb-2">View on Google Maps</h3>
-                      <p className="text-foreground/80 mb-4">R. Agostinho Lourenço 339<br />1000-011 Lisboa, Portugal</p>
-                      <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                        Open in Maps
-                      </Button>
-                    </div>
-                  </div>
-                </a>
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m12!1m8!1m3!1d49788.93729862002!2d-9.1323749!3d38.7451546!3m2!1i1024!2i768!4f13.1!2m1!1sNamaste%20curry%20House%20lisboa!5e0!3m2!1sen!2sin!4v1762746728998!5m2!1sen!2sin"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Namaste Curry House Location"
+                  className="w-full h-full"
+                ></iframe>
+                <div className="absolute bottom-4 right-4">
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=R.+Agostinho+Lourenço+339,+1000-011+Lisboa,+Portugal"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg">
+                      <MapPin className="w-4 h-4 mr-2" />
+                      Open in Maps
+                    </Button>
+                  </a>
+                </div>
               </div>
             </CardContent>
           </Card>

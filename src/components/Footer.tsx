@@ -21,14 +21,14 @@ export const Footer = () => {
               Experience authentic Indian flavors and traditional hospitality. 
               Savor our carefully crafted curries, aromatic biryanis, and warm service in a welcoming atmosphere.
             </p>
-            <div className="flex space-x-4 justify-center md:justify-start">
-              <a href="https://www.facebook.com/profile.php?id=61569936611862" target="_blank" rel="noopener noreferrer" 
-                 className="transition-colors hover:opacity-80" style={{ color: '#D4AF37' }}>
-                <Facebook className="w-6 h-6" />
+            <div className="flex space-x-6 justify-center md:justify-start">
+              <a href="https://www.facebook.com/profile.php?id=61562044322831" target="_blank" rel="noopener noreferrer" 
+                 className="transition-colors hover:opacity-80 p-2" style={{ color: '#D4AF37' }}>
+                <Facebook className="w-10 h-10" />
               </a>
-              <a href="https://www.instagram.com/namastecurryhouse/" target="_blank" rel="noopener noreferrer"
-                 className="transition-colors hover:opacity-80" style={{ color: '#D4AF37' }}>
-                <Instagram className="w-6 h-6" />
+              <a href="https://www.instagram.com/namastecurry.lisbon/" target="_blank" rel="noopener noreferrer"
+                 className="transition-colors hover:opacity-80 p-2" style={{ color: '#D4AF37' }}>
+                <Instagram className="w-10 h-10" />
               </a>
             </div>
           </div>
