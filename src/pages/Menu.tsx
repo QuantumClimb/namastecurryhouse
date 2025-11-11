@@ -206,26 +206,26 @@ const MenuItemCard = ({ item, placeholderImg, isStoreClosed }: { item: MenuItem,
         </div>
 
         {/* Right: Add Button */}
-        <div className="flex-shrink-0">
-          {isInCart ? (
-            <QuantityStepper
-              quantity={cartQuantity}
-              onIncrement={handleIncrement}
-              onDecrement={handleDecrement}
-              size="sm"
-            />
-          ) : (
-            <Button 
-              onClick={handleAddToCart}
-              size="sm"
-              className="rounded-full px-6"
-              disabled={isStoreClosed}
-              title={isStoreClosed ? "Store is currently closed" : ""}
-            >
-              Add
-            </Button>
-          )}
-        </div>
+        {!isStoreClosed && (
+          <div className="flex-shrink-0">
+            {isInCart ? (
+              <QuantityStepper
+                quantity={cartQuantity}
+                onIncrement={handleIncrement}
+                onDecrement={handleDecrement}
+                size="sm"
+              />
+            ) : (
+              <Button 
+                onClick={handleAddToCart}
+                size="sm"
+                className="rounded-full px-6"
+              >
+                Add
+              </Button>
+            )}
+          </div>
+        )}
       </Card>
 
       {/* Desktop Layout - Vertical Card */}
@@ -270,27 +270,27 @@ const MenuItemCard = ({ item, placeholderImg, isStoreClosed }: { item: MenuItem,
             </div>
             
             {/* Conditional rendering: Stepper if in cart, Add button otherwise */}
-            <div className="flex-shrink-0">
-              {isInCart ? (
-                <QuantityStepper
-                  quantity={cartQuantity}
-                  onIncrement={handleIncrement}
-                  onDecrement={handleDecrement}
-                  size="sm"
-                />
-              ) : (
-                <Button 
-                  onClick={handleAddToCart}
-                  size="sm"
-                  className="gap-1"
-                  disabled={isStoreClosed}
-                  title={isStoreClosed ? "Store is currently closed" : ""}
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  Add
-                </Button>
-              )}
-            </div>
+            {!isStoreClosed && (
+              <div className="flex-shrink-0">
+                {isInCart ? (
+                  <QuantityStepper
+                    quantity={cartQuantity}
+                    onIncrement={handleIncrement}
+                    onDecrement={handleDecrement}
+                    size="sm"
+                  />
+                ) : (
+                  <Button 
+                    onClick={handleAddToCart}
+                    size="sm"
+                    className="gap-1"
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                    Add
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

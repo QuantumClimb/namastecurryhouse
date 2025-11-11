@@ -1,15 +1,48 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CartDrawer } from "./CartDrawer";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+// Store status type
+interface StoreStatus {
+  id: number;
+  isOpen: boolean;
+  closedMessage: string | null;
+  reopenTime: string | null;
+}
+
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { language, toggleLanguage } = useLanguage();
+  
+  // Store status state
+  const [storeStatus, setStoreStatus] = useState<StoreStatus | null>(null);
+  const [loadingStoreStatus, setLoadingStoreStatus] = useState(true);
+
+  // Fetch store status
+  useEffect(() => {
+    const fetchStoreStatus = async () => {
+      try {
+        const response = await fetch('/api/store-status');
+        if (response.ok) {
+          const data = await response.json();
+          setStoreStatus(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch store status:', err);
+      } finally {
+        setLoadingStoreStatus(false);
+      }
+    };
+    
+    fetchStoreStatus();
+  }, []);
+
+  const isStoreClosed = storeStatus?.isOpen === false;
 
   const navigation = [
     { name: "Our Story", href: "/" },
@@ -69,7 +102,7 @@ export const Navigation = () => {
                 <Languages size={18} />
                 <span className="font-bold">{language === 'en' ? 'PT' : 'EN'}</span>
               </Button>
-              <CartDrawer />
+              {!isStoreClosed && <CartDrawer />}
             </div>
           </div>
           
@@ -84,7 +117,7 @@ export const Navigation = () => {
             >
               <span className="text-sm font-bold">{language === 'en' ? 'PT' : 'EN'}</span>
             </Button>
-            <CartDrawer />
+            {!isStoreClosed && <CartDrawer />}
             <Button
               variant="ghost"
               size="sm"
