@@ -110,3 +110,14 @@ enum PaymentMethod {
   STRIPE_IDEAL  // Future: iDEAL payment
   CASH          // Future: Cash on delivery
 }
+
+model StoreStatus {
+  id             Int       @id @default(1) // Single row table
+  isOpen         Boolean   @default(true)
+  closedMessage  String?   // Custom message to display when closed
+  reopenTime     DateTime? // Expected reopening time
+  updatedAt      DateTime  @updatedAt
+  updatedBy      String?   // Admin user who made the change
+  
+  @@map("store_status")
+}

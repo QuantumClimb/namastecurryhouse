@@ -1710,6 +1710,83 @@ app.post('/api/orders/whatsapp', express.json(), async (req, res) => {
 });
 
 // ============================================================================
+// STORE STATUS ENDPOINTS
+// ============================================================================
+
+// Helper function to get or create store status
+async function getStoreStatus() {
+  let status = await prisma.storeStatus.findUnique({
+    where: { id: 1 }
+  });
+  
+  // Create default status if it doesn't exist
+  if (!status) {
+    status = await prisma.storeStatus.create({
+      data: {
+        id: 1,
+        isOpen: true,
+        closedMessage: null,
+        reopenTime: null
+      }
+    });
+  }
+  
+  return status;
+}
+
+// GET /api/store-status - Public endpoint to check if store is open
+app.get('/api/store-status', async (req, res) => {
+  try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
+
+    const status = await getStoreStatus();
+    res.json(status);
+  } catch (error) {
+    console.error('Error fetching store status:', error);
+    res.status(500).json({ error: 'Failed to fetch store status' });
+  }
+});
+
+// POST /api/admin/store-status - Admin endpoint to update store status
+app.post('/api/admin/store-status', express.json(), async (req, res) => {
+  try {
+    if (!(await ensureDbConnection())) {
+      return res.status(503).json({ error: 'Database unavailable' });
+    }
+
+    const { isOpen, closedMessage, reopenTime, updatedBy } = req.body;
+
+    // Validation
+    if (typeof isOpen !== 'boolean') {
+      return res.status(400).json({ error: 'isOpen must be a boolean' });
+    }
+
+    // Ensure store status record exists
+    await getStoreStatus();
+
+    // Update store status
+    const status = await prisma.storeStatus.update({
+      where: { id: 1 },
+      data: {
+        isOpen,
+        closedMessage: closedMessage || null,
+        reopenTime: reopenTime ? new Date(reopenTime) : null,
+        updatedBy: updatedBy || 'admin'
+      }
+    });
+
+    console.log(`🏪 Store status updated: ${isOpen ? 'OPEN' : 'CLOSED'} by ${updatedBy || 'admin'}`);
+    
+    res.json(status);
+  } catch (error) {
+    console.error('Error updating store status:', error);
+    res.status(500).json({ error: 'Failed to update store status' });
+  }
+});
+
+// ============================================================================
 // SERVER STARTUP
 // ============================================================================
 

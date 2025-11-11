@@ -1,10 +1,11 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ShoppingCart } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ShoppingCart, AlertCircle, Clock } from "lucide-react";
 import { MenuCategory, MenuItem } from "../types/menu";
 import { QuantityStepper } from "../components/QuantityStepper";
 import { useItemCartQuantity } from "../hooks/useCartQuantity";
@@ -16,10 +17,18 @@ import { CartCustomization } from "../types/cart";
 import { useMenuData } from "../hooks/useMenuData";
 import { useLanguage } from "../contexts/LanguageContext";
 
+// Store status type
+interface StoreStatus {
+  id: number;
+  isOpen: boolean;
+  closedMessage: string | null;
+  reopenTime: string | null;
+}
+
 // Track last selected spice level for each menu item (outside component for persistence)
 const lastSpiceLevels = new Map<string, number>();
 
-const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => {
+const MenuSection = ({ items, title, isStoreClosed }: { items: MenuItem[], title: string, isStoreClosed: boolean }) => {
   const placeholderImg = "/images/placeholder-food.svg";
   
   return (
@@ -27,14 +36,14 @@ const MenuSection = ({ items, title }: { items: MenuItem[], title: string }) => 
       <h3 className="text-3xl font-bold text-primary mb-8">{title}</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {items.map((item, index) => (
-          <MenuItemCard key={item.id || index} item={item} placeholderImg={placeholderImg} />
+          <MenuItemCard key={item.id || index} item={item} placeholderImg={placeholderImg} isStoreClosed={isStoreClosed} />
         ))}
       </div>
     </div>
   );
 };
 
-const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg: string }) => {
+const MenuItemCard = ({ item, placeholderImg, isStoreClosed }: { item: MenuItem, placeholderImg: string, isStoreClosed: boolean }) => {
   const [isSpiceDialogOpen, setIsSpiceDialogOpen] = useState(false);
   const [isRepeatDialogOpen, setIsRepeatDialogOpen] = useState(false);
   const { t } = useLanguage();
@@ -210,6 +219,8 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
               onClick={handleAddToCart}
               size="sm"
               className="rounded-full px-6"
+              disabled={isStoreClosed}
+              title={isStoreClosed ? "Store is currently closed" : ""}
             >
               Add
             </Button>
@@ -272,6 +283,8 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
                   onClick={handleAddToCart}
                   size="sm"
                   className="gap-1"
+                  disabled={isStoreClosed}
+                  title={isStoreClosed ? "Store is currently closed" : ""}
                 >
                   <ShoppingCart className="w-4 h-4" />
                   Add
@@ -309,6 +322,32 @@ const MenuItemCard = ({ item, placeholderImg }: { item: MenuItem, placeholderImg
 const Menu = () => {
   const { data: menuData = [], isLoading: loading, error: queryError } = useMenuData();
   const error = queryError?.message || null;
+  const { t } = useLanguage();
+  
+  // Store status state
+  const [storeStatus, setStoreStatus] = useState<StoreStatus | null>(null);
+  const [loadingStoreStatus, setLoadingStoreStatus] = useState(true);
+
+  // Fetch store status
+  useEffect(() => {
+    const fetchStoreStatus = async () => {
+      try {
+        const response = await fetch('/api/store-status');
+        if (response.ok) {
+          const data = await response.json();
+          setStoreStatus(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch store status:', err);
+      } finally {
+        setLoadingStoreStatus(false);
+      }
+    };
+    
+    fetchStoreStatus();
+  }, []);
+
+  const isStoreClosed = storeStatus?.isOpen === false;
 
   // Tabs: use categories from menuData
   const tabKeys = menuData.map((cat) => cat.name);
@@ -316,6 +355,41 @@ const Menu = () => {
 
   return (
     <div className="min-h-screen pt-16">
+      {/* Store Closed Banner */}
+      {!loadingStoreStatus && isStoreClosed && (
+        <div className="bg-red-500/10 border-b border-red-500/30">
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <Alert className="bg-transparent border-0">
+              <AlertCircle className="h-5 w-5 text-red-500" />
+              <AlertDescription className="text-foreground">
+                <div className="font-semibold text-lg mb-1">
+                  {t('Store is currently closed', 'A loja está atualmente fechada')}
+                </div>
+                {storeStatus?.closedMessage && (
+                  <p className="text-sm mb-2">{storeStatus.closedMessage}</p>
+                )}
+                {storeStatus?.reopenTime && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Clock className="h-4 w-4" />
+                    <span>
+                      {t('Expected to reopen', 'Esperado para reabrir')}: {' '}
+                      {new Date(storeStatus.reopenTime).toLocaleString(t('en-US', 'pt-PT'), {
+                        dateStyle: 'medium',
+                        timeStyle: 'short'
+                      })}
+                    </span>
+                  </div>
+                )}
+                <p className="text-xs mt-2 text-foreground/70">
+                  {t('You can browse the menu, but ordering is currently disabled.', 
+                     'Você pode navegar no menu, mas fazer pedidos está temporariamente desativado.')}
+                </p>
+              </AlertDescription>
+            </Alert>
+          </div>
+        </div>
+      )}
+
       {/* Menu Content */}
       <section className="py-8 px-4 max-w-7xl mx-auto menu-page-section">
         {loading ? (
@@ -333,7 +407,7 @@ const Menu = () => {
             </TabsList>
             {menuData.map((cat) => (
               <TabsContent key={cat.name} value={cat.name} className="space-y-8">
-                <MenuSection items={cat.items} title={cat.name} />
+                <MenuSection items={cat.items} title={cat.name} isStoreClosed={isStoreClosed} />
               </TabsContent>
             ))}
           </Tabs>

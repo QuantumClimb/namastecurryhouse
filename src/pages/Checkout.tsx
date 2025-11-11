@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useCartStore from "@/stores/cartStore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 import CustomerInfoForm from '@/components/checkout/CustomerInfoForm';
 import DeliveryAddressForm from '@/components/checkout/DeliveryAddressForm';
 import PaymentMethodSelector from '@/components/checkout/PaymentMethodSelector';
@@ -13,13 +15,23 @@ import { SpiceLevelDialog } from '@/components/SpiceLevelDialog';
 import { RepeatCustomizationDialog } from '@/components/RepeatCustomizationDialog';
 import { CartCustomization } from '@/types/cart';
 import { MenuItemImage } from '@/components/MenuItemImage';
+import { useNavigate } from 'react-router-dom';
 
 type CheckoutStep = 'cart' | 'customer' | 'address' | 'payment' | 'stripe-payment';
+
+// Store status type
+interface StoreStatus {
+  id: number;
+  isOpen: boolean;
+  closedMessage: string | null;
+  reopenTime: string | null;
+}
 
 // Track last selected spice level for each menu item (outside component for persistence)
 const lastSpiceLevels = new Map<string, number>();
 
 export default function Checkout() {
+  const navigate = useNavigate();
   const { 
     items, 
     total, 
@@ -38,6 +50,31 @@ export default function Checkout() {
   const [isSpiceDialogOpen, setIsSpiceDialogOpen] = useState(false);
   const [isRepeatDialogOpen, setIsRepeatDialogOpen] = useState(false);
   const [currentItemForCustomization, setCurrentItemForCustomization] = useState<string | null>(null);
+  
+  // Store status state
+  const [storeStatus, setStoreStatus] = useState<StoreStatus | null>(null);
+  const [loadingStoreStatus, setLoadingStoreStatus] = useState(true);
+
+  // Fetch store status
+  useEffect(() => {
+    const fetchStoreStatus = async () => {
+      try {
+        const response = await fetch('/api/store-status');
+        if (response.ok) {
+          const data = await response.json();
+          setStoreStatus(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch store status:', err);
+      } finally {
+        setLoadingStoreStatus(false);
+      }
+    };
+    
+    fetchStoreStatus();
+  }, []);
+
+  const isStoreClosed = storeStatus?.isOpen === false;
   
   const deliveryFee = 2.50; // Fixed for now
   const grandTotal = total + deliveryFee;
@@ -175,6 +212,30 @@ export default function Checkout() {
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Checkout</h1>
       
+      {/* Store Closed Alert */}
+      {!loadingStoreStatus && isStoreClosed && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            <div className="font-semibold mb-1">Store is currently closed</div>
+            {storeStatus?.closedMessage && (
+              <p className="text-sm mb-2">{storeStatus.closedMessage}</p>
+            )}
+            <p className="text-sm">
+              Checkout is disabled while the store is closed. You can browse the menu and come back later.
+            </p>
+            <Button 
+              onClick={() => navigate('/menu')}
+              variant="outline"
+              size="sm"
+              className="mt-3"
+            >
+              Return to Menu
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+      
       <CheckoutStepIndicator currentStep={currentStep} />
       
       {/* Cart Review */}
@@ -244,8 +305,9 @@ export default function Checkout() {
                   onClick={() => setCurrentStep('customer')} 
                   className="w-full mt-6"
                   size="lg"
+                  disabled={isStoreClosed}
                 >
-                  Continue to Customer Info
+                  {isStoreClosed ? 'Store Closed - Checkout Disabled' : 'Continue to Customer Info'}
                 </Button>
               </>
             )}

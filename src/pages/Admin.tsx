@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import MenuManagement from "@/components/MenuManagement";
 import OrderManagement from "@/components/admin/OrderManagement";
 import CategoryManagement from "@/components/admin/CategoryManagement";
+import StoreToggle from "@/components/admin/StoreToggle";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const ADMIN_USER = "NamasteAdmin";
@@ -22,15 +23,16 @@ export default function Admin() {
   const location = useLocation();
   
   // Get active view from URL hash
-  const getActiveViewFromUrl = (): "dashboard" | "menu-management" | "orders" | "categories" => {
+  const getActiveViewFromUrl = (): "dashboard" | "menu-management" | "orders" | "categories" | "store-status" => {
     const hash = location.hash.replace('#', '');
     if (hash === 'menu-management') return 'menu-management';
     if (hash === 'orders') return 'orders';
     if (hash === 'categories') return 'categories';
+    if (hash === 'store-status') return 'store-status';
     return 'dashboard';
   };
   
-  const [activeView, setActiveView] = useState<"dashboard" | "menu-management" | "orders" | "categories">(getActiveViewFromUrl());
+  const [activeView, setActiveView] = useState<"dashboard" | "menu-management" | "orders" | "categories" | "store-status">(getActiveViewFromUrl());
 
   // Check if session is still valid
   const isSessionValid = (): boolean => {
@@ -61,7 +63,7 @@ export default function Admin() {
     localStorage.removeItem("namaste-admin-login-time");
   };
 
-  const setActiveViewWithUrl = (view: "dashboard" | "menu-management" | "orders" | "categories") => {
+  const setActiveViewWithUrl = (view: "dashboard" | "menu-management" | "orders" | "categories" | "store-status") => {
     setActiveView(view);
     // Update URL hash to persist view state
     if (view === "menu-management") {
@@ -70,6 +72,8 @@ export default function Admin() {
       navigate('/admin#orders');
     } else if (view === "categories") {
       navigate('/admin#categories');
+    } else if (view === "store-status") {
+      navigate('/admin#store-status');
     } else {
       navigate('/admin');
     }
@@ -135,6 +139,16 @@ export default function Admin() {
   <div className="min-h-screen pt-16 bg-primary/5">
           <div className="container mx-auto px-4 py-8">
             <CategoryManagement onClose={() => setActiveViewWithUrl("dashboard")} />
+          </div>
+        </div>
+      );
+    }
+
+    if (activeView === "store-status") {
+      return (
+  <div className="min-h-screen pt-16 bg-primary/5">
+          <div className="container mx-auto px-4 py-8">
+            <StoreToggle onClose={() => setActiveViewWithUrl("dashboard")} />
           </div>
         </div>
       );
@@ -206,6 +220,24 @@ export default function Admin() {
                     onClick={() => setActiveView("menu-management")}
                   >
                     Manage Images
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Settings Card */}
+              <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
+                <CardHeader>
+                  <CardTitle className="text-accent">Store Status</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-foreground/70">
+                    Open or close the store for orders temporarily.
+                  </p>
+                  <Button 
+                    className="w-full"
+                    onClick={() => setActiveViewWithUrl("store-status")}
+                  >
+                    Manage Store Status
                   </Button>
                 </CardContent>
               </Card>
