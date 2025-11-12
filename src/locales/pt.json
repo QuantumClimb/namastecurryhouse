@@ -92,15 +92,24 @@
     "searchPlaceholder": "Pesquisar itens do menu..."
   },
   "cart": {
-    "title": "O Seu Carrinho",
-    "empty": "O seu carrinho está vazio",
+    "title": "Carrinho de Compras",
+    "items": "itens",
+    "clear": "Limpar",
+    "emptyCart": "O seu carrinho está vazio",
+    "emptyCartMessage": "Adicione alguns itens deliciosos do nosso menu!",
     "subtotal": "Subtotal",
-    "delivery": "Taxa de Entrega",
+    "deliveryFee": "Taxa de Entrega",
     "total": "Total",
-    "checkout": "Finalizar Compra",
+    "proceedToCheckout": "Finalizar Compra",
     "continueShopping": "Continuar a Comprar",
     "remove": "Remover",
-    "itemsInCart": "itens no carrinho"
+    "each": "cada",
+    "noSpice": "Sem Picante",
+    "mild": "Suave",
+    "medium": "Médio",
+    "hot": "Picante",
+    "extraHot": "Extra Picante",
+    "spicy": "Picante"
   },
   "checkout": {
     "title": "Finalizar Compra",

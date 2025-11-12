@@ -92,15 +92,24 @@
     "searchPlaceholder": "Search menu items..."
   },
   "cart": {
-    "title": "Your Cart",
-    "empty": "Your cart is empty",
+    "title": "Shopping Cart",
+    "items": "items",
+    "clear": "Clear",
+    "emptyCart": "Your cart is empty",
+    "emptyCartMessage": "Add some delicious items from our menu!",
     "subtotal": "Subtotal",
-    "delivery": "Delivery Fee",
+    "deliveryFee": "Delivery Fee",
     "total": "Total",
-    "checkout": "Proceed to Checkout",
+    "proceedToCheckout": "Proceed to Checkout",
     "continueShopping": "Continue Shopping",
     "remove": "Remove",
-    "itemsInCart": "items in cart"
+    "each": "each",
+    "noSpice": "No Spice",
+    "mild": "Mild",
+    "medium": "Medium",
+    "hot": "Hot",
+    "extraHot": "Extra Hot",
+    "spicy": "Spicy"
   },
   "checkout": {
     "title": "Checkout",

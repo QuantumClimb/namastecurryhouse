@@ -12,6 +12,7 @@ import { CartItem, CartCustomization } from '../types/cart';
 import { SpiceLevelDialog } from './SpiceLevelDialog';
 import { RepeatCustomizationDialog } from './RepeatCustomizationDialog';
 import { MenuItemImage } from './MenuItemImage';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface CartDrawerProps {
   trigger?: React.ReactNode;
@@ -31,6 +32,7 @@ const CartItemComponent: React.FC<CartItemComponentProps> = ({
   onShowRepeatDialog 
 }) => {
   const { updateQuantity, removeItem } = useCartStore();
+  const { t } = useLanguage();
 
   const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity <= 0) {
@@ -64,12 +66,12 @@ const CartItemComponent: React.FC<CartItemComponentProps> = ({
 
   const getSpiceLevelDisplay = (level?: number) => {
     if (level === undefined) return '';
-    if (level === 0) return '🔵 No Spice';
-    if (level === 25) return '🌶️ Mild';
-    if (level === 50) return '🌶️🌶️ Medium';
-    if (level === 75) return '🌶️🌶️🌶️ Hot';
-    if (level === 100) return '🌶️🌶️🌶️🌶️ Extra Hot';
-    return `🌶️ ${level}% Spicy`;
+    if (level === 0) return `🔵 ${t('cart.noSpice')}`;
+    if (level === 25) return `🌶️ ${t('cart.mild')}`;
+    if (level === 50) return `🌶️🌶️ ${t('cart.medium')}`;
+    if (level === 75) return `🌶️🌶️🌶️ ${t('cart.hot')}`;
+    if (level === 100) return `🌶️🌶️🌶️🌶️ ${t('cart.extraHot')}`;
+    return `🌶️ ${level}% ${t('cart.spicy')}`;
   };
 
   return (
@@ -83,7 +85,7 @@ const CartItemComponent: React.FC<CartItemComponentProps> = ({
       
       <div className="flex-1 min-w-0">
         <h4 className="font-medium text-sm truncate">{item.menuItem.name}</h4>
-        <p className="text-xs text-muted-foreground mb-2">€{item.menuItem.price.toFixed(2)} each</p>
+        <p className="text-xs text-muted-foreground mb-2">€{item.menuItem.price.toFixed(2)} {t('cart.each')}</p>
         
         {/* Customizations */}
         {item.customization && (
@@ -161,6 +163,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const [open, setOpen] = useState(controlledOpen ?? false);
   const { items, total, itemCount, clearCart, addItem } = useCartStore();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   
   const [isSpiceDialogOpen, setIsSpiceDialogOpen] = useState(false);
   const [isRepeatDialogOpen, setIsRepeatDialogOpen] = useState(false);
@@ -246,7 +249,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
       <SheetContent className="w-full sm:max-w-lg">
         <SheetHeader>
           <SheetTitle className="flex items-center justify-between">
-            <span>Shopping Cart ({itemCount} items)</span>
+            <span>{t('cart.title')} ({itemCount} {t('cart.items')})</span>
             {items.length > 0 && (
               <Button
                 variant="ghost"
@@ -255,7 +258,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 className="text-destructive hover:text-destructive"
               >
                 <Trash2 className="w-4 h-4 mr-1" />
-                Clear
+                {t('cart.clear')}
               </Button>
             )}
           </SheetTitle>
@@ -266,9 +269,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
                 <ShoppingBag className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">Your cart is empty</p>
+                <p className="text-muted-foreground">{t('cart.emptyCart')}</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Add some delicious items from our menu!
+                  {t('cart.emptyCartMessage')}
                 </p>
               </div>
             </div>
@@ -292,16 +295,16 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="border-t pt-4 space-y-4 flex-shrink-0">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Subtotal ({itemCount} items)</span>
+                    <span>{t('cart.subtotal')} ({itemCount} {t('cart.items')})</span>
                     <span>€{total.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>Delivery Fee</span>
+                    <span>{t('cart.deliveryFee')}</span>
                     <span>€2.50</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between font-bold text-lg">
-                    <span>Total</span>
+                    <span>{t('cart.total')}</span>
                     <span>€{(total + 2.50).toFixed(2)}</span>
                   </div>
                 </div>
@@ -312,10 +315,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       setOpen(false);
                       navigate('/checkout');
                     }}>
-                      Proceed to Checkout
+                      {t('cart.proceedToCheckout')}
                     </Button>
                   <Button variant="outline" className="w-full">
-                    Continue Shopping
+                    {t('cart.continueShopping')}
                   </Button>
                 </div>
               </div>
