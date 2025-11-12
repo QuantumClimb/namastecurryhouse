@@ -76,6 +76,9 @@ export const Footer = () => {
           <p className="text-white">
             © 2024 Namaste Curry House. All rights reserved.
           </p>
+          <p className="text-white/60 text-sm mt-2">
+            POWERED BY QUANTUM CLIMB
+          </p>
         </div>
       </div>
     </footer>

@@ -7,6 +7,7 @@ import fs from 'fs';
 import { PrismaClient } from '@prisma/client';
 import Stripe from 'stripe';
 import { Resend } from 'resend';
+import twilio from 'twilio';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 
@@ -44,6 +45,28 @@ if (process.env.RESEND_API_KEY) {
   }
 } else {
   console.warn('⚠️  Resend not configured - email notifications will not work');
+}
+
+// Initialize Twilio (for WhatsApp notifications)
+let twilioClient = null;
+const TWILIO_ENABLED = process.env.TWILIO_ENABLED === 'true';
+const TWILIO_WHATSAPP_FROM = process.env.TWILIO_WHATSAPP_FROM || 'whatsapp:+14155238886';
+
+if (TWILIO_ENABLED && process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
+  try {
+    twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    console.log('✅ Twilio initialized for WhatsApp notifications');
+    console.log(`   From: ${TWILIO_WHATSAPP_FROM}`);
+    console.log(`   To: ${RESTAURANT_WHATSAPP}`);
+  } catch (error) {
+    console.warn('⚠️  Twilio initialization failed:', error.message);
+  }
+} else {
+  if (!TWILIO_ENABLED) {
+    console.log('ℹ️  Twilio disabled - using manual WhatsApp links (set TWILIO_ENABLED=true to enable)');
+  } else {
+    console.warn('⚠️  Twilio not configured - WhatsApp notifications will use manual method');
+  }
 }
 
 // Initialize Stripe (only if key is configured)
@@ -823,21 +846,55 @@ ${address}
 📊 *Status:* ${order.status}`;
 }
 
-// Helper: Send WhatsApp notification (console log + link for manual sending)
-function logWhatsAppNotification(order) {
+// Helper: Send WhatsApp notification (Twilio or manual link)
+async function sendWhatsAppNotification(order) {
   const message = formatOrderForWhatsApp(order);
+  
+  if (twilioClient && TWILIO_ENABLED) {
+    // Automatic sending via Twilio
+    try {
+      console.log('\n📱 ═══════════════════════════════════════════');
+      console.log('   SENDING WHATSAPP VIA TWILIO');
+      console.log('   ═══════════════════════════════════════════');
+      
+      const result = await twilioClient.messages.create({
+        from: TWILIO_WHATSAPP_FROM,
+        to: `whatsapp:${RESTAURANT_WHATSAPP}`,
+        body: message
+      });
+      
+      console.log(`✅ WhatsApp sent successfully!`);
+      console.log(`   Message SID: ${result.sid}`);
+      console.log(`   Status: ${result.status}`);
+      console.log('   ═══════════════════════════════════════════\n');
+      
+      return { success: true, method: 'twilio', sid: result.sid };
+      
+    } catch (error) {
+      console.error('❌ Twilio WhatsApp failed:', error.message);
+      console.log('   Falling back to manual method...\n');
+      // Fall through to manual method
+    }
+  }
+  
+  // Manual method (existing behavior)
   const encodedMessage = encodeURIComponent(message);
   const whatsappLink = `https://wa.me/${RESTAURANT_WHATSAPP.replace(/\+/g, '')}?text=${encodedMessage}`;
   
   console.log('\n📱 ═══════════════════════════════════════════');
-  console.log('   WHATSAPP NOTIFICATION');
+  console.log('   WHATSAPP NOTIFICATION (MANUAL)');
   console.log('   ═══════════════════════════════════════════');
   console.log(message);
   console.log('   ═══════════════════════════════════════════');
   console.log(`   🔗 Send manually: ${whatsappLink}`);
   console.log('   ═══════════════════════════════════════════\n');
   
-  return whatsappLink;
+  return { success: true, method: 'manual', link: whatsappLink };
+}
+
+// Legacy function name for backward compatibility
+function logWhatsAppNotification(order) {
+  return sendWhatsAppNotification(order);
 }
 
 // Helper: Send email notification to customer
