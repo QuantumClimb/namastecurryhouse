@@ -1,0 +1,214 @@
+{
+  "nav": {
+    "ourStory": "Nossa História",
+    "menu": "Menu",
+    "gallery": "Galeria",
+    "reservation": "Reserva",
+    "contact": "Contacto",
+    "switchLanguage": "Mudar para Inglês"
+  },
+  "common": {
+    "orderNow": "Pedir Agora",
+    "learnMore": "Saiba Mais",
+    "bookTable": "Reservar Mesa",
+    "viewMenu": "Ver Menu Completo",
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Apagar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "loading": "A carregar...",
+    "error": "Erro",
+    "success": "Sucesso"
+  },
+  "ourStory": {
+    "title": "Bem-vindo ao Namaste Curry House",
+    "subtitle": "Experimente as ricas tradições da culinária indiana com especiarias autênticas, receitas tradicionais e hospitalidade calorosa",
+    "heritage": {
+      "title": "Herança Tradicional",
+      "description": "Receitas autênticas transmitidas através de gerações, trazendo os verdadeiros sabores da Índia para a sua mesa"
+    },
+    "excellence": {
+      "title": "Excelência Culinária",
+      "description": "Os nossos chefs mestres usam técnicas de cozinha tradicionais e especiarias autênticas para criar experiências gastronómicas indianas inesquecíveis"
+    },
+    "ingredients": {
+      "title": "Ingredientes Frescos",
+      "description": "Especiarias de qualidade premium, vegetais frescos e ingredientes autênticos selecionados para manter os sabores tradicionais"
+    },
+    "hospitality": {
+      "title": "Hospitalidade Calorosa",
+      "description": "Um espaço acolhedor onde famílias e amigos se reúnem para desfrutar da autêntica cozinha indiana e hospitalidade tradicional"
+    },
+    "features": {
+      "recipes": {
+        "title": "Receitas Tradicionais",
+        "description": "Pratos indianos autênticos preparados usando receitas e técnicas familiares consagradas pelo tempo"
+      },
+      "fresh": {
+        "title": "Ingredientes Frescos",
+        "description": "Especiarias premium e ingredientes frescos selecionados para manter sabores autênticos"
+      },
+      "dining": {
+        "title": "Refeições o Dia Todo",
+        "description": "Do almoço ao jantar, desfrute do nosso menu completo de especialidades indianas"
+      },
+      "family": {
+        "title": "Para Toda a Família",
+        "description": "Ambiente acolhedor perfeito para famílias e celebrações em grupo"
+      }
+    }
+  },
+  "menu": {
+    "title": "Nosso Menu",
+    "subtitle": "Descubra a nossa deliciosa seleção de pratos indianos autênticos",
+    "allCategories": "Todas as Categorias",
+    "addToCart": "Adicionar ao Carrinho",
+    "spiceLevel": "Nível de Picante",
+    "selectSpice": "Selecione o nível de picante",
+    "quantity": "Quantidade",
+    "price": "Preço",
+    "dietary": "Dietético",
+    "vegetarian": "Vegetariano",
+    "vegan": "Vegano",
+    "glutenFree": "Sem Glúten",
+    "searchPlaceholder": "Pesquisar itens do menu..."
+  },
+  "cart": {
+    "title": "O Seu Carrinho",
+    "empty": "O seu carrinho está vazio",
+    "subtotal": "Subtotal",
+    "delivery": "Taxa de Entrega",
+    "total": "Total",
+    "checkout": "Finalizar Compra",
+    "continueShopping": "Continuar a Comprar",
+    "remove": "Remover",
+    "itemsInCart": "itens no carrinho"
+  },
+  "checkout": {
+    "title": "Finalizar Compra",
+    "deliveryInfo": "Informações de Entrega",
+    "paymentMethod": "Método de Pagamento",
+    "orderSummary": "Resumo do Pedido",
+    "placeOrder": "Fazer Pedido",
+    "fullName": "Nome Completo",
+    "email": "Endereço de Email",
+    "phone": "Número de Telefone",
+    "street": "Morada",
+    "apartment": "Apartamento / Andar (Opcional)",
+    "city": "Cidade",
+    "postalCode": "Código Postal",
+    "country": "País",
+    "cardPayment": "Pagar com Cartão",
+    "cashOnDelivery": "Pagamento à Entrega",
+    "specialInstructions": "Instruções Especiais (Opcional)",
+    "errors": {
+      "required": "Este campo é obrigatório",
+      "invalidEmail": "Endereço de email inválido",
+      "invalidPhone": "Número de telefone inválido"
+    }
+  },
+  "reservation": {
+    "title": "Reservar uma Mesa",
+    "subtitle": "Reserve a sua mesa para uma experiência gastronómica inesquecível",
+    "name": "O Seu Nome",
+    "email": "Endereço de Email",
+    "phone": "Número de Telefone",
+    "date": "Data da Reserva",
+    "time": "Hora Preferida",
+    "guests": "Número de Pessoas",
+    "specialRequests": "Pedidos Especiais (Opcional)",
+    "submitReservation": "Enviar Reserva",
+    "hours": "Horário de Funcionamento",
+    "mondayToSaturday": "Segunda a Sábado: 12:00 - 22:00",
+    "sundayClosed": "Domingo: Encerrado",
+    "closedNotice": "Estamos encerrados aos domingos",
+    "success": "Reserva enviada com sucesso!",
+    "error": "Falha ao enviar reserva. Por favor, tente novamente."
+  },
+  "contact": {
+    "title": "Contacte-nos",
+    "subtitle": "Entre em contacto connosco para qualquer questão",
+    "address": "Morada",
+    "phone": "Telefone",
+    "email": "Email",
+    "hours": "Horário de Funcionamento",
+    "mondayToSaturday": "Segunda a Sábado: 12:00 - 22:00",
+    "sundayClosed": "Domingo: Encerrado",
+    "sendMessage": "Enviar Mensagem",
+    "name": "O Seu Nome",
+    "emailAddress": "Endereço de Email",
+    "phoneNumber": "Número de Telefone",
+    "message": "A Sua Mensagem",
+    "success": "Mensagem enviada com sucesso!",
+    "error": "Falha ao enviar mensagem. Por favor, tente novamente."
+  },
+  "customerSupport": {
+    "title": "Apoio ao Cliente",
+    "subtitle": "Estamos aqui para ajudar",
+    "hours": "Horário de Apoio",
+    "mondayToSaturday": "Segunda a Sábado: 12:00 - 22:00",
+    "sundayClosed": "Domingo: Encerrado",
+    "faq": "Perguntas Frequentes",
+    "contactInfo": "Informações de Contacto"
+  },
+  "footer": {
+    "about": "Sobre",
+    "aboutText": "Experimente a autêntica cozinha indiana no coração de Lisboa. Receitas tradicionais, hospitalidade calorosa e sabores inesquecíveis.",
+    "quickLinks": "Links Rápidos",
+    "ourStory": "Nossa História",
+    "menu": "Menu",
+    "gallery": "Galeria",
+    "reservation": "Reserva",
+    "contact": "Contacto",
+    "legal": "Legal",
+    "privacy": "Política de Privacidade",
+    "terms": "Termos e Condições",
+    "cancellation": "Política de Cancelamento e Reembolso",
+    "contactInfo": "Contacto",
+    "address": "Morada",
+    "phone": "Telefone",
+    "email": "Email",
+    "hours": "Horário",
+    "mondayToSaturday": "Segunda a Sábado: 12:00 - 22:00",
+    "sundayClosed": "Domingo: Encerrado",
+    "copyright": "© 2025 Namaste Curry House. Todos os direitos reservados.",
+    "poweredBy": "DESENVOLVIDO POR QUANTUM CLIMB"
+  },
+  "legal": {
+    "privacy": {
+      "title": "Política de Privacidade",
+      "lastUpdated": "Última atualização"
+    },
+    "terms": {
+      "title": "Termos e Condições",
+      "lastUpdated": "Última atualização"
+    },
+    "cancellation": {
+      "title": "Política de Cancelamento e Reembolso",
+      "lastUpdated": "Última atualização"
+    }
+  },
+  "orderTracking": {
+    "title": "Acompanhe o Seu Pedido",
+    "orderNumber": "Número do Pedido",
+    "status": "Estado",
+    "placed": "Pedido Efetuado",
+    "preparing": "A Preparar",
+    "ready": "Pronto para Entrega",
+    "delivered": "Entregue",
+    "cancelled": "Cancelado"
+  },
+  "orderConfirmation": {
+    "title": "Confirmação do Pedido",
+    "thankYou": "Obrigado pelo seu pedido!",
+    "orderNumber": "Número do Pedido",
+    "estimatedDelivery": "Entrega Estimada",
+    "orderDetails": "Detalhes do Pedido",
+    "deliveryAddress": "Morada de Entrega",
+    "paymentMethod": "Método de Pagamento",
+    "trackOrder": "Acompanhar Pedido"
+  }
+}

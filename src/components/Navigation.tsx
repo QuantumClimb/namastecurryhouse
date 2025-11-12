@@ -17,7 +17,7 @@ interface StoreStatus {
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const { language, toggleLanguage } = useLanguage();
+  const { language, toggleLanguage, t } = useLanguage();
   
   // Store status state
   const [storeStatus, setStoreStatus] = useState<StoreStatus | null>(null);
@@ -45,11 +45,11 @@ export const Navigation = () => {
   const isStoreClosed = storeStatus?.isOpen === false;
 
   const navigation = [
-    { name: "Our Story", href: "/" },
-    { name: "Menu", href: "/menu" },
-    { name: "Gallery", href: "/gallery" },
-    { name: "Reservation", href: "/reservation" },
-    { name: "Contact", href: "/contact" },
+    { name: t('nav.ourStory'), href: "/" },
+    { name: t('nav.menu'), href: "/menu" },
+    { name: t('nav.gallery'), href: "/gallery" },
+    { name: t('nav.reservation'), href: "/reservation" },
+    { name: t('nav.contact'), href: "/contact" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -97,7 +97,7 @@ export const Navigation = () => {
                 onClick={toggleLanguage}
                 className="px-3 py-2 text-sm font-medium hover:bg-transparent transition-all duration-300 flex items-center gap-2"
                 style={{ color: '#D4AF37' }}
-                title={language === 'en' ? 'Switch to Portuguese' : 'Mudar para Inglês'}
+                title={t('nav.switchLanguage')}
               >
                 <Languages size={18} />
                 <span className="font-bold">{language === 'en' ? 'PT' : 'EN'}</span>
@@ -113,7 +113,7 @@ export const Navigation = () => {
               onClick={toggleLanguage}
               className="p-2 hover:bg-transparent transition-all duration-300"
               style={{ color: '#D4AF37' }}
-              title={language === 'en' ? 'Switch to Portuguese' : 'Mudar para Inglês'}
+              title={t('nav.switchLanguage')}
             >
               <span className="text-sm font-bold">{language === 'en' ? 'PT' : 'EN'}</span>
             </Button>

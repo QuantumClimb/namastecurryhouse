@@ -1,0 +1,214 @@
+{
+  "nav": {
+    "ourStory": "Our Story",
+    "menu": "Menu",
+    "gallery": "Gallery",
+    "reservation": "Reservation",
+    "contact": "Contact",
+    "switchLanguage": "Switch to Portuguese"
+  },
+  "common": {
+    "orderNow": "Order Now",
+    "learnMore": "Learn More",
+    "bookTable": "Book a Table",
+    "viewMenu": "View Full Menu",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "back": "Back",
+    "next": "Next",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "ourStory": {
+    "title": "Welcome to Namaste Curry House",
+    "subtitle": "Experience the rich traditions of Indian cuisine with authentic spices, traditional recipes, and warm hospitality",
+    "heritage": {
+      "title": "Traditional Heritage",
+      "description": "Authentic recipes passed down through generations, bringing the true flavors of India to your table"
+    },
+    "excellence": {
+      "title": "Culinary Excellence",
+      "description": "Our master chefs use traditional cooking techniques and authentic spices to create unforgettable Indian dining experiences"
+    },
+    "ingredients": {
+      "title": "Fresh Ingredients",
+      "description": "Premium quality spices, fresh vegetables, and authentic ingredients sourced to maintain traditional flavors"
+    },
+    "hospitality": {
+      "title": "Warm Hospitality",
+      "description": "A welcoming space where families and friends gather to enjoy authentic Indian cuisine and traditional hospitality"
+    },
+    "features": {
+      "recipes": {
+        "title": "Traditional Recipes",
+        "description": "Authentic Indian dishes prepared using time-honored family recipes and techniques"
+      },
+      "fresh": {
+        "title": "Fresh Ingredients",
+        "description": "Premium spices and fresh ingredients sourced to maintain authentic flavors"
+      },
+      "dining": {
+        "title": "All Day Dining",
+        "description": "From lunch to dinner, enjoy our full menu of Indian specialties"
+      },
+      "family": {
+        "title": "Family Friendly",
+        "description": "Welcoming atmosphere perfect for families and group celebrations"
+      }
+    }
+  },
+  "menu": {
+    "title": "Our Menu",
+    "subtitle": "Discover our delicious selection of authentic Indian dishes",
+    "allCategories": "All Categories",
+    "addToCart": "Add to Cart",
+    "spiceLevel": "Spice Level",
+    "selectSpice": "Select spice level",
+    "quantity": "Quantity",
+    "price": "Price",
+    "dietary": "Dietary",
+    "vegetarian": "Vegetarian",
+    "vegan": "Vegan",
+    "glutenFree": "Gluten Free",
+    "searchPlaceholder": "Search menu items..."
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty",
+    "subtotal": "Subtotal",
+    "delivery": "Delivery Fee",
+    "total": "Total",
+    "checkout": "Proceed to Checkout",
+    "continueShopping": "Continue Shopping",
+    "remove": "Remove",
+    "itemsInCart": "items in cart"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "deliveryInfo": "Delivery Information",
+    "paymentMethod": "Payment Method",
+    "orderSummary": "Order Summary",
+    "placeOrder": "Place Order",
+    "fullName": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "street": "Street Address",
+    "apartment": "Apartment / Suite (Optional)",
+    "city": "City",
+    "postalCode": "Postal Code",
+    "country": "Country",
+    "cardPayment": "Pay with Card",
+    "cashOnDelivery": "Cash on Delivery",
+    "specialInstructions": "Special Instructions (Optional)",
+    "errors": {
+      "required": "This field is required",
+      "invalidEmail": "Invalid email address",
+      "invalidPhone": "Invalid phone number"
+    }
+  },
+  "reservation": {
+    "title": "Reserve a Table",
+    "subtitle": "Book your table for an unforgettable dining experience",
+    "name": "Your Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "date": "Reservation Date",
+    "time": "Preferred Time",
+    "guests": "Number of Guests",
+    "specialRequests": "Special Requests (Optional)",
+    "submitReservation": "Submit Reservation",
+    "hours": "Opening Hours",
+    "mondayToSaturday": "Monday - Saturday: 12:00 PM - 10:00 PM",
+    "sundayClosed": "Sunday: Closed",
+    "closedNotice": "We are closed on Sundays",
+    "success": "Reservation submitted successfully!",
+    "error": "Failed to submit reservation. Please try again."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with us for any inquiries",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "hours": "Opening Hours",
+    "mondayToSaturday": "Monday - Saturday: 12:00 PM - 10:00 PM",
+    "sundayClosed": "Sunday: Closed",
+    "sendMessage": "Send Message",
+    "name": "Your Name",
+    "emailAddress": "Email Address",
+    "phoneNumber": "Phone Number",
+    "message": "Your Message",
+    "success": "Message sent successfully!",
+    "error": "Failed to send message. Please try again."
+  },
+  "customerSupport": {
+    "title": "Customer Support",
+    "subtitle": "We're here to help",
+    "hours": "Support Hours",
+    "mondayToSaturday": "Monday - Saturday: 12:00 PM - 10:00 PM",
+    "sundayClosed": "Sunday: Closed",
+    "faq": "Frequently Asked Questions",
+    "contactInfo": "Contact Information"
+  },
+  "footer": {
+    "about": "About",
+    "aboutText": "Experience authentic Indian cuisine in the heart of Lisboa. Traditional recipes, warm hospitality, and unforgettable flavors.",
+    "quickLinks": "Quick Links",
+    "ourStory": "Our Story",
+    "menu": "Menu",
+    "gallery": "Gallery",
+    "reservation": "Reservation",
+    "contact": "Contact",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions",
+    "cancellation": "Cancellation & Refund",
+    "contactInfo": "Contact",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "hours": "Hours",
+    "mondayToSaturday": "Monday - Saturday: 12:00 PM - 10:00 PM",
+    "sundayClosed": "Sunday: Closed",
+    "copyright": "© 2025 Namaste Curry House. All rights reserved.",
+    "poweredBy": "POWERED BY QUANTUM CLIMB"
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacy Policy",
+      "lastUpdated": "Last updated"
+    },
+    "terms": {
+      "title": "Terms & Conditions",
+      "lastUpdated": "Last updated"
+    },
+    "cancellation": {
+      "title": "Cancellation & Refund Policy",
+      "lastUpdated": "Last updated"
+    }
+  },
+  "orderTracking": {
+    "title": "Track Your Order",
+    "orderNumber": "Order Number",
+    "status": "Status",
+    "placed": "Order Placed",
+    "preparing": "Preparing",
+    "ready": "Ready for Delivery",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled"
+  },
+  "orderConfirmation": {
+    "title": "Order Confirmation",
+    "thankYou": "Thank you for your order!",
+    "orderNumber": "Order Number",
+    "estimatedDelivery": "Estimated Delivery",
+    "orderDetails": "Order Details",
+    "deliveryAddress": "Delivery Address",
+    "paymentMethod": "Payment Method",
+    "trackOrder": "Track Order"
+  }
+}
