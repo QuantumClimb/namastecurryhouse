@@ -47,7 +47,7 @@ const CustomerSupport = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-xl font-semibold text-primary mb-2">info@namastecurryhouse.com</p>
+                <p className="text-xl font-semibold text-primary mb-2">namastecurrylisboa@gmail.com</p>
                 <p className="text-foreground/70">
                   Send us an email anytime. We typically respond within 24 hours on business days.
                 </p>
@@ -65,7 +65,11 @@ const CustomerSupport = () => {
             <CardContent className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="font-medium">Phone Support:</span>
-                <span className="text-foreground/70">Monday - Sunday: 11:00 AM - 10:00 PM</span>
+                <span className="text-foreground/70">Monday - Saturday: 11:00 AM - 10:00 PM</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="font-medium"></span>
+                <span className="text-foreground/70 text-sm">Closed Sundays</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="font-medium">Email Support:</span>

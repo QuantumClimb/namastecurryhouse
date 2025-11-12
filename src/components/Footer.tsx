@@ -58,12 +58,13 @@ export const Footer = () => {
               </div>
               <div className="flex items-center space-x-3 justify-center md:justify-start">
                 <Mail className="w-5 h-5 flex-shrink-0" style={{ color: '#D4AF37' }} />
-                <p className="text-white">info@namastecurryhouse.com</p>
+                <p className="text-white">namastecurrylisboa@gmail.com</p>
               </div>
               <div className="flex items-start space-x-3 justify-center md:justify-start">
                 <Clock className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: '#D4AF37' }} />
                 <div className="text-white">
-                  <p>Mon-Sun: 11AM - 10PM</p>
+                  <p>Mon-Sat: 11AM - 10PM</p>
+                  <p>Closed Sundays</p>
                   <p>Delivery: 11AM - 9:30PM</p>
                 </div>
               </div>

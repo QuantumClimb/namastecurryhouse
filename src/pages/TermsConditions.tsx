@@ -183,7 +183,7 @@ const TermsConditions = () => {
               <ul className="list-none space-y-2 mt-4">
                 <li><strong>Address:</strong> R. Agostinho Lourenço 339, 1000-011 Lisboa, Portugal</li>
                 <li><strong>Phone:</strong> +351 920 617 185</li>
-                <li><strong>Email:</strong> info@namastecurryhouse.com</li>
+                <li><strong>Email:</strong> namastecurrylisboa@gmail.com</li>
               </ul>
             </CardContent>
           </Card>

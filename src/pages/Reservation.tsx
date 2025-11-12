@@ -61,6 +61,12 @@ const Reservation = () => {
             <CardTitle className="text-3xl font-bold text-foreground text-center">
               Book Your Table
             </CardTitle>
+            <div className="bg-primary/10 border border-primary/30 rounded-lg p-4 mt-4">
+              <p className="text-center text-foreground/80">
+                <Clock className="w-5 h-5 inline-block mr-2 text-primary" />
+                Open Monday - Saturday: 11:00 AM - 10:00 PM | <span className="font-semibold text-primary">Closed Sundays</span>
+              </p>
+            </div>
           </CardHeader>
           <CardContent className="space-y-8">
             {/* Guest Count */}
@@ -101,7 +107,13 @@ const Reservation = () => {
                     mode="single"
                     selected={date}
                     onSelect={(newDate) => newDate && setDate(newDate)}
-                    disabled={(date) => date < new Date()}
+                    disabled={(date) => {
+                      // Disable past dates
+                      if (date < new Date()) return true;
+                      // Disable Sundays (0 = Sunday)
+                      if (date.getDay() === 0) return true;
+                      return false;
+                    }}
                     initialFocus
                     className="p-3 pointer-events-auto"
                   />

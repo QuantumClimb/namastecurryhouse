@@ -81,7 +81,7 @@ const CancellationRefund = () => {
               </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>Phone: +351 920 617 185</li>
-                <li>Email: info@namastecurryhouse.com</li>
+                <li>Email: namastecurrylisboa@gmail.com</li>
               </ul>
               
               <p className="font-semibold mt-4">Step 2: Provide Details</p>
@@ -224,7 +224,7 @@ const CancellationRefund = () => {
             <CardContent className="space-y-3 text-foreground/80 leading-relaxed">
               <p>
                 If you are not satisfied with our resolution to your refund request, please escalate 
-                the matter by contacting our management team at info@namastecurryhouse.com with 
+                the matter by contacting our management team at namastecurrylisboa@gmail.com with 
                 "Refund Dispute" in the subject line.
               </p>
               <p className="mt-4">
@@ -257,8 +257,8 @@ const CancellationRefund = () => {
                 For any questions about our Cancellation and Refund Policy, please contact:
               </p>
               <ul className="list-none space-y-2 mt-4">
-                <li><strong>Phone:</strong> +351 920 617 185 (Mon-Sun: 11 AM - 10 PM)</li>
-                <li><strong>Email:</strong> info@namastecurryhouse.com</li>
+                <li><strong>Phone:</strong> +351 920 617 185 (Mon-Sat: 11 AM - 10 PM, Closed Sundays)</li>
+                <li><strong>Email:</strong> namastecurrylisboa@gmail.com</li>
                 <li><strong>Address:</strong> R. Agostinho Lourenço 339, 1000-011 Lisboa, Portugal</li>
               </ul>
             </CardContent>
