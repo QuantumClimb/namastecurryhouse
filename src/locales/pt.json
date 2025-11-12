@@ -1,68 +1,68 @@
 {
   "nav": {
-    "ourStory": "Nossa História",
+    "ourStory": "A Nossa História",
     "menu": "Menu",
     "gallery": "Galeria",
     "reservation": "Reserva",
-    "contact": "Contacto",
+    "contact": "Contato",
     "switchLanguage": "Mudar para Inglês"
   },
   "common": {
-    "orderNow": "Pedir Agora",
-    "learnMore": "Saiba Mais",
+    "orderNow": "Encomendar Agora",
+    "learnMore": "Saber Mais",
     "bookTable": "Reservar Mesa",
     "viewMenu": "Ver Menu Completo",
     "submit": "Enviar",
     "cancel": "Cancelar",
     "save": "Guardar",
     "edit": "Editar",
-    "delete": "Apagar",
+    "delete": "Eliminar",
     "back": "Voltar",
-    "next": "Próximo",
+    "next": "Seguinte",
     "loading": "A carregar...",
     "error": "Erro",
     "success": "Sucesso"
   },
   "ourStory": {
     "title": "Bem-vindo ao Namaste Curry House",
-    "subtitle": "Experimente as ricas tradições da culinária indiana com especiarias autênticas, receitas tradicionais e hospitalidade calorosa",
+    "subtitle": "Viva as ricas tradições da cozinha indiana com especiarias autênticas, receitas tradicionais e uma hospitalidade calorosa",
     "heritage": {
       "title": "Herança Tradicional",
-      "description": "Receitas autênticas transmitidas através de gerações, trazendo os verdadeiros sabores da Índia para a sua mesa"
+      "description": "Receitas autênticas passadas de geração em geração, trazendo os verdadeiros sabores da Índia para a sua mesa"
     },
     "excellence": {
       "title": "Excelência Culinária",
-      "description": "Os nossos chefs mestres usam técnicas de cozinha tradicionais e especiarias autênticas para criar experiências gastronómicas indianas inesquecíveis"
+      "description": "Os nossos mestres cozinheiros utilizam técnicas tradicionais e especiarias autênticas para criar experiências gastronómicas indianas inesquecíveis"
     },
     "ingredients": {
       "title": "Ingredientes Frescos",
-      "description": "Especiarias de qualidade premium, vegetais frescos e ingredientes autênticos selecionados para manter os sabores tradicionais"
+      "description": "Especiarias de alta qualidade, vegetais frescos e ingredientes autênticos selecionados para manter os sabores tradicionais"
     },
     "hospitality": {
       "title": "Hospitalidade Calorosa",
-      "description": "Um espaço acolhedor onde famílias e amigos se reúnem para desfrutar da autêntica cozinha indiana e hospitalidade tradicional"
+      "description": "Um espaço acolhedor onde famílias e amigos se reúnem para saborear a autêntica cozinha indiana e a tradicional hospitalidade"
     },
     "features": {
       "recipes": {
         "title": "Receitas Tradicionais",
-        "description": "Pratos indianos autênticos preparados usando receitas e técnicas familiares consagradas pelo tempo"
+        "description": "Pratos indianos autênticos preparados com receitas e técnicas familiares antigas"
       },
       "fresh": {
         "title": "Ingredientes Frescos",
-        "description": "Especiarias premium e ingredientes frescos selecionados para manter sabores autênticos"
+        "description": "Especiarias premium e ingredientes frescos selecionados para manter os sabores autênticos"
       },
       "dining": {
-        "title": "Refeições o Dia Todo",
+        "title": "Serviço Todo o Dia",
         "description": "Do almoço ao jantar, desfrute do nosso menu completo de especialidades indianas"
       },
       "family": {
-        "title": "Para Toda a Família",
-        "description": "Ambiente acolhedor perfeito para famílias e celebrações em grupo"
+        "title": "Ambiente Familiar",
+        "description": "Ambiente acolhedor, perfeito para famílias e celebrações em grupo"
       }
     }
   },
   "menu": {
-    "title": "Nosso Menu",
+    "title": "O Nosso Menu",
     "subtitle": "Descubra a nossa deliciosa seleção de pratos indianos autênticos",
     "allCategories": "Todas as Categorias",
     "addToCart": "Adicionar ao Carrinho",
@@ -70,7 +70,7 @@
     "selectSpice": "Selecione o nível de picante",
     "quantity": "Quantidade",
     "price": "Preço",
-    "dietary": "Dietético",
+    "dietary": "Preferências Alimentares",
     "vegetarian": "Vegetariano",
     "vegan": "Vegano",
     "glutenFree": "Sem Glúten",
@@ -91,18 +91,18 @@
     "title": "Finalizar Compra",
     "deliveryInfo": "Informações de Entrega",
     "paymentMethod": "Método de Pagamento",
-    "orderSummary": "Resumo do Pedido",
+    "orderSummary": "Resumo da Encomenda",
     "placeOrder": "Fazer Pedido",
     "fullName": "Nome Completo",
     "email": "Endereço de Email",
     "phone": "Número de Telefone",
     "street": "Morada",
-    "apartment": "Apartamento / Andar (Opcional)",
+    "apartment": "Apartamento / Suíte (Opcional)",
     "city": "Cidade",
     "postalCode": "Código Postal",
     "country": "País",
     "cardPayment": "Pagar com Cartão",
-    "cashOnDelivery": "Pagamento à Entrega",
+    "cashOnDelivery": "Pagamento na Entrega",
     "specialInstructions": "Instruções Especiais (Opcional)",
     "errors": {
       "required": "Este campo é obrigatório",
@@ -118,25 +118,25 @@
     "phone": "Número de Telefone",
     "date": "Data da Reserva",
     "time": "Hora Preferida",
-    "guests": "Número de Pessoas",
+    "guests": "Número de Convidados",
     "specialRequests": "Pedidos Especiais (Opcional)",
     "submitReservation": "Enviar Reserva",
     "hours": "Horário de Funcionamento",
-    "mondayToSaturday": "Segunda a Sábado: 12:00 - 22:00",
-    "sundayClosed": "Domingo: Encerrado",
+    "mondayToSaturday": "Segunda a Sábado: 12h00 - 22h00",
+    "sundayClosed": "Domingo: Fechado",
     "closedNotice": "Estamos encerrados aos domingos",
     "success": "Reserva enviada com sucesso!",
     "error": "Falha ao enviar reserva. Por favor, tente novamente."
   },
   "contact": {
-    "title": "Contacte-nos",
-    "subtitle": "Entre em contacto connosco para qualquer questão",
-    "address": "Morada",
+    "title": "Fale Conosco",
+    "subtitle": "Entre em contacto connosco para qualquer dúvida",
+    "address": "Endereço",
     "phone": "Telefone",
     "email": "Email",
     "hours": "Horário de Funcionamento",
-    "mondayToSaturday": "Segunda a Sábado: 12:00 - 22:00",
-    "sundayClosed": "Domingo: Encerrado",
+    "mondayToSaturday": "Segunda a Sábado: 12h00 - 22h00",
+    "sundayClosed": "Domingo: Fechado",
     "sendMessage": "Enviar Mensagem",
     "name": "O Seu Nome",
     "emailAddress": "Endereço de Email",
@@ -148,32 +148,32 @@
   "customerSupport": {
     "title": "Apoio ao Cliente",
     "subtitle": "Estamos aqui para ajudar",
-    "hours": "Horário de Apoio",
-    "mondayToSaturday": "Segunda a Sábado: 12:00 - 22:00",
-    "sundayClosed": "Domingo: Encerrado",
+    "hours": "Horário de Atendimento",
+    "mondayToSaturday": "Segunda a Sábado: 12h00 - 22h00",
+    "sundayClosed": "Domingo: Fechado",
     "faq": "Perguntas Frequentes",
-    "contactInfo": "Informações de Contacto"
+    "contactInfo": "Informações de Contato"
   },
   "footer": {
     "about": "Sobre",
     "aboutText": "Experimente a autêntica cozinha indiana no coração de Lisboa. Receitas tradicionais, hospitalidade calorosa e sabores inesquecíveis.",
     "quickLinks": "Links Rápidos",
-    "ourStory": "Nossa História",
+    "ourStory": "A Nossa História",
     "menu": "Menu",
     "gallery": "Galeria",
     "reservation": "Reserva",
-    "contact": "Contacto",
+    "contact": "Contato",
     "legal": "Legal",
     "privacy": "Política de Privacidade",
     "terms": "Termos e Condições",
-    "cancellation": "Política de Cancelamento e Reembolso",
-    "contactInfo": "Contacto",
-    "address": "Morada",
+    "cancellation": "Cancelamento e Reembolso",
+    "contactInfo": "Contato",
+    "address": "Endereço",
     "phone": "Telefone",
     "email": "Email",
     "hours": "Horário",
-    "mondayToSaturday": "Segunda a Sábado: 12:00 - 22:00",
-    "sundayClosed": "Domingo: Encerrado",
+    "mondayToSaturday": "Segunda a Sábado: 12h00 - 22h00",
+    "sundayClosed": "Domingo: Fechado",
     "copyright": "© 2025 Namaste Curry House. Todos os direitos reservados.",
     "poweredBy": "DESENVOLVIDO POR QUANTUM CLIMB"
   },
@@ -192,10 +192,10 @@
     }
   },
   "orderTracking": {
-    "title": "Acompanhe o Seu Pedido",
+    "title": "Acompanhar o Seu Pedido",
     "orderNumber": "Número do Pedido",
     "status": "Estado",
-    "placed": "Pedido Efetuado",
+    "placed": "Pedido Realizado",
     "preparing": "A Preparar",
     "ready": "Pronto para Entrega",
     "delivered": "Entregue",
@@ -203,11 +203,11 @@
   },
   "orderConfirmation": {
     "title": "Confirmação do Pedido",
-    "thankYou": "Obrigado pelo seu pedido!",
+    "thankYou": "Obrigado pela sua encomenda!",
     "orderNumber": "Número do Pedido",
     "estimatedDelivery": "Entrega Estimada",
     "orderDetails": "Detalhes do Pedido",
-    "deliveryAddress": "Morada de Entrega",
+    "deliveryAddress": "Endereço de Entrega",
     "paymentMethod": "Método de Pagamento",
     "trackOrder": "Acompanhar Pedido"
   }
