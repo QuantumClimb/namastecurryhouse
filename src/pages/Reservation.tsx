@@ -8,8 +8,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format } from "date-fns";
 import { CalendarIcon, Clock, Users, AlertCircle, Bell, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Reservation = () => {
+  const { t } = useLanguage();
   const [date, setDate] = useState<Date>(new Date());
   const [guests, setGuests] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
@@ -30,15 +32,17 @@ const Reservation = () => {
   };
 
   const handleWhatsAppBooking = () => {
+    const peopleText = guests === "1" ? t('reservation.person') : t('reservation.people');
     const message = encodeURIComponent(
-      `Hi Namaste Curry House! I'd like to make a reservation for ${guests} ${guests === "1" ? "person" : "people"} on ${format(date, "MMMM d, yyyy")} at ${selectedTime}. Please confirm availability.`
+      `${t('reservation.whatsappBooking')} ${guests} ${peopleText} ${t('reservation.on')} ${format(date, "MMMM d, yyyy")} ${t('reservation.at')} ${selectedTime}. ${t('reservation.confirmAvailability')}`
     );
     window.open(`https://wa.me/351920617185?text=${message}`, "_blank");
   };
 
   const handleWaitlist = () => {
+    const peopleText = guests === "1" ? t('reservation.person') : t('reservation.people');
     const message = encodeURIComponent(
-      `Hi Namaste Curry House! I'd like to join the waitlist for ${guests} ${guests === "1" ? "person" : "people"} on ${format(date, "MMMM d, yyyy")} at ${selectedTime}. Please notify me if a table becomes available.`
+      `${t('reservation.whatsappWaitlist')} ${guests} ${peopleText} ${t('reservation.on')} ${format(date, "MMMM d, yyyy")} ${t('reservation.at')} ${selectedTime}. ${t('reservation.notifyAvailable')}`
     );
     window.open(`https://wa.me/351920617185?text=${message}`, "_blank");
   };
@@ -49,37 +53,37 @@ const Reservation = () => {
       <section className="py-20 px-4 max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 text-foreground">
-            Reservations
+            {t('reservation.title')}
           </h1>
           <p className="text-xl text-foreground/80 mb-8">
-            Secure your spot for an authentic Indian dining experience at Namaste Curry House
+            {t('reservation.subtitle')}
           </p>
         </div>
         
         <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
           <CardHeader>
             <CardTitle className="text-3xl font-bold text-foreground text-center">
-              Book Your Table
+              {t('reservation.bookTable')}
             </CardTitle>
             <div className="bg-primary/10 border border-primary/30 rounded-lg p-4 mt-4">
               <p className="text-center text-foreground/80">
                 <Clock className="w-5 h-5 inline-block mr-2 text-primary" />
-                Open Monday - Saturday: 11:00 AM - 10:00 PM | <span className="font-semibold text-primary">Closed Sundays</span>
+                {t('reservation.openHours')} | <span className="font-semibold text-primary">{t('reservation.closedSundays')}</span>
               </p>
             </div>
           </CardHeader>
           <CardContent className="space-y-8">
             {/* Guest Count */}
             <div className="space-y-3">
-              <label className="text-lg font-medium text-foreground">Number of Guests</label>
+              <label className="text-lg font-medium text-foreground">{t('reservation.numberOfGuests')}</label>
               <Select value={guests} onValueChange={setGuests}>
                 <SelectTrigger className="w-full bg-background/50 border-primary/30 neon-glow">
-                  <SelectValue placeholder="Select number of guests" />
+                  <SelectValue placeholder={t('reservation.selectGuests')} />
                 </SelectTrigger>
                 <SelectContent>
                   {Array.from({ length: 13 }, (_, i) => i + 1).map((num) => (
                     <SelectItem key={num} value={num.toString()}>
-                      {num} {num === 1 ? "Guest" : "Guests"}
+                      {num} {num === 1 ? t('reservation.guest') : t('reservation.guests')}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -88,7 +92,7 @@ const Reservation = () => {
 
             {/* Date Picker */}
             <div className="space-y-3">
-              <label className="text-lg font-medium text-foreground">Date</label>
+              <label className="text-lg font-medium text-foreground">{t('reservation.date')}</label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -123,7 +127,7 @@ const Reservation = () => {
 
             {/* Time Slots */}
             <div className="space-y-3">
-              <label className="text-lg font-medium text-foreground">Select Time</label>
+              <label className="text-lg font-medium text-foreground">{t('reservation.time')}</label>
               <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
                 {timeSlots.map((time) => {
                   const isUnavailable = unavailableSlots.includes(time);
@@ -157,7 +161,7 @@ const Reservation = () => {
                 className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-lg neon-glow"
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
-                Book via WhatsApp
+                {t('reservation.bookViaWhatsApp')}
               </Button>
               
               {selectedTime && unavailableSlots.includes(selectedTime) && (
@@ -167,7 +171,7 @@ const Reservation = () => {
                   className="flex-1 border-accent text-accent hover:bg-accent/10 h-12 text-lg"
                 >
                   <Bell className="w-5 h-5 mr-2" />
-                  Join Waitlist
+                  {t('reservation.joinWaitlist')}
                 </Button>
               )}
             </div>
