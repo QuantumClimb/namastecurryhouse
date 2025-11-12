@@ -21,7 +21,10 @@
     "next": "Seguinte",
     "loading": "A carregar...",
     "error": "Erro",
-    "success": "Sucesso"
+    "success": "Sucesso",
+    "pageNotFound": "Página Não Encontrada",
+    "pageNotFoundMessage": "A página que procura não existe.",
+    "goHome": "Ir para a Página Inicial"
   },
   "ourStory": {
     "title": "Bem-vindo ao Namaste Curry House",
