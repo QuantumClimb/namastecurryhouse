@@ -6,8 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail, Clock, MessageCircle, Facebook, Instagram } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Contact = () => {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,8 +22,8 @@ const Contact = () => {
     e.preventDefault();
     // Here you would typically send the form data to your backend
     toast({
-      title: "Message Sent!",
-      description: "We'll get back to you within 24 hours.",
+      title: t('contact.success'),
+      description: t('contact.successDesc'),
     });
     setFormData({ name: "", email: "", message: "" });
   };
@@ -42,7 +44,7 @@ const Contact = () => {
           <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
             <CardHeader>
               <CardTitle className="text-3xl font-bold text-foreground text-center">
-                Scan for Reviews
+                {t('contact.scanReviews')}
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center justify-center p-8">
@@ -59,21 +61,21 @@ const Contact = () => {
             <Card className="bg-secondary/10 border-secondary/20 neon-glow">
               <CardContent className="p-8 text-center">
                 <MessageCircle className="w-12 h-12 text-secondary mx-auto mb-4" />
-                <h3 className="text-2xl font-bold mb-4 text-foreground">Quick Contact</h3>
+                <h3 className="text-2xl font-bold mb-4 text-foreground">{t('contact.quickContact')}</h3>
                 <p className="text-foreground/80 mb-6">
-                  Have a question? Contact us directly via WhatsApp for the fastest response about reservations, menu items, or catering.
+                  {t('contact.quickContactDesc')}
                 </p>
                 <Button
                   onClick={() => {
                     const message = encodeURIComponent(
-                      "Hi Namaste Curry House! I have a question about your Indian restaurant. Could you please assist me?"
+                      t('contact.whatsappMessage')
                     );
                     window.open(`https://wa.me/351920617185?text=${message}`, "_blank");
                   }}
                   className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-8 py-3 text-lg neon-glow"
                 >
                   <MessageCircle className="w-5 h-5 mr-2" />
-                  WhatsApp Us
+                  {t('contact.whatsappUs')}
                 </Button>
               </CardContent>
             </Card>
@@ -81,7 +83,7 @@ const Contact = () => {
             {/* Social Media Card */}
             <Card className="bg-card/50 backdrop-blur-sm border-primary/20 neon-glow">
               <CardContent className="p-8 text-center">
-                <h3 className="text-2xl font-bold mb-6 text-foreground">Follow Us</h3>
+                <h3 className="text-2xl font-bold mb-6 text-foreground">{t('contact.followUs')}</h3>
                 <div className="flex space-x-8 justify-center">
                   <a href="https://www.facebook.com/profile.php?id=61562044322831" target="_blank" rel="noopener noreferrer" 
                      className="transition-all hover:opacity-80 hover:scale-110 p-3" style={{ color: '#D4AF37' }}>

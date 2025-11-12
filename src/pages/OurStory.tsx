@@ -2,53 +2,55 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles, ChefHat, Leaf, Users, Calendar, MapPin, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const OurStory = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const values = [
     {
       icon: <Sparkles className="w-12 h-12" />,
-      title: "Traditional Heritage",
-      description: "Authentic recipes passed down through generations, bringing the true flavors of India to your table"
+      title: t('ourStory.heritage.title'),
+      description: t('ourStory.heritage.description')
     },
     {
       icon: <ChefHat className="w-12 h-12" />,
-      title: "Culinary Excellence",
-      description: "Our master chefs use traditional cooking techniques and authentic spices to create unforgettable Indian dining experiences"
+      title: t('ourStory.excellence.title'),
+      description: t('ourStory.excellence.description')
     },
     {
       icon: <Leaf className="w-12 h-12" />,
-      title: "Fresh Ingredients",
-      description: "Premium quality spices, fresh vegetables, and authentic ingredients sourced to maintain traditional flavors"
+      title: t('ourStory.ingredients.title'),
+      description: t('ourStory.ingredients.description')
     },
     {
       icon: <Users className="w-12 h-12" />,
-      title: "Warm Hospitality",
-      description: "A welcoming space where families and friends gather to enjoy authentic Indian cuisine and traditional hospitality"
+      title: t('ourStory.hospitality.title'),
+      description: t('ourStory.hospitality.description')
     }
   ];
 
   const features = [
     {
       icon: <Calendar className="w-8 h-8" />,
-      title: "Traditional Recipes",
-      description: "Authentic Indian dishes prepared using time-honored family recipes and techniques"
+      title: t('ourStory.features.recipes.title'),
+      description: t('ourStory.features.recipes.description')
     },
     {
       icon: <MapPin className="w-8 h-8" />,
-      title: "Fresh Ingredients",
-      description: "Premium spices and fresh ingredients sourced to maintain authentic flavors"
+      title: t('ourStory.features.fresh.title'),
+      description: t('ourStory.features.fresh.description')
     },
     {
       icon: <Clock className="w-8 h-8" />,
-      title: "All Day Dining",
-      description: "From lunch to dinner, enjoy our full menu of Indian specialties"
+      title: t('ourStory.features.dining.title'),
+      description: t('ourStory.features.dining.description')
     },
     {
       icon: <Users className="w-8 h-8" />,
-      title: "Family Friendly",
-      description: "Welcoming atmosphere perfect for families and group celebrations"
+      title: t('ourStory.features.family.title'),
+      description: t('ourStory.features.family.description')
     }
   ];
 
@@ -67,10 +69,10 @@ const OurStory = () => {
       <section className="py-20 px-4 max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
-            Welcome to Namaste Curry House
+            {t('ourStory.title')}
           </h2>
           <p className="text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed">
-            Experience the rich traditions of Indian cuisine with authentic spices, traditional recipes, and warm hospitality
+            {t('ourStory.subtitle')}
           </p>
         </div>
       </section>
@@ -80,17 +82,17 @@ const OurStory = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="text-4xl md:text-5xl font-bold mb-8 text-primary">
-              Where It All Began
+              {t('ourStory.storyTitle')}
             </h2>
             <div className="space-y-6 text-lg text-foreground/80 leading-relaxed">
               <p>
-                Namaste Curry House was born from a simple vision: to create a space where authentic Indian flavors and traditional hospitality come together to create memorable dining experiences. We've become a beloved destination for those seeking genuine Indian cuisine.
+                {t('ourStory.story1')}
               </p>
               <p>
-                Our name, Namaste Curry House, represents the essence of welcome and respect – a philosophy that permeates every aspect of our establishment. From the moment you step through our doors, you're transported into a world where every dish tells a story of India's rich culinary heritage.
+                {t('ourStory.story2')}
               </p>
               <p>
-                We believe that great food isn't just about taste – it's about bringing people together, sharing traditions, and creating connections through the universal language of authentic Indian cuisine.
+                {t('ourStory.story3')}
               </p>
             </div>
           </div>
@@ -108,10 +110,10 @@ const OurStory = () => {
       <section className="py-20 px-4 max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
-            The Namaste Experience
+            {t('ourStory.experienceTitle')}
           </h2>
           <p className="text-xl text-foreground/80 max-w-3xl mx-auto">
-            Immerse yourself in authentic Indian flavors, traditional hospitality, and the warmth of our welcoming atmosphere
+            {t('ourStory.experienceSubtitle')}
           </p>
         </div>
 
@@ -178,13 +180,13 @@ const OurStory = () => {
           </div>
           <div>
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
-              Tradition Perfected
+              {t('ourStory.traditionTitle')}
             </h2>
             <p className="text-lg text-foreground/80 mb-6 leading-relaxed">
-              Namaste Curry House isn't just a restaurant – it's a journey through the rich culinary traditions of India. Our master chefs use authentic recipes and traditional cooking methods to bring you the true taste of India.
+              {t('ourStory.traditionText1')}
             </p>
             <p className="text-lg text-foreground/80 mb-8 leading-relaxed">
-              From aromatic biryanis to flavorful curries, every dish at Namaste Curry House is crafted with love and respect for Indian culinary heritage.
+              {t('ourStory.traditionText2')}
             </p>
           </div>
         </div>
@@ -194,17 +196,17 @@ const OurStory = () => {
       <section className="py-20 px-4 max-w-7xl mx-auto bg-accent/10">
         <div className="text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8 text-primary">
-            Our Vision
+            {t('ourStory.visionTitle')}
           </h2>
           <div className="max-w-4xl mx-auto">
             <p className="text-xl text-foreground/80 leading-relaxed mb-8">
-              To be more than just a restaurant – to be a bridge between cultures through authentic Indian cuisine. We're not just serving food; we're sharing traditions, stories, and the warmth of Indian hospitality with every meal.
+              {t('ourStory.visionText')}
             </p>
             <blockquote className="text-2xl font-medium text-primary/80 italic border-l-4 border-primary pl-6 my-8">
-              "Every meal at Namaste Curry House is a celebration of authentic flavors, traditional recipes, and the joy of sharing good food with loved ones."
+              "{t('ourStory.visionQuote')}"
             </blockquote>
             <p className="text-lg text-foreground/70 mb-8">
-              Join us as we continue to bring the authentic taste of India to your table, one dish at a time.
+              {t('ourStory.visionClosing')}
             </p>
           </div>
         </div>
@@ -214,10 +216,10 @@ const OurStory = () => {
       <section className="py-20 px-4 text-center">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
-            Experience Authentic India
+            {t('ourStory.ctaTitle')}
           </h2>
           <p className="text-xl text-foreground/80 mb-8 max-w-2xl mx-auto">
-            Join us for an unforgettable dining experience where traditional recipes meet warm hospitality
+            {t('ourStory.ctaSubtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
@@ -225,7 +227,7 @@ const OurStory = () => {
               className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-3 neon-glow"
               size="lg"
             >
-              Book a Table
+              {t('common.bookTable')}
             </Button>
             <Button
               onClick={() => navigate("/menu")}
@@ -233,7 +235,7 @@ const OurStory = () => {
               className="border-primary text-primary hover:bg-primary/10 text-lg px-8 py-3"
               size="lg"
             >
-              View Menu
+              {t('common.viewMenu')}
             </Button>
           </div>
         </div>

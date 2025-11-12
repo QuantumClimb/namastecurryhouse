@@ -26,6 +26,21 @@
   "ourStory": {
     "title": "Bem-vindo ao Namaste Curry House",
     "subtitle": "Viva as ricas tradições da cozinha indiana com especiarias autênticas, receitas tradicionais e uma hospitalidade calorosa",
+    "storyTitle": "Onde Tudo Começou",
+    "story1": "O Namaste Curry House nasceu de uma visão simples: criar um espaço onde os sabores autênticos indianos e a hospitalidade tradicional se unem para criar experiências gastronómicas memoráveis. Tornámo-nos um destino querido para quem procura a genuína cozinha indiana.",
+    "story2": "O nosso nome, Namaste Curry House, representa a essência de boas-vindas e respeito – uma filosofia que permeia todos os aspectos do nosso estabelecimento. Desde o momento em que entra pelas nossas portas, é transportado para um mundo onde cada prato conta uma história do rico património culinário da Índia.",
+    "story3": "Acreditamos que uma boa comida não é apenas sobre o sabor – é sobre reunir pessoas, partilhar tradições e criar conexões através da linguagem universal da autêntica cozinha indiana.",
+    "experienceTitle": "A Experiência Namaste",
+    "experienceSubtitle": "Mergulhe nos sabores autênticos indianos, na hospitalidade tradicional e no calor da nossa atmosfera acolhedora",
+    "traditionTitle": "Tradição Aperfeiçoada",
+    "traditionText1": "O Namaste Curry House não é apenas um restaurante – é uma viagem pelas ricas tradições culinárias da Índia. Os nossos mestres cozinheiros utilizam receitas autênticas e métodos de cozinha tradicionais para lhe trazer o verdadeiro sabor da Índia.",
+    "traditionText2": "Desde birianes aromáticos a caril saborosos, cada prato no Namaste Curry House é preparado com amor e respeito pelo património culinário indiano.",
+    "visionTitle": "A Nossa Visão",
+    "visionText": "Ser mais do que apenas um restaurante – ser uma ponte entre culturas através da autêntica cozinha indiana. Não servimos apenas comida; partilhamos tradições, histórias e o calor da hospitalidade indiana em cada refeição.",
+    "visionQuote": "Cada refeição no Namaste Curry House é uma celebração de sabores autênticos, receitas tradicionais e a alegria de partilhar boa comida com os entes queridos.",
+    "visionClosing": "Junte-se a nós enquanto continuamos a trazer o sabor autêntico da Índia à sua mesa, um prato de cada vez.",
+    "ctaTitle": "Experimente a Índia Autêntica",
+    "ctaSubtitle": "Junte-se a nós para uma experiência gastronómica inesquecível onde as receitas tradicionais encontram uma hospitalidade calorosa",
     "heritage": {
       "title": "Herança Tradicional",
       "description": "Receitas autênticas passadas de geração em geração, trazendo os verdadeiros sabores da Índia para a sua mesa"
@@ -131,6 +146,12 @@
   "contact": {
     "title": "Fale Conosco",
     "subtitle": "Entre em contacto connosco para qualquer dúvida",
+    "scanReviews": "Digitalize para Avaliações",
+    "quickContact": "Contacto Rápido",
+    "quickContactDesc": "Tem alguma pergunta? Entre em contacto connosco diretamente via WhatsApp para uma resposta rápida sobre reservas, itens do menu ou catering.",
+    "whatsappMessage": "Olá Namaste Curry House! Tenho uma pergunta sobre o vosso restaurante indiano. Podem ajudar-me?",
+    "whatsappUs": "WhatsApp",
+    "followUs": "Siga-nos",
     "address": "Endereço",
     "phone": "Telefone",
     "email": "Email",
@@ -143,6 +164,7 @@
     "phoneNumber": "Número de Telefone",
     "message": "A Sua Mensagem",
     "success": "Mensagem enviada com sucesso!",
+    "successDesc": "Responderemos dentro de 24 horas.",
     "error": "Falha ao enviar mensagem. Por favor, tente novamente."
   },
   "customerSupport": {
