@@ -221,7 +221,7 @@ const MenuItemCard = ({ item, placeholderImg, isStoreClosed }: { item: MenuItem,
                 size="sm"
                 className="rounded-full px-6"
               >
-                Add
+                {t('menu.addToCart')}
               </Button>
             )}
           </div>
@@ -393,7 +393,7 @@ const Menu = () => {
       {/* Menu Content */}
       <section className="py-8 px-4 max-w-7xl mx-auto menu-page-section">
         {loading ? (
-          <div className="text-center py-20 text-xl">Loading menu...</div>
+          <div className="text-center py-20 text-xl">{t('common.loading')}</div>
         ) : error ? (
           <div className="text-center py-20 text-red-500">{error}</div>
         ) : (
