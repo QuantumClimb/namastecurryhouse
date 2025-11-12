@@ -74,7 +74,7 @@ export const Footer = () => {
 
         <div className="border-t mt-8 pt-8 text-center" style={{ borderColor: '#D4AF37' }}>
           <p className="text-white">
-            © 2024 Namaste Curry House. All rights reserved.
+            © 2025 Namaste Curry House. All rights reserved.
           </p>
           <p className="text-white/60 text-sm mt-2">
             POWERED BY QUANTUM CLIMB
