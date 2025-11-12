@@ -1,7 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, Phone, MessageCircle, Clock } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const CustomerSupport = () => {
+  const { t } = useLanguage();
+  
   return (
     <div className="min-h-screen pt-16">
       {/* Content Section */}
@@ -11,14 +14,12 @@ const CustomerSupport = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <MessageCircle className="w-6 h-6 text-primary" />
-                How Can We Help You?
+                {t('customerSupport.howCanWeHelp')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-foreground/80 leading-relaxed">
-                At Namaste Curry House, we're committed to providing excellent customer service. 
-                Whether you have questions about our menu, need help with an order, or want to share feedback, 
-                our team is here to assist you.
+                {t('customerSupport.helpDescription')}
               </p>
             </CardContent>
           </Card>
@@ -28,13 +29,13 @@ const CustomerSupport = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Phone className="w-5 h-5 text-primary" />
-                  Call Us
+                  {t('customerSupport.callUs')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-primary mb-2">+351 920 617 185</p>
                 <p className="text-foreground/70">
-                  Available during business hours for immediate assistance with orders, reservations, or inquiries.
+                  {t('customerSupport.callDescription')}
                 </p>
               </CardContent>
             </Card>
@@ -43,13 +44,13 @@ const CustomerSupport = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Mail className="w-5 h-5 text-primary" />
-                  Email Us
+                  {t('customerSupport.emailUs')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-xl font-semibold text-primary mb-2">namastecurrylisboa@gmail.com</p>
                 <p className="text-foreground/70">
-                  Send us an email anytime. We typically respond within 24 hours on business days.
+                  {t('customerSupport.emailDescription')}
                 </p>
               </CardContent>
             </Card>
@@ -59,65 +60,62 @@ const CustomerSupport = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Clock className="w-5 h-5 text-primary" />
-                Support Hours
+                {t('customerSupport.supportHours')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="font-medium">Phone Support:</span>
-                <span className="text-foreground/70">Monday - Saturday: 11:00 AM - 10:00 PM</span>
+                <span className="font-medium">{t('customerSupport.phoneSupport')}</span>
+                <span className="text-foreground/70">{t('customerSupport.phoneSupportHours')}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="font-medium"></span>
-                <span className="text-foreground/70 text-sm">Closed Sundays</span>
+                <span className="text-foreground/70 text-sm">{t('customerSupport.closedSundays')}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="font-medium">Email Support:</span>
-                <span className="text-foreground/70">24/7 (Response within 24 hours)</span>
+                <span className="font-medium">{t('customerSupport.emailSupport')}</span>
+                <span className="text-foreground/70">{t('customerSupport.emailSupportHours')}</span>
               </div>
             </CardContent>
           </Card>
 
           <Card className="bg-card/50 backdrop-blur-sm border-primary/20">
             <CardHeader>
-              <CardTitle>Frequently Asked Questions</CardTitle>
+              <CardTitle>{t('customerSupport.faq')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <h3 className="font-semibold text-lg mb-2">How do I place an order?</h3>
+                <h3 className="font-semibold text-lg mb-2">{t('customerSupport.faqQuestion1')}</h3>
                 <p className="text-foreground/70">
-                  You can place an order directly through our website by browsing the menu, adding items to your cart, 
-                  and proceeding to checkout. You can also call us at +351 920 617 185 for phone orders.
+                  {t('customerSupport.faqAnswer1')}
                 </p>
               </div>
 
               <div>
-                <h3 className="font-semibold text-lg mb-2">What are your delivery areas?</h3>
+                <h3 className="font-semibold text-lg mb-2">{t('customerSupport.faqQuestion2')}</h3>
                 <p className="text-foreground/70">
-                  We deliver within Lisboa and surrounding areas. Delivery availability and fees may vary based on location.
+                  {t('customerSupport.faqAnswer2')}
                 </p>
               </div>
 
               <div>
-                <h3 className="font-semibold text-lg mb-2">Do you accommodate dietary restrictions?</h3>
+                <h3 className="font-semibold text-lg mb-2">{t('customerSupport.faqQuestion3')}</h3>
                 <p className="text-foreground/70">
-                  Yes! We offer vegetarian, vegan, and gluten-free options. Please inform us of any allergies or dietary 
-                  requirements when placing your order, and we'll do our best to accommodate you.
+                  {t('customerSupport.faqAnswer3')}
                 </p>
               </div>
 
               <div>
-                <h3 className="font-semibold text-lg mb-2">Can I modify my order after placing it?</h3>
+                <h3 className="font-semibold text-lg mb-2">{t('customerSupport.faqQuestion4')}</h3>
                 <p className="text-foreground/70">
-                  Please contact us immediately at +351 920 617 185 if you need to modify your order. 
-                  We'll do our best to accommodate changes if the order hasn't been prepared yet.
+                  {t('customerSupport.faqAnswer4')}
                 </p>
               </div>
 
               <div>
-                <h3 className="font-semibold text-lg mb-2">What payment methods do you accept?</h3>
+                <h3 className="font-semibold text-lg mb-2">{t('customerSupport.faqQuestion5')}</h3>
                 <p className="text-foreground/70">
-                  We accept all major credit and debit cards through our secure online payment system, as well as cash on delivery.
+                  {t('customerSupport.faqAnswer5')}
                 </p>
               </div>
             </CardContent>
