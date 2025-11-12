@@ -264,7 +264,7 @@ const CancellationRefund = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-card/50 backdrop-blur-sm border-primary/20 bg-primary/5">
+          <Card className="backdrop-blur-sm border-primary/20 bg-primary/5">
             <CardContent className="pt-6">
               <p className="text-center font-semibold text-lg mb-4">
                 Your Satisfaction is Our Priority

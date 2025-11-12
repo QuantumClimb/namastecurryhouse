@@ -2,14 +2,14 @@
 import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
+import path from 'node:path';
+import fs from 'node:fs';
 import { PrismaClient } from '@prisma/client';
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 import twilio from 'twilio';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -61,12 +61,10 @@ if (TWILIO_ENABLED && process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_
   } catch (error) {
     console.warn('⚠️  Twilio initialization failed:', error.message);
   }
+} else if (TWILIO_ENABLED) {
+  console.warn('⚠️  Twilio not configured - WhatsApp notifications will use manual method');
 } else {
-  if (!TWILIO_ENABLED) {
-    console.log('ℹ️  Twilio disabled - using manual WhatsApp links (set TWILIO_ENABLED=true to enable)');
-  } else {
-    console.warn('⚠️  Twilio not configured - WhatsApp notifications will use manual method');
-  }
+  console.log('ℹ️  Twilio disabled - using manual WhatsApp links (set TWILIO_ENABLED=true to enable)');
 }
 
 // Initialize Stripe (only if key is configured)
@@ -145,7 +143,7 @@ app.get('/api/images/:id', async (req, res) => {
 
     const { id } = req.params;
     const item = await prisma.menuItem.findUnique({
-      where: { id: parseInt(id) },
+      where: { id: Number.parseInt(id) },
       select: { imageData: true, imageMimeType: true }
     });
 
@@ -192,11 +190,11 @@ app.get('/api/health', (req, res) => {
     message: 'Server is running',
     database: dbConnected ? 'connected' : 'disconnected',
     stripe: {
-      configured: stripe ? true : false,
-      webhookSecretSet: process.env.STRIPE_WEBHOOK_SECRET ? true : false
+      configured: Boolean(stripe),
+      webhookSecretSet: Boolean(process.env.STRIPE_WEBHOOK_SECRET)
     },
     resend: {
-      configured: resend ? true : false,
+      configured: Boolean(resend),
       testMode: RESEND_TEST_MODE
     }
   });
@@ -488,7 +486,7 @@ app.put('/api/admin/categories/:id', async (req, res) => {
           mode: 'insensitive'
         },
         NOT: {
-          id: parseInt(id)
+          id: Number.parseInt(id)
         }
       }
     });
@@ -498,7 +496,7 @@ app.put('/api/admin/categories/:id', async (req, res) => {
     }
 
     const updatedCategory = await prisma.menuCategory.update({
-      where: { id: parseInt(id) },
+      where: { id: Number.parseInt(id) },
       data: { name: name.trim() },
       include: {
         _count: {
@@ -527,7 +525,7 @@ app.delete('/api/admin/categories/:id', async (req, res) => {
 
     // Check if category has any menu items
     const category = await prisma.menuCategory.findUnique({
-      where: { id: parseInt(id) },
+      where: { id: Number.parseInt(id) },
       include: {
         _count: {
           select: { items: true }
@@ -546,7 +544,7 @@ app.delete('/api/admin/categories/:id', async (req, res) => {
     }
 
     await prisma.menuCategory.delete({
-      where: { id: parseInt(id) }
+      where: { id: Number.parseInt(id) }
     });
 
     res.json({ message: 'Category deleted successfully' });
@@ -573,14 +571,14 @@ app.post('/api/admin/menu-items', async (req, res) => {
         namePt: namePt || null,
         description,
         descriptionPt: descriptionPt || null,
-        price: parseFloat(price),
+        price: Number.parseFloat(price),
         dietary: Array.isArray(dietary) ? dietary.join(',') : dietary || '',
         hasSpiceCustomization: hasSpiceCustomization || false,
-        categoryId: parseInt(categoryId),
+        categoryId: Number.parseInt(categoryId),
         imageUrl: imageUrl || null,
         imageData: imageData || null,
         imageMimeType: imageMimeType || null,
-        imageSize: imageSize ? parseInt(imageSize) : null
+        imageSize: imageSize ? Number.parseInt(imageSize) : null
       },
       include: {
         category: true
@@ -616,20 +614,20 @@ app.put('/api/admin/menu-items/:id', async (req, res) => {
     const { name, namePt, description, descriptionPt, price, dietary, hasSpiceCustomization, categoryId, imageUrl, imageData, imageMimeType, imageSize } = req.body;
     
     const updatedItem = await prisma.menuItem.update({
-      where: { id: parseInt(id) },
+      where: { id: Number.parseInt(id) },
       data: {
         name,
         namePt: namePt || null,
         description,
         descriptionPt: descriptionPt || null,
-        price: parseFloat(price),
+        price: Number.parseFloat(price),
         dietary: Array.isArray(dietary) ? dietary.join(',') : dietary || '',
         hasSpiceCustomization: hasSpiceCustomization || false,
-        categoryId: parseInt(categoryId),
+        categoryId: Number.parseInt(categoryId),
         imageUrl: imageUrl || null,
         imageData: imageData || null,
         imageMimeType: imageMimeType || null,
-        imageSize: imageSize ? parseInt(imageSize) : null
+        imageSize: imageSize ? Number.parseInt(imageSize) : null
       },
       include: {
         category: true
@@ -665,7 +663,7 @@ app.delete('/api/admin/menu-items/:id', async (req, res) => {
     
     // Get the item to check for legacy file-based image
     const item = await prisma.menuItem.findUnique({
-      where: { id: parseInt(id) }
+      where: { id: Number.parseInt(id) }
     });
     
     if (!item) {
@@ -674,7 +672,7 @@ app.delete('/api/admin/menu-items/:id', async (req, res) => {
     
     // Delete the item (database-stored images are automatically removed)
     await prisma.menuItem.delete({
-      where: { id: parseInt(id) }
+      where: { id: Number.parseInt(id) }
     });
     
     res.json({ message: 'Menu item deleted successfully' });
@@ -766,7 +764,7 @@ app.get('/api/admin/menu-items', async (req, res) => {
           name: 'asc'
         },
         skip: offset,
-        take: parseInt(limit)
+        take: Number.parseInt(limit)
       }),
       prisma.menuItem.count({ where })
     ]);
@@ -789,7 +787,7 @@ app.get('/api/admin/menu-items', async (req, res) => {
     res.json({
       items: menuItems,
       total,
-      page: parseInt(page),
+      page: Number.parseInt(page),
       totalPages: Math.ceil(total / limit)
     });
   } catch (error) {
@@ -805,7 +803,7 @@ app.get('/api/admin/menu-items', async (req, res) => {
 // Helper: Generate unique order number
 function generateOrderNumber() {
   const date = new Date();
-  const dateStr = date.toISOString().split('T')[0].replace(/-/g, '');
+  const dateStr = date.toISOString().split('T')[0].replaceAll('-', '');
   const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
   return `ORD-${dateStr}-${random}`;
 }
@@ -813,14 +811,15 @@ function generateOrderNumber() {
 // Helper: Calculate delivery fee
 function calculateDeliveryFee(address) {
   // Simple flat rate for now - can be enhanced with distance calculation
-  return 2.50; // €2.50 delivery fee
+  return 2.5; // €2.50 delivery fee
 }
 
 // Helper: Format order for WhatsApp message
 function formatOrderForWhatsApp(order) {
-  const items = order.orderItems.map(item => 
-    `• ${item.quantity}x ${item.name} (€${item.totalPrice.toFixed(2)})${item.spiceLevel !== undefined ? ` - ${item.spiceLevel}% spice` : ''}`
-  ).join('\n');
+  const items = order.orderItems.map(item => {
+    const spiceText = item.spiceLevel === undefined ? '' : ` - ${item.spiceLevel}% spice`;
+    return `• ${item.quantity}x ${item.name} (€${item.totalPrice.toFixed(2)})${spiceText}`;
+  }).join('\n');
   
   const address = typeof order.deliveryAddress === 'string' 
     ? order.deliveryAddress 
@@ -879,7 +878,7 @@ async function sendWhatsAppNotification(order) {
   
   // Manual method (existing behavior)
   const encodedMessage = encodeURIComponent(message);
-  const whatsappLink = `https://wa.me/${RESTAURANT_WHATSAPP.replace(/\+/g, '')}?text=${encodedMessage}`;
+  const whatsappLink = `https://wa.me/${RESTAURANT_WHATSAPP.replaceAll('+', '')}?text=${encodedMessage}`;
   
   console.log('\n📱 ═══════════════════════════════════════════');
   console.log('   WHATSAPP NOTIFICATION (MANUAL)');
@@ -1050,12 +1049,14 @@ async function sendOwnerNotificationEmail(order) {
   }
 
   try {
-    const orderItemsText = order.orderItems.map(item => 
-      `${item.quantity}x ${item.name}${item.spiceLevel ? ` (${item.spiceLevel})` : ''} - €${(item.price * item.quantity).toFixed(2)}`
-    ).join('\n');
+    const orderItemsText = order.orderItems.map(item => {
+      const spiceText = item.spiceLevel ? ` (${item.spiceLevel})` : '';
+      return `${item.quantity}x ${item.name}${spiceText} - €${(item.price * item.quantity).toFixed(2)}`;
+    }).join('\n');
 
     const deliveryAddress = order.deliveryAddress;
-    const addressText = `${deliveryAddress.street}${deliveryAddress.apartment ? `, ${deliveryAddress.apartment}` : ''}, ${deliveryAddress.city}, ${deliveryAddress.postalCode}, ${deliveryAddress.country}`;
+    const apartmentText = deliveryAddress.apartment ? `, ${deliveryAddress.apartment}` : '';
+    const addressText = `${deliveryAddress.street}${apartmentText}, ${deliveryAddress.city}, ${deliveryAddress.postalCode}, ${deliveryAddress.country}`;
 
     const htmlContent = `
       <!DOCTYPE html>
@@ -1175,7 +1176,6 @@ app.get('/api/stripe/health', (req, res) => {
   const secretKeySet = !!process.env.STRIPE_SECRET_KEY;
   const publishableKeySet = !!process.env.STRIPE_PUBLISHABLE_KEY;
   const webhookSecretSet = !!process.env.STRIPE_WEBHOOK_SECRET;
-  const currencySet = !!process.env.STRIPE_CURRENCY;
   
   res.json({
     stripeInitialized: !!stripe,
@@ -1397,25 +1397,29 @@ app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async
   // Handle the event
   try {
     switch (event.type) {
-      case 'checkout.session.completed':
+      case 'checkout.session.completed': {
         const session = event.data.object;
         await handleCheckoutSessionCompleted(session);
         break;
+      }
         
-      case 'payment_intent.succeeded':
+      case 'payment_intent.succeeded': {
         const paymentIntent = event.data.object;
         await handlePaymentSuccess(paymentIntent);
         break;
+      }
         
-      case 'payment_intent.payment_failed':
+      case 'payment_intent.payment_failed': {
         const failedPayment = event.data.object;
         await handlePaymentFailure(failedPayment);
         break;
+      }
         
-      case 'charge.succeeded':
+      case 'charge.succeeded': {
         const charge = event.data.object;
         await handleChargeSuccess(charge);
         break;
+      }
         
       default:
         console.log(`Unhandled event type: ${event.type}`);
@@ -1606,7 +1610,7 @@ app.get('/api/orders/:id', async (req, res) => {
       return res.status(503).json({ error: 'Database unavailable' });
     }
 
-    const orderId = parseInt(req.params.id);
+    const orderId = Number.parseInt(req.params.id);
     const order = await prisma.order.findUnique({
       where: { id: orderId },
     });
@@ -1651,7 +1655,7 @@ app.get('/api/orders/:id/whatsapp-link', async (req, res) => {
       return res.status(503).json({ error: 'Database unavailable' });
     }
 
-    const orderId = parseInt(req.params.id);
+    const orderId = Number.parseInt(req.params.id);
     const order = await prisma.order.findUnique({
       where: { id: orderId },
     });
@@ -1662,7 +1666,7 @@ app.get('/api/orders/:id/whatsapp-link', async (req, res) => {
     
     const message = formatOrderForWhatsApp(order);
     const encodedMessage = encodeURIComponent(message);
-    const whatsappLink = `https://wa.me/${RESTAURANT_WHATSAPP.replace(/\+/g, '')}?text=${encodedMessage}`;
+    const whatsappLink = `https://wa.me/${RESTAURANT_WHATSAPP.replaceAll('+', '')}?text=${encodedMessage}`;
     
     res.json({
       orderId: order.id,
@@ -1684,7 +1688,7 @@ app.post('/api/orders/:id/send-emails', express.json(), async (req, res) => {
       return res.status(503).json({ error: 'Database unavailable' });
     }
 
-    const orderId = parseInt(req.params.id);
+    const orderId = Number.parseInt(req.params.id);
     const order = await prisma.order.findUnique({
       where: { id: orderId },
     });
@@ -1699,7 +1703,7 @@ app.post('/api/orders/:id/send-emails', express.json(), async (req, res) => {
       orderNumber: order.orderNumber,
       customerEmail: null,
       ownerEmail: null,
-      resendConfigured: resend ? true : false,
+      resendConfigured: Boolean(resend),
       testMode: RESEND_TEST_MODE,
     };
 
@@ -1707,7 +1711,7 @@ app.post('/api/orders/:id/send-emails', express.json(), async (req, res) => {
     console.log('📧 Sending customer confirmation email...');
     const customerResult = await sendCustomerConfirmationEmail(order);
     results.customerEmail = {
-      sent: customerResult ? true : false,
+      sent: Boolean(customerResult),
       result: customerResult,
     };
 
@@ -1715,7 +1719,7 @@ app.post('/api/orders/:id/send-emails', express.json(), async (req, res) => {
     console.log('📧 Sending owner notification email...');
     const ownerResult = await sendOwnerNotificationEmail(order);
     results.ownerEmail = {
-      sent: ownerResult ? true : false,
+      sent: Boolean(ownerResult),
       result: ownerResult,
     };
 
@@ -1868,10 +1872,12 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
     return server;
   }
 
-  startServer().catch(err => {
+  try {
+    await startServer();
+  } catch (err) {
     console.error('Failed to start server:', err);
     process.exit(1);
-  });
+  }
 
   // Graceful shutdown
   process.on('SIGINT', async () => {
