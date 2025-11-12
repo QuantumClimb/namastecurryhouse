@@ -32,6 +32,13 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   // Initialize from localStorage or default to English
   const [language, setLanguageState] = useState<Language>(() => {
     const saved = localStorage.getItem('namaste-language');
+    // Force reset to English if version flag is not set (migration from old default)
+    const version = localStorage.getItem('namaste-language-version');
+    if (!version) {
+      localStorage.setItem('namaste-language-version', '1');
+      localStorage.setItem('namaste-language', 'en');
+      return 'en';
+    }
     return (saved as Language) || 'en';
   });
 
