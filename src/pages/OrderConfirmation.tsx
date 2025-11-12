@@ -6,10 +6,12 @@ import { CheckCircle, Package, Clock } from 'lucide-react';
 import { Order } from '@/types/order';
 import useCartStore from '@/stores/cartStore';
 import { MenuItemImage } from '@/components/MenuItemImage';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 export default function OrderConfirmation() {
+  const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   // Support both order_number (from Stripe) and orderNumber (legacy)
   const orderNumber = searchParams.get('order_number') || searchParams.get('orderNumber');
@@ -61,8 +63,8 @@ export default function OrderConfirmation() {
       <div className="max-w-2xl mx-auto p-6">
         <div className="flex justify-center items-center min-h-[400px]">
           <div className="text-center">
-            <p className="text-lg text-gray-600">Loading your order...</p>
-            <p className="text-sm text-gray-400 mt-2">Order Number: {orderNumber}</p>
+            <p className="text-lg text-gray-600">{t('orderConfirmation.loading')}</p>
+            <p className="text-sm text-gray-400 mt-2">{t('orderConfirmation.orderNumber')}: {orderNumber}</p>
           </div>
         </div>
       </div>
@@ -75,13 +77,13 @@ export default function OrderConfirmation() {
         <Card>
           <CardContent className="pt-6">
             <p className="text-center text-red-600 mb-4">
-              {error || 'Order not found'}
+              {error || t('orderConfirmation.orderNotFound')}
             </p>
             <p className="text-center text-gray-600 mb-4">
-              Order Number: {orderNumber || 'Not provided'}
+              {t('orderConfirmation.orderNumber')}: {orderNumber || t('orderConfirmation.notProvided')}
             </p>
             <Link to="/menu" className="block">
-              <Button className="w-full">Back to Menu</Button>
+              <Button className="w-full">{t('orderConfirmation.backToMenu')}</Button>
             </Link>
           </CardContent>
         </Card>
@@ -96,15 +98,15 @@ export default function OrderConfirmation() {
           <div className="flex justify-center mb-4">
             <CheckCircle className="w-16 h-16 text-green-600" />
           </div>
-          <CardTitle className="text-2xl">Order Confirmed!</CardTitle>
+          <CardTitle className="text-2xl">{t('orderConfirmation.title')}</CardTitle>
           <p className="text-gray-600 mt-2">
-            Thank you for your order. We'll start preparing it right away!
+            {t('orderConfirmation.thankYou')}
           </p>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
             <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <p className="text-sm text-gray-600 mb-1">Order Number</p>
+              <p className="text-sm text-gray-600 mb-1">{t('orderConfirmation.orderNumber')}</p>
               <p className="text-2xl font-bold">{order.orderNumber}</p>
             </div>
             
@@ -112,7 +114,7 @@ export default function OrderConfirmation() {
               <div className="flex items-start gap-3">
                 <Package className="w-5 h-5 text-gray-600 mt-1 flex-shrink-0" />
                 <div>
-                  <p className="font-semibold">Delivery Address</p>
+                  <p className="font-semibold">{t('orderConfirmation.deliveryAddress')}</p>
                   <p className="text-sm text-gray-600">
                     {order.deliveryAddress.street}
                     {order.deliveryAddress.apartment && `, ${order.deliveryAddress.apartment}`}
@@ -126,14 +128,14 @@ export default function OrderConfirmation() {
               <div className="flex items-start gap-3">
                 <Clock className="w-5 h-5 text-gray-600 mt-1 flex-shrink-0" />
                 <div>
-                  <p className="font-semibold">Estimated Delivery</p>
-                  <p className="text-sm text-gray-600">30-45 minutes</p>
+                  <p className="font-semibold">{t('orderConfirmation.estimatedDelivery')}</p>
+                  <p className="text-sm text-gray-600">{t('orderConfirmation.deliveryTime')}</p>
                 </div>
               </div>
             </div>
             
             <div className="border-t pt-4">
-              <h3 className="font-semibold mb-3">Order Items</h3>
+              <h3 className="font-semibold mb-3">{t('orderConfirmation.orderItems')}</h3>
               <ul className="space-y-3">
                 {(order.orderItems as any).map((item: any, idx: number) => (
                   <li key={idx} className="flex items-start gap-3 pb-3 border-b last:border-0">
@@ -156,7 +158,7 @@ export default function OrderConfirmation() {
                           </p>
                           {item.spiceLevel !== undefined && item.spiceLevel !== null && (
                             <span className="text-xs text-gray-500">
-                              Spice Level: {item.spiceLevel}%
+                              {t('orderConfirmation.spiceLevel')}: {item.spiceLevel}%
                             </span>
                           )}
                         </div>
@@ -172,15 +174,15 @@ export default function OrderConfirmation() {
             
             <div className="border-t pt-4">
               <div className="flex justify-between mb-2">
-                <span>Subtotal:</span>
+                <span>{t('orderConfirmation.subtotal')}:</span>
                 <span>€{order.subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between mb-2">
-                <span>Delivery Fee:</span>
+                <span>{t('orderConfirmation.deliveryFee')}:</span>
                 <span>€{order.deliveryFee.toFixed(2)}</span>
               </div>
               <div className="flex justify-between font-bold text-lg">
-                <span>Total {order.paymentStatus === 'SUCCEEDED' ? 'Paid' : ''}:</span>
+                <span>{order.paymentStatus === 'SUCCEEDED' ? t('orderConfirmation.totalPaid') : t('orderConfirmation.total')}:</span>
                 <span>€{order.total.toFixed(2)}</span>
               </div>
             </div>
@@ -188,9 +190,9 @@ export default function OrderConfirmation() {
             <div className="bg-blue-50 p-4 rounded-lg">
               <p className="text-sm text-gray-700">
                 {order.paymentStatus === 'SUCCEEDED' ? (
-                  <>A confirmation email has been sent to <strong>{order.customerEmail}</strong></>
+                  <>{t('orderConfirmation.confirmationEmailSent')} <strong>{order.customerEmail}</strong></>
                 ) : (
-                  <>We'll confirm your order via WhatsApp at <strong>{order.customerPhone}</strong></>
+                  <>{t('orderConfirmation.confirmationWhatsApp')} <strong>{order.customerPhone}</strong></>
                 )}
               </p>
             </div>
@@ -198,12 +200,12 @@ export default function OrderConfirmation() {
             <div className="flex gap-3">
               <Link to="/menu" className="flex-1">
                 <Button variant="outline" className="w-full">
-                  Continue Shopping
+                  {t('orderConfirmation.continueShopping')}
                 </Button>
               </Link>
               <Link to="/" className="flex-1">
                 <Button className="w-full">
-                  Back to Home
+                  {t('orderConfirmation.backToHome')}
                 </Button>
               </Link>
             </div>

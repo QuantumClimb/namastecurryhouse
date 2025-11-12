@@ -279,13 +279,25 @@
     "cancelled": "Cancelado"
   },
   "orderConfirmation": {
-    "title": "Confirmação do Pedido",
-    "thankYou": "Obrigado pela sua encomenda!",
+    "title": "Pedido Confirmado!",
+    "thankYou": "Obrigado pela sua encomenda. Vamos começar a prepará-la imediatamente!",
     "orderNumber": "Número do Pedido",
-    "estimatedDelivery": "Entrega Estimada",
-    "orderDetails": "Detalhes do Pedido",
     "deliveryAddress": "Endereço de Entrega",
-    "paymentMethod": "Método de Pagamento",
-    "trackOrder": "Acompanhar Pedido"
+    "estimatedDelivery": "Entrega Estimada",
+    "deliveryTime": "30-45 minutos",
+    "orderItems": "Itens do Pedido",
+    "spiceLevel": "Nível de Picante",
+    "subtotal": "Subtotal",
+    "deliveryFee": "Taxa de Entrega",
+    "totalPaid": "Total Pago",
+    "total": "Total",
+    "confirmationEmailSent": "Um email de confirmação foi enviado para",
+    "confirmationWhatsApp": "Confirmaremos o seu pedido via WhatsApp em",
+    "continueShopping": "Continuar a Comprar",
+    "backToHome": "Voltar à Página Inicial",
+    "loading": "A carregar o seu pedido...",
+    "orderNotFound": "Pedido não encontrado",
+    "notProvided": "Não fornecido",
+    "backToMenu": "Voltar ao Menu"
   }
 }

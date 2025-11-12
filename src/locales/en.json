@@ -279,13 +279,25 @@
     "cancelled": "Cancelled"
   },
   "orderConfirmation": {
-    "title": "Order Confirmation",
-    "thankYou": "Thank you for your order!",
+    "title": "Order Confirmed!",
+    "thankYou": "Thank you for your order. We'll start preparing it right away!",
     "orderNumber": "Order Number",
-    "estimatedDelivery": "Estimated Delivery",
-    "orderDetails": "Order Details",
     "deliveryAddress": "Delivery Address",
-    "paymentMethod": "Payment Method",
-    "trackOrder": "Track Order"
+    "estimatedDelivery": "Estimated Delivery",
+    "deliveryTime": "30-45 minutes",
+    "orderItems": "Order Items",
+    "spiceLevel": "Spice Level",
+    "subtotal": "Subtotal",
+    "deliveryFee": "Delivery Fee",
+    "totalPaid": "Total Paid",
+    "total": "Total",
+    "confirmationEmailSent": "A confirmation email has been sent to",
+    "confirmationWhatsApp": "We'll confirm your order via WhatsApp at",
+    "continueShopping": "Continue Shopping",
+    "backToHome": "Back to Home",
+    "loading": "Loading your order...",
+    "orderNotFound": "Order not found",
+    "notProvided": "Not provided",
+    "backToMenu": "Back to Menu"
   }
 }
