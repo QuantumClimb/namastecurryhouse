@@ -113,6 +113,13 @@
   },
   "checkout": {
     "title": "Checkout",
+    "storeClosed": "Store is currently closed",
+    "storeClosedMessage": "Checkout is disabled while the store is closed. You can browse the menu and come back later.",
+    "storeClosedCheckoutDisabled": "Store Closed - Checkout Disabled",
+    "returnToMenu": "Return to Menu",
+    "yourOrder": "Your Order",
+    "spiceLevel": "Spice Level",
+    "continueToCustomerInfo": "Continue to Customer Info",
     "deliveryInfo": "Delivery Information",
     "paymentMethod": "Payment Method",
     "orderSummary": "Order Summary",

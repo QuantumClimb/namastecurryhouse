@@ -113,6 +113,13 @@
   },
   "checkout": {
     "title": "Finalizar Compra",
+    "storeClosed": "A loja está atualmente fechada",
+    "storeClosedMessage": "A compra está desativada enquanto a loja está fechada. Pode navegar no menu e voltar mais tarde.",
+    "storeClosedCheckoutDisabled": "Loja Fechada - Compra Desativada",
+    "returnToMenu": "Voltar ao Menu",
+    "yourOrder": "O Seu Pedido",
+    "spiceLevel": "Nível de Picante",
+    "continueToCustomerInfo": "Continuar para Informações do Cliente",
     "deliveryInfo": "Informações de Entrega",
     "paymentMethod": "Método de Pagamento",
     "orderSummary": "Resumo da Encomenda",

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { useLanguage } from '@/contexts/LanguageContext';
 import CustomerInfoForm from '@/components/checkout/CustomerInfoForm';
 import DeliveryAddressForm from '@/components/checkout/DeliveryAddressForm';
 import PaymentMethodSelector from '@/components/checkout/PaymentMethodSelector';
@@ -32,6 +33,7 @@ const lastSpiceLevels = new Map<string, number>();
 
 export default function Checkout() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { 
     items, 
     total, 
@@ -210,19 +212,19 @@ export default function Checkout() {
   
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+      <h1 className="text-3xl font-bold mb-6">{t('checkout.title')}</h1>
       
       {/* Store Closed Alert */}
       {!loadingStoreStatus && isStoreClosed && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            <div className="font-semibold mb-1">Store is currently closed</div>
+            <div className="font-semibold mb-1">{t('checkout.storeClosed')}</div>
             {storeStatus?.closedMessage && (
               <p className="text-sm mb-2">{storeStatus.closedMessage}</p>
             )}
             <p className="text-sm">
-              Checkout is disabled while the store is closed. You can browse the menu and come back later.
+              {t('checkout.storeClosedMessage')}
             </p>
             <Button 
               onClick={() => navigate('/menu')}
@@ -230,7 +232,7 @@ export default function Checkout() {
               size="sm"
               className="mt-3"
             >
-              Return to Menu
+              {t('checkout.returnToMenu')}
             </Button>
           </AlertDescription>
         </Alert>
@@ -242,11 +244,11 @@ export default function Checkout() {
       {currentStep === 'cart' && (
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle>Your Order</CardTitle>
+            <CardTitle>{t('checkout.yourOrder')}</CardTitle>
           </CardHeader>
           <CardContent>
             {items.length === 0 ? (
-              <p>Your cart is empty.</p>
+              <p>{t('cart.emptyCart')}</p>
             ) : (
               <>
                 <ul className="space-y-3 mb-4">
@@ -268,7 +270,7 @@ export default function Checkout() {
                         </div>
                         {item.customization?.spiceLevel !== undefined && (
                           <span className="text-sm text-gray-600 block mb-2">
-                            Spice Level: {item.customization.spiceLevel}%
+                            {t('checkout.spiceLevel')}: {item.customization.spiceLevel}%
                           </span>
                         )}
                         <div className="flex items-center justify-between">
@@ -288,15 +290,15 @@ export default function Checkout() {
                 
                 <div className="border-t pt-3 space-y-2">
                   <div className="flex justify-between">
-                    <span>Subtotal:</span>
+                    <span>{t('cart.subtotal')}:</span>
                     <span>€{total.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Delivery Fee:</span>
+                    <span>{t('cart.deliveryFee')}:</span>
                     <span>€{deliveryFee.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg">
-                    <span>Total:</span>
+                    <span>{t('cart.total')}:</span>
                     <span>€{grandTotal.toFixed(2)}</span>
                   </div>
                 </div>
@@ -307,7 +309,7 @@ export default function Checkout() {
                   size="lg"
                   disabled={isStoreClosed}
                 >
-                  {isStoreClosed ? 'Store Closed - Checkout Disabled' : 'Continue to Customer Info'}
+                  {isStoreClosed ? t('checkout.storeClosedCheckoutDisabled') : t('checkout.continueToCustomerInfo')}
                 </Button>
               </>
             )}
