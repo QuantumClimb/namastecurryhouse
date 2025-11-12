@@ -141,10 +141,10 @@ const OurStory = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
-              What Drives Us
+              {t('ourStory.valuesTitle')}
             </h2>
             <p className="text-xl text-foreground/80 max-w-3xl mx-auto">
-              Four pillars that define the Namaste Curry House experience and our commitment to authentic Indian cuisine
+              {t('ourStory.valuesSubtitle')}
             </p>
           </div>
 
