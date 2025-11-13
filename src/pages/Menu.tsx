@@ -355,41 +355,6 @@ const Menu = () => {
 
   return (
     <div className="min-h-screen pt-16">
-      {/* Store Closed Banner */}
-      {!loadingStoreStatus && isStoreClosed && (
-        <div className="bg-red-500/10 border-b border-red-500/30">
-          <div className="max-w-7xl mx-auto px-4 py-4">
-            <Alert className="bg-transparent border-0">
-              <AlertCircle className="h-5 w-5 text-red-500" />
-              <AlertDescription className="text-foreground">
-                <div className="font-semibold text-lg mb-1">
-                  {t('Store is currently closed', 'A loja está atualmente fechada')}
-                </div>
-                {storeStatus?.closedMessage && (
-                  <p className="text-sm mb-2">{storeStatus.closedMessage}</p>
-                )}
-                {storeStatus?.reopenTime && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Clock className="h-4 w-4" />
-                    <span>
-                      {t('Expected to reopen', 'Esperado para reabrir')}: {' '}
-                      {new Date(storeStatus.reopenTime).toLocaleString(t('en-US', 'pt-PT'), {
-                        dateStyle: 'medium',
-                        timeStyle: 'short'
-                      })}
-                    </span>
-                  </div>
-                )}
-                <p className="text-xs mt-2 text-foreground/70">
-                  {t('You can browse the menu, but ordering is currently disabled.', 
-                     'Você pode navegar no menu, mas fazer pedidos está temporariamente desativado.')}
-                </p>
-              </AlertDescription>
-            </Alert>
-          </div>
-        </div>
-      )}
-
       {/* Menu Content */}
       <section className="py-8 px-4 max-w-7xl mx-auto menu-page-section">
         {loading ? (
