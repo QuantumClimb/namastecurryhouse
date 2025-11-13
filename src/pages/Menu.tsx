@@ -46,7 +46,7 @@ const MenuSection = ({ items, title, isStoreClosed }: { items: MenuItem[], title
 const MenuItemCard = ({ item, placeholderImg, isStoreClosed }: { item: MenuItem, placeholderImg: string, isStoreClosed: boolean }) => {
   const [isSpiceDialogOpen, setIsSpiceDialogOpen] = useState(false);
   const [isRepeatDialogOpen, setIsRepeatDialogOpen] = useState(false);
-  const { t } = useLanguage();
+  const { t, tLegacy } = useLanguage();
   
   // Only subscribe to actions, not items (to avoid re-renders)
   const addItem = useCartStore(state => state.addItem);
@@ -61,9 +61,9 @@ const MenuItemCard = ({ item, placeholderImg, isStoreClosed }: { item: MenuItem,
   const items = useCartStore(state => state.items);
   const cartItemId = items.find(cartItem => cartItem.menuItem.id === item.id)?.id;
 
-  // Get translated name and description
-  const displayName = t(item.name, item.namePt);
-  const displayDescription = t(item.description || '', item.descriptionPt);
+  // Get translated name and description using tLegacy for menu items
+  const displayName = tLegacy(item.name, item.namePt);
+  const displayDescription = tLegacy(item.description || '', item.descriptionPt);
 
   const handleAddToCart = () => {
     // Check if item has spice customization enabled
