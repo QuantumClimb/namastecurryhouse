@@ -16,6 +16,7 @@ import { RepeatCustomizationDialog } from "../components/RepeatCustomizationDial
 import { CartCustomization } from "../types/cart";
 import { useMenuData } from "../hooks/useMenuData";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useSEO } from "../hooks/useSEO";
 
 // Store status type
 interface StoreStatus {

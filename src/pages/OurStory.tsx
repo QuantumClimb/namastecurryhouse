@@ -3,10 +3,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles, ChefHat, Leaf, Users, Calendar, MapPin, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useSEO } from "../hooks/useSEO";
 
 const OurStory = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  
+  useSEO({
+    title: 'Namaste Curry House | Authentic Indian Restaurant & Food Delivery',
+    description: 'Experience authentic Indian flavors at Namaste Curry House. Order tandoori, curries, biryani & vegetarian dishes online. Traditional recipes, fresh ingredients, delivered to your door.',
+    keywords: 'authentic Indian restaurant, Indian food delivery, order Indian food online, tandoori, curry, biryani, vegetarian Indian food, best Indian restaurant',
+    canonicalUrl: 'https://www.namastecurry.house/'
+  });
 
   const values = [
     {

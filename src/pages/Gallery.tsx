@@ -3,8 +3,16 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useSEO } from "../hooks/useSEO";
 
 const Gallery = () => {
+  useSEO({
+    title: 'Gallery | Namaste Curry House - Authentic Indian Dishes',
+    description: 'Explore our gallery of authentic Indian dishes including tandoori specialties, aromatic curries, freshly baked naan, and traditional desserts.',
+    keywords: 'Indian food photos, tandoori images, curry pictures, Indian restaurant gallery, authentic Indian cuisine photos',
+    canonicalUrl: 'https://www.namastecurry.house/gallery'
+  });
+  
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 

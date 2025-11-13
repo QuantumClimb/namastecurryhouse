@@ -17,6 +17,7 @@ import { RepeatCustomizationDialog } from '@/components/RepeatCustomizationDialo
 import { CartCustomization } from '@/types/cart';
 import { MenuItemImage } from '@/components/MenuItemImage';
 import { useNavigate } from 'react-router-dom';
+import { useSEO } from '../hooks/useSEO';
 
 type CheckoutStep = 'cart' | 'customer' | 'address' | 'payment' | 'stripe-payment';
 
@@ -34,6 +35,13 @@ const lastSpiceLevels = new Map<string, number>();
 export default function Checkout() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  
+  useSEO({
+    title: 'Checkout | Namaste Curry House - Complete Your Order',
+    description: 'Complete your Indian food order with secure online payment. Enter delivery details and enjoy authentic Indian cuisine delivered to your door.',
+    canonicalUrl: 'https://www.namastecurry.house/checkout'
+  });
+  
   const { 
     items, 
     total, 

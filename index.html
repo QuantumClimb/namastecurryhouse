@@ -4,9 +4,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Namaste Curry House | Authentic Indian Cuisine</title>
-    <meta name="description" content="Experience authentic Indian flavors and traditional hospitality at Namaste Curry House" />
+    <title>Namaste Curry House | Authentic Indian Restaurant & Food Delivery</title>
+    <meta name="description" content="Order authentic Indian cuisine online from Namaste Curry House. Fresh tandoori, aromatic curries, biryani & vegetarian dishes delivered to your door. Traditional flavors, modern convenience." />
+    <meta name="keywords" content="Indian restaurant, Indian food delivery, curry delivery, tandoori, biryani, authentic Indian cuisine, vegetarian Indian food, online food ordering, Indian takeaway" />
     <meta name="author" content="Namaste Curry House" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.namastecurry.house/" />
     
     <!-- Content Security Policy for Stripe -->
     <meta http-equiv="Content-Security-Policy" content="
@@ -19,29 +22,63 @@
       img-src 'self' data: https: blob:;
     ">
 
-    <meta property="og:title" content="Namaste Curry House | Authentic Indian Cuisine" />
-    <meta property="og:description" content="Experience authentic Indian flavors and traditional hospitality at Namaste Curry House" />
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/share-image.png" />
+    <meta property="og:url" content="https://www.namastecurry.house/" />
+    <meta property="og:title" content="Namaste Curry House | Authentic Indian Restaurant & Food Delivery" />
+    <meta property="og:description" content="Order authentic Indian cuisine online. Fresh tandoori, aromatic curries, biryani & vegetarian dishes delivered to your door." />
+    <meta property="og:image" content="https://www.namastecurry.house/share-image.png" />
+    <meta property="og:site_name" content="Namaste Curry House" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="pt_PT" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@namastecurryhouse" />
-    <meta name="twitter:image" content="/share-image.png" />
+    <meta name="twitter:url" content="https://www.namastecurry.house/" />
+    <meta name="twitter:title" content="Namaste Curry House | Authentic Indian Restaurant & Food Delivery" />
+    <meta name="twitter:description" content="Order authentic Indian cuisine online. Fresh tandoori, aromatic curries, biryani & vegetarian dishes delivered to your door." />
+    <meta name="twitter:image" content="https://www.namastecurry.house/share-image.png" />
     
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Forum&family=Manrope:wght@200;300;400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-  <!-- Favicon & App Icons -->
-  <link rel="icon" href="/favicon.ico" />
-  <link rel="manifest" href="/site.webmanifest" />
-  <meta name="theme-color" content="#000000" />
-  <meta name="application-name" content="Namaste Curry House" />
-  <meta name="apple-mobile-web-app-title" content="Namaste Curry" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <!-- SEO: specify brand logo -->
-  <link rel="preload" as="image" href="/logo.png" />
+    
+    <!-- Favicon & Icons -->
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="application-name" content="Namaste Curry House" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    
+    <!-- Performance -->
+    <link rel="preload" as="image" href="/logo.png" />
+    <link rel="dns-prefetch" href="https://api.stripe.com" />
+    <link rel="dns-prefetch" href="https://js.stripe.com" />
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Namaste Curry House",
+      "image": "https://www.namastecurry.house/logo.png",
+      "url": "https://www.namastecurry.house",
+      "telephone": "+351920617185",
+      "servesCuisine": "Indian",
+      "priceRange": "$$",
+      "acceptsReservations": false,
+      "menu": "https://www.namastecurry.house/menu",
+      "email": "namastecurrylisboa@gmail.com",
+      "currenciesAccepted": "EUR",
+      "paymentAccepted": "Cash, Credit Card, Debit Card, Online Payment",
+      "hasDeliveryMethod": {
+        "@type": "DeliveryMethod",
+        "name": "Online Ordering",
+        "url": "https://www.namastecurry.house"
+      }
+    }
+    </script>
   </head>
 
   <body>

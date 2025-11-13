@@ -6,10 +6,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail, Clock, MessageCircle, Facebook, Instagram } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useLanguage } from "../contexts/LanguageContext";
+import { useSEO } from "../hooks/useSEO";
 
 const Contact = () => {
   const { t } = useLanguage();
+  
+  useSEO({
+    title: 'Contact Us | Namaste Curry House - Get in Touch',
+    description: 'Contact Namaste Curry House for reservations, catering, or inquiries. Call +351920617185 or email namastecurrylisboa@gmail.com. We are here to serve you.',
+    keywords: 'contact Indian restaurant, restaurant phone number, Indian restaurant location, restaurant hours, catering inquiries',
+    canonicalUrl: 'https://www.namastecurry.house/contact'
+  });
   const [formData, setFormData] = useState({
     name: "",
     email: "",
