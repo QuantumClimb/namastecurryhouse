@@ -4,9 +4,29 @@ import pkg from '@prisma/client';
 import { Resend } from 'resend';
 
 const { PrismaClient } = pkg;
-const prisma = new PrismaClient();
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Lazy initialization to avoid top-level crashes
+let prisma = null;
+let stripe = null;
+let resend = null;
+
+function initializeServices() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY not configured');
+  }
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY not configured');
+  }
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL not configured');
+  }
+  
+  if (!prisma) prisma = new PrismaClient();
+  if (!stripe) stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  if (!resend) resend = new Resend(process.env.RESEND_API_KEY);
+  
+  return { prisma, stripe, resend };
+}
 
 // Restaurant contact info
 const RESTAURANT_WHATSAPP = process.env.RESTAURANT_WHATSAPP || '+351920617185';
@@ -33,7 +53,7 @@ async function getRawBody(req) {
 }
 
 // Email sending function
-async function sendCustomerConfirmationEmail(order) {
+async function sendCustomerConfirmationEmail(order, resend) {
   try {
     console.log('📧 Preparing customer confirmation email...');
     
@@ -169,7 +189,7 @@ async function sendCustomerConfirmationEmail(order) {
   }
 }
 
-async function sendOwnerNotificationEmail(order) {
+async function sendOwnerNotificationEmail(order, resend) {
   try {
     console.log('📧 Preparing owner notification email...');
     
@@ -322,7 +342,9 @@ async function sendOwnerNotificationEmail(order) {
 }
 
 // Handle checkout session completed
-async function handleCheckoutSessionCompleted(session) {
+async function handleCheckoutSessionCompleted(session, services) {
+  const { prisma, resend } = services;
+  
   try {
     console.log('🔍 Processing checkout session:', session.id);
     console.log('💰 Payment status:', session.payment_status);
@@ -369,8 +391,8 @@ async function handleCheckoutSessionCompleted(session) {
     // Send confirmation emails
     console.log('📧 Starting email sending process...');
     try {
-      await sendCustomerConfirmationEmail(updatedOrder);
-      await sendOwnerNotificationEmail(updatedOrder);
+      await sendCustomerConfirmationEmail(updatedOrder, resend);
+      await sendOwnerNotificationEmail(updatedOrder, resend);
       console.log('✅ Both emails sent successfully');
     } catch (emailError) {
       console.error('❌ Email sending failed (but order is confirmed):', emailError);
@@ -390,11 +412,30 @@ async function handleCheckoutSessionCompleted(session) {
 
 // Main handler
 export default async function handler(req, res) {
-  console.log('🎯 Webhook received at:', new Date().toISOString());
+  console.log('🎯 [SERVERLESS WEBHOOK] Request received at:', new Date().toISOString());
   console.log('📍 Method:', req.method);
   console.log('📍 URL:', req.url);
+  console.log('📍 Headers:', Object.keys(req.headers).join(', '));
+  
+  // Initialize services with error handling
+  let services;
+  try {
+    console.log('🔧 Initializing services...');
+    services = initializeServices();
+    console.log('✅ Services initialized successfully');
+  } catch (error) {
+    console.error('❌ CRITICAL: Failed to initialize services:', error.message);
+    console.error('   This means the serverless function could not start');
+    console.error('   Check Vercel environment variables for:', error.message);
+    return res.status(500).json({ 
+      error: 'Service initialization failed',
+      details: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
   
   if (req.method !== 'POST') {
+    console.log('⚠️ Non-POST request rejected');
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
@@ -415,8 +456,8 @@ export default async function handler(req, res) {
     console.log('✅ Raw body received, length:', rawBody.length);
     
     // Verify webhook signature
-    console.log('🔍 Verifying webhook signature...');
-    event = stripe.webhooks.constructEvent(
+    console.log('🔍 Verifying webhook signature with STRIPE_WEBHOOK_SECRET...');
+    event = services.stripe.webhooks.constructEvent(
       rawBody,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
@@ -432,19 +473,16 @@ export default async function handler(req, res) {
   try {
     console.log('🎯 Handling event type:', event.type);
     
-    switch (event.type) {
-      case 'checkout.session.completed':
-        console.log('💳 Processing checkout.session.completed event');
-        await handleCheckoutSessionCompleted(event.data.object);
-        console.log('✅ Checkout session processed successfully');
-        break;
-      
-      default:
-        console.log('ℹ️ Unhandled event type:', event.type);
+    if (event.type === 'checkout.session.completed') {
+      console.log('💳 Processing checkout.session.completed event');
+      await handleCheckoutSessionCompleted(event.data.object, services);
+      console.log('✅ Checkout session processed successfully');
+    } else {
+      console.log('ℹ️ Unhandled event type:', event.type);
     }
     
-    console.log('✅ Webhook processed successfully');
-    res.status(200).json({ received: true });
+    console.log('✅ [SERVERLESS WEBHOOK] Processing complete');
+    res.status(200).json({ received: true, source: 'serverless-webhook' });
   } catch (error) {
     console.error('❌ Error processing webhook:', error);
     console.error('Stack trace:', error.stack);

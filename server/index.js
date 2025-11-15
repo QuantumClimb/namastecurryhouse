@@ -1373,10 +1373,19 @@ app.post('/api/stripe/create-checkout-session', express.json(), async (req, res)
   }
 });
 
-// POST /api/stripe/webhook - Handle Stripe webhooks
-app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-  console.log('🎯 Webhook received at:', new Date().toISOString());
+// POST /api/stripe/webhook - DISABLED: Use dedicated serverless function at api/stripe/webhook.js
+app.post('/api/stripe/webhook', express.json(), async (req, res) => {
+  console.error('❌ WRONG ENDPOINT: This Express webhook handler should not be called!');
+  console.error('   Stripe should be calling the dedicated serverless function at api/stripe/webhook.js');
+  console.error('   If you see this message, the routing is wrong or the serverless function failed to load.');
   
+  return res.status(500).json({ 
+    error: 'Wrong webhook endpoint - use dedicated serverless function',
+    message: 'This Express endpoint is disabled. The webhook should be handled by api/stripe/webhook.js',
+    timestamp: new Date().toISOString()
+  });
+  
+  /* ORIGINAL CODE DISABLED - KEPT FOR REFERENCE
   if (!stripe) {
     console.error('❌ Stripe not configured');
     return res.status(503).json({ error: 'Stripe not configured' });
