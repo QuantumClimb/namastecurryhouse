@@ -1375,119 +1375,158 @@ app.post('/api/stripe/create-checkout-session', express.json(), async (req, res)
 
 // POST /api/stripe/webhook - Handle Stripe webhooks
 app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  console.log('🎯 Webhook received at:', new Date().toISOString());
+  
   if (!stripe) {
+    console.error('❌ Stripe not configured');
     return res.status(503).json({ error: 'Stripe not configured' });
   }
   
   const sig = req.headers['stripe-signature'];
+  console.log('🔑 Signature present:', !!sig);
   let event;
   
   try {
     // Verify webhook signature
+    console.log('🔍 Verifying webhook signature...');
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
+    console.log('✅ Signature verified. Event type:', event.type);
   } catch (err) {
-    console.error('Webhook signature verification failed:', err.message);
+    console.error('❌ Webhook signature verification failed:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
   
   // Handle the event
   try {
+    console.log('🔄 Processing event:', event.type);
+    
     switch (event.type) {
       case 'checkout.session.completed': {
+        console.log('💳 Processing checkout.session.completed');
         const session = event.data.object;
+        console.log('   Session ID:', session.id);
+        console.log('   Payment Status:', session.payment_status);
         await handleCheckoutSessionCompleted(session);
+        console.log('✅ Checkout session handled successfully');
         break;
       }
         
       case 'payment_intent.succeeded': {
+        console.log('💰 Processing payment_intent.succeeded');
         const paymentIntent = event.data.object;
         await handlePaymentSuccess(paymentIntent);
+        console.log('✅ Payment intent handled successfully');
         break;
       }
         
       case 'payment_intent.payment_failed': {
+        console.log('❌ Processing payment_intent.payment_failed');
         const failedPayment = event.data.object;
         await handlePaymentFailure(failedPayment);
         break;
       }
         
       case 'charge.succeeded': {
+        console.log('💵 Processing charge.succeeded');
         const charge = event.data.object;
         await handleChargeSuccess(charge);
         break;
       }
         
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        console.log(`ℹ️  Unhandled event type: ${event.type}`);
     }
     
+    console.log('✅ Webhook processed successfully, returning 200');
     res.json({ received: true });
   } catch (error) {
-    console.error('Error processing webhook:', error);
-    res.status(500).json({ error: 'Webhook processing failed' });
+    console.error('❌ Error processing webhook:', error);
+    console.error('   Error stack:', error.stack);
+    res.status(500).json({ error: 'Webhook processing failed', message: error.message });
   }
 });
 
 // Helper: Handle checkout session completed
 async function handleCheckoutSessionCompleted(session) {
   try {
-    console.log(`📧 Checkout session completed: ${session.id}`);
+    console.log(`📧 [WEBHOOK] Checkout session completed: ${session.id}`);
+    console.log(`   Payment Status: ${session.payment_status}`);
+    console.log(`   Payment Intent: ${session.payment_intent}`);
     
+    console.log('🔌 Checking database connection...');
     if (!(await ensureDbConnection())) {
-      console.error('Database unavailable for checkout session handling');
+      console.error('❌ [WEBHOOK] Database unavailable for checkout session handling');
       return;
     }
+    console.log('✅ Database connected');
 
     // Find order by session ID
+    console.log(`🔍 [WEBHOOK] Looking for order with session ID: ${session.id}`);
     const order = await prisma.order.findFirst({
       where: { stripeSessionId: session.id },
     });
     
     if (order) {
-      console.log(`✅ Found order: ${order.orderNumber} (ID: ${order.id})`);
+      console.log(`✅ [WEBHOOK] Found order: ${order.orderNumber} (DB ID: ${order.id})`);
+      console.log(`   Current Status: ${order.status}`);
+      console.log(`   Current Payment: ${order.paymentStatus}`);
       
+      console.log('💾 [WEBHOOK] Updating order to CONFIRMED...');
       await prisma.order.update({
         where: { id: order.id },
         data: {
           paymentStatus: 'SUCCEEDED',
           status: 'CONFIRMED',
           confirmedAt: new Date(),
-          stripePaymentIntentId: session.payment_intent, // Now we have the payment intent ID
+          stripePaymentIntentId: session.payment_intent,
         },
       });
-      
-      console.log(`✅ Checkout completed for order ${order.orderNumber}`);
+      console.log(`✅ [WEBHOOK] Order ${order.orderNumber} updated to CONFIRMED`);
       
       // Get updated order with all details
+      console.log('📋 [WEBHOOK] Fetching updated order details...');
       const updatedOrder = await prisma.order.findUnique({
         where: { id: order.id },
       });
       
-      console.log(`📧 Attempting to send notifications for order ${updatedOrder.orderNumber}...`);
+      console.log(`📧 [WEBHOOK] Preparing to send notifications for order ${updatedOrder.orderNumber}...`);
       console.log(`   Customer email: ${updatedOrder.customerEmail}`);
       console.log(`   Resend configured: ${resend ? 'YES' : 'NO'}`);
       console.log(`   Test mode: ${RESEND_TEST_MODE}`);
+      console.log(`   Test email: ${RESEND_TEST_EMAIL}`);
       
       // Send WhatsApp notification to restaurant
+      console.log('📱 [WEBHOOK] Logging WhatsApp notification...');
       logWhatsAppNotification(updatedOrder);
       
       // Send email notifications
-      console.log('📧 Sending customer confirmation email...');
-      const customerEmailResult = await sendCustomerConfirmationEmail(updatedOrder);
-      console.log(`   Customer email result:`, customerEmailResult ? 'SUCCESS' : 'FAILED');
+      console.log('📧 [WEBHOOK] Sending customer confirmation email...');
+      try {
+        const customerEmailResult = await sendCustomerConfirmationEmail(updatedOrder);
+        console.log(`   ✅ Customer email result:`, customerEmailResult ? 'SUCCESS' : 'FAILED');
+      } catch (emailError) {
+        console.error('   ❌ Customer email error:', emailError.message);
+      }
       
-      console.log('📧 Sending owner notification email...');
-      const ownerEmailResult = await sendOwnerNotificationEmail(updatedOrder);
-      console.log(`   Owner email result:`, ownerEmailResult ? 'SUCCESS' : 'FAILED');
+      console.log('📧 [WEBHOOK] Sending owner notification email...');
+      try {
+        const ownerEmailResult = await sendOwnerNotificationEmail(updatedOrder);
+        console.log(`   ✅ Owner email result:`, ownerEmailResult ? 'SUCCESS' : 'FAILED');
+      } catch (emailError) {
+        console.error('   ❌ Owner email error:', emailError.message);
+      }
+      
+      console.log('✅ [WEBHOOK] All notifications sent successfully');
     } else {
-      console.warn(`⚠️  Order not found for session: ${session.id}`);
+      console.warn(`⚠️  [WEBHOOK] Order not found for session: ${session.id}`);
     }
   } catch (error) {
-    console.error('Error handling checkout session:', error);
+    console.error('❌ [WEBHOOK] Error handling checkout session:', error);
+    console.error('   Stack trace:', error.stack);
   }
 }
 
