@@ -361,8 +361,7 @@ async function handleCheckoutSessionCompleted(session, services) {
 
     console.log('🔍 Looking up order with stripeSessionId:', session.id);
     const order = await prisma.order.findUnique({
-      where: { stripeSessionId: session.id },
-      include: { items: true }
+      where: { stripeSessionId: session.id }
     });
 
     if (!order) {
@@ -383,16 +382,21 @@ async function handleCheckoutSessionCompleted(session, services) {
       data: { 
         status: 'CONFIRMED',
         paymentIntentId: session.payment_intent
-      },
-      include: { items: true }
+      }
     });
     console.log('✅ Order status updated to CONFIRMED');
+
+    // Parse orderItems from JSON for email sending
+    const orderWithItems = {
+      ...updatedOrder,
+      items: typeof updatedOrder.orderItems === 'string' ? JSON.parse(updatedOrder.orderItems) : updatedOrder.orderItems
+    };
 
     // Send confirmation emails
     console.log('📧 Starting email sending process...');
     try {
-      await sendCustomerConfirmationEmail(updatedOrder, resend);
-      await sendOwnerNotificationEmail(updatedOrder, resend);
+      await sendCustomerConfirmationEmail(orderWithItems, resend);
+      await sendOwnerNotificationEmail(orderWithItems, resend);
       console.log('✅ Both emails sent successfully');
     } catch (emailError) {
       console.error('❌ Email sending failed (but order is confirmed):', emailError);
