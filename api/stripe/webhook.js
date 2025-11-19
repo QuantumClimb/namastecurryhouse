@@ -381,7 +381,7 @@ async function handleCheckoutSessionCompleted(session, services) {
       where: { id: order.id },
       data: { 
         status: 'CONFIRMED',
-        paymentIntentId: session.payment_intent
+        stripePaymentIntentId: session.payment_intent
       }
     });
     console.log('✅ Order status updated to CONFIRMED');
