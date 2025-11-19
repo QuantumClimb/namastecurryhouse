@@ -359,14 +359,14 @@ async function handleCheckoutSessionCompleted(session, services) {
     await prisma.$connect();
     console.log('✅ Database connected');
 
-    console.log('🔍 Looking up order with sessionId:', session.id);
+    console.log('🔍 Looking up order with stripeSessionId:', session.id);
     const order = await prisma.order.findUnique({
-      where: { sessionId: session.id },
+      where: { stripeSessionId: session.id },
       include: { items: true }
     });
 
     if (!order) {
-      console.error('❌ No order found with sessionId:', session.id);
+      console.error('❌ No order found with stripeSessionId:', session.id);
       throw new Error('Order not found');
     }
 
