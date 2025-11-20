@@ -61,7 +61,7 @@ async function sendCustomerConfirmationEmail(order, resend) {
       <tr>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
           ${item.name}
-          ${item.spiceLevel ? `<br><small style="color: #6b7280;">Spice Level: ${item.spiceLevel}</small>` : ''}
+          ${item.customization?.spiceLevel ? `<br><small style="color: #6b7280;">Spice Level: ${item.customization.spiceLevel}</small>` : ''}
         </td>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: center;">${item.quantity}</td>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right;">€${(item.price * item.quantity).toFixed(2)}</td>
@@ -197,7 +197,7 @@ async function sendOwnerNotificationEmail(order, resend) {
       <tr>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
           ${item.name}
-          ${item.spiceLevel ? `<br><small style="color: #6b7280;">Spice Level: ${item.spiceLevel}</small>` : ''}
+          ${item.customization?.spiceLevel ? `<br><small style="color: #6b7280;">Spice Level: ${item.customization.spiceLevel}</small>` : ''}
         </td>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: center;">${item.quantity}</td>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right;">€${(item.price * item.quantity).toFixed(2)}</td>
@@ -386,10 +386,11 @@ async function handleCheckoutSessionCompleted(session, services) {
     });
     console.log('✅ Order status updated to CONFIRMED');
 
-    // Parse orderItems from JSON for email sending
+    // Parse JSON fields for email sending
     const orderWithItems = {
       ...updatedOrder,
-      items: typeof updatedOrder.orderItems === 'string' ? JSON.parse(updatedOrder.orderItems) : updatedOrder.orderItems
+      items: typeof updatedOrder.orderItems === 'string' ? JSON.parse(updatedOrder.orderItems) : updatedOrder.orderItems,
+      deliveryAddress: typeof updatedOrder.deliveryAddress === 'string' ? JSON.parse(updatedOrder.deliveryAddress) : updatedOrder.deliveryAddress
     };
 
     // Send confirmation emails
