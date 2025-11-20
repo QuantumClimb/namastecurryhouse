@@ -395,12 +395,25 @@ async function handleCheckoutSessionCompleted(session, services) {
 
     // Send confirmation emails
     console.log('📧 Starting email sending process...');
+    console.log('   Resend initialized:', !!resend);
+    console.log('   Order has items:', orderWithItems.items?.length || 0);
+    console.log('   Order has deliveryAddress:', !!orderWithItems.deliveryAddress);
+    
     try {
+      console.log('📤 Attempting to send customer email to:', orderWithItems.customerEmail);
       await sendCustomerConfirmationEmail(orderWithItems, resend);
+      console.log('✅ Customer email sent');
+      
+      console.log('📤 Attempting to send owner email to:', RESTAURANT_EMAIL);
       await sendOwnerNotificationEmail(orderWithItems, resend);
+      console.log('✅ Owner email sent');
+      
       console.log('✅ Both emails sent successfully');
     } catch (emailError) {
-      console.error('❌ Email sending failed (but order is confirmed):', emailError);
+      console.error('❌ Email sending failed (but order is confirmed):');
+      console.error('   Error name:', emailError.name);
+      console.error('   Error message:', emailError.message);
+      console.error('   Error stack:', emailError.stack);
       // Don't throw - order is already confirmed
     }
 
